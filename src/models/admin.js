@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
 
-export const Admin = model(
+const Admin = model(
     'Admin',
     new Schema({
         username: String,
@@ -8,3 +8,5 @@ export const Admin = model(
         uuid: String
     })
 )
+
+export default Admin

@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
 
-export const LoanOfficer = model(
+const LoanOfficer = model(
     'LoanOfficer',
     new Schema({
         username: String,
@@ -8,3 +8,5 @@ export const LoanOfficer = model(
         uuid: String
     })
 )
+
+export default LoanOfficer
