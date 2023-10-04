@@ -26,6 +26,10 @@ router.post('/add', async function(req, res, next) {
     const newLoanee = await Loanee.create(req.body);
     return res.json(newLoanee);
   } catch (e) {
+    if (e.name === 'ValidationError') {
+      // console.error(e.stack);
+      return res.status(400).json({message: "Invalid data format"});
+    }
     return next(e)
   }
 })
@@ -43,6 +47,10 @@ router.patch('/edit', async function(req, res, next) {
     const updatedLoanee = await Loanee.updateOne({username: username}, req.body)
     return res.json(updatedLoanee);
   } catch(e) {
+    if (e.name === 'ValidationError') {
+      // console.error(e.stack);
+      return res.status(400).json({message: "Invalid data format"});
+    }
     return next(e);
   }
 })
