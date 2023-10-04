@@ -4,8 +4,13 @@ const router = express.Router();
 import Loanee from '../models/loanee.js';
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+router.get('/', async function(req, res, next) {
+  try {
+    const loanees = await Loanee.find().lean();
+    return res.json(loanees);
+  } catch (e) {
+    return next(e);
+  }
 });
 
 /**
