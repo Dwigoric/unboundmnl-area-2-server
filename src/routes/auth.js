@@ -1,8 +1,14 @@
+// Import packages
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import passport from 'passport'
+import argon2 from 'argon2'
 
+// Create router
 const router = express.Router()
+
+// Import models
+import LoanOfficer from '../models/loan_officer.js'
 
 /**
  * POST /login
@@ -15,11 +21,9 @@ router.post('/login', (req, res, next) => {
     passport.authenticate('login', { session: false }, (err, user, info) => {
         if (err) return next(err)
         if (!user) return res.status(401).json(info)
-        req.login(user, { session: false }, (err) => {
-            if (err) return next(err)
-            const token = jwt.sign(user, process.env.JWT_SECRET)
-            return res.json({ user, token })
-        })
+
+        const token = jwt.sign({ username: user.username, name: user.name }, process.env.JWT_SECRET)
+        return res.json({ token })
     })
 })
 
@@ -30,14 +34,26 @@ router.post('/login', (req, res, next) => {
  * The username and password are authenticated using the `register` strategy.
  */
 router.post('/register', (req, res, next) => {
-    passport.authenticate('register', { session: false }, (err, user, info) => {
+    passport.authenticate('register', { session: false }, async (err, user, info) => {
         if (err) return next(err)
         if (!user) return res.status(401).json(info)
-        req.login(user, { session: false }, (err) => {
-            if (err) return next(err)
-            const token = jwt.sign(user, process.env.JWT_SECRET)
-            return res.json({ user, token })
+
+        // Get the loan officer's username, password, and name
+        const { username, password, name } = req.body
+
+        // Hash the password
+        const password_hash = argon2.hash(password)
+
+        // Create a new loan officer
+        await LoanOfficer.create({ username, password_hash, name }).catch((err) => {
+            // If there was an error creating the loan officer, send back an error
+            console.error(err)
+            return res.status(500).json({ message: 'Error creating loan officer' })
         })
+
+        // Send back a JWT
+        const token = jwt.sign({ username, name }, process.env.JWT_SECRET)
+        return res.json({ token })
     })
 })
 

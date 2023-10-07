@@ -9,48 +9,9 @@ import Admin from '../models/admin.js'
 import LoanOfficer from '../models/loan_officer.js'
 
 /**
- * Configure loan officer registration strategy
+ * Configure admin/loan officer login strategy
  *
- * This strategy is used to register a new loan officer.
- * It checks if the username is already taken and if not,
- * creates a new loan officer.
- */
-passport.use(
-    'register',
-    new LocalStrategy(
-        {
-            usernameField: 'username',
-            passwordField: 'password'
-        },
-        async function verify(username, password, done) {
-            try {
-                const loanOfficer = await LoanOfficer.findOne({ username })
-
-                if (loanOfficer) {
-                    return done(null, false, {
-                        message: 'Username already taken'
-                    })
-                }
-
-                const hashedPassword = await argon2.hash(password)
-
-                const newAdmin = await Admin.create({
-                    username,
-                    password: hashedPassword
-                })
-
-                return done(null, newAdmin)
-            } catch (error) {
-                done(error)
-            }
-        }
-    )
-)
-
-/**
- * Configure loan officer login strategy
- *
- * This strategy is used to authenticate a loan officer.
+ * This strategy is used to authenticate an admin or a loan officer.
  */
 passport.use(
     'login',
@@ -64,19 +25,50 @@ passport.use(
                 const loanOfficer = await LoanOfficer.findOne({ username })
 
                 if (!loanOfficer) {
-                    return done(null, false, { message: 'User not found' })
+                    return done(null, false, { message: 'Incorrect credentials' })
                 }
 
                 const passwordValid = await argon2.verify(loanOfficer.password_hash, password)
 
                 if (!passwordValid) {
-                    return done(null, false, { message: 'Wrong password' })
+                    return done(null, false, { message: 'Incorrect credentials' })
                 }
 
                 return done(null, loanOfficer, { message: 'Logged in' })
             } catch (error) {
                 done(error)
             }
+        }
+    )
+)
+
+/**
+ * Configure loan officer registration strategy
+ *
+ * This strategy is used to register a new loan officer.
+ * It checks if the username is already taken and if not,
+ * creates a new loan officer. The admin must be logged in
+ * to use this strategy.
+ */
+passport.use(
+    'register',
+    new JwtStrategy(
+        {
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: process.env.JWT_SECRET
+        },
+        async function verify(payload, done) {
+            // Check if admin is used to register a new loan officer
+            if (payload.id !== 'admin') {
+                return done(null, false, { message: 'Incorrect credentials' })
+            }
+            // Check the Admin model to verify the admin exists
+            if (!(await Admin.exists({ username: payload.username }))) {
+                return done(null, false, { message: 'Incorrect credentials' })
+            }
+
+            // Return so route can continue
+            return done(null, payload)
         }
     )
 )
@@ -97,7 +89,7 @@ passport.use(
         },
         async function verify(payload, done) {
             try {
-                const loanOfficer = await LoanOfficer.findById(payload.sub)
+                const loanOfficer = await LoanOfficer.findOne({ username: payload.username })
 
                 if (!loanOfficer) {
                     return done(null, false)
