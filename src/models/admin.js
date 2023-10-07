@@ -1,9 +1,6 @@
 // Import packages
 import { Schema, model } from 'mongoose'
 
-// Import schema
-import NameSchema from './nameSchema.js'
-
 const Admin = model(
     'Admin',
     new Schema({
@@ -35,10 +32,6 @@ const Admin = model(
                 },
                 message: 'UUID must be a valid UUID'
             }
-        },
-        name: {
-            type: NameSchema,
-            required: [true, 'Name is required']
         }
     })
 )
