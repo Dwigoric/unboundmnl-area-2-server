@@ -30,8 +30,8 @@ router.post('/login', (req, res, next) => {
 /**
  * POST /register
  *
- * This route creates a new user and sends back a JWT.
- * The username and password are authenticated using the `register` strategy.
+ * This route creates a new loan officer.
+ * The admin must be logged in to use this route.
  */
 router.post('/register', (req, res, next) => {
     passport.authenticate('register', { session: false }, async (err, user, info) => {
