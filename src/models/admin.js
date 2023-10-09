@@ -36,5 +36,4 @@ const Admin = model(
     })
 )
 
-await Admin.init()
 export default Admin

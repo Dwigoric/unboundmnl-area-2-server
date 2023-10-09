@@ -43,5 +43,4 @@ const LoanOfficer = model(
     })
 )
 
-await LoanOfficer.init()
 export default LoanOfficer
