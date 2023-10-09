@@ -9,9 +9,43 @@ import Admin from '../models/admin.js'
 import LoanOfficer from '../models/loan_officer.js'
 
 /**
- * Configure admin/loan officer login strategy
+ * Configure admin login strategy
  *
- * This strategy is used to authenticate an admin or a loan officer.
+ * This strategy is used to authenticate an admin.
+ */
+passport.use(
+    'admin-login',
+    new LocalStrategy(
+        {
+            usernameField: 'username',
+            passwordField: 'password'
+        },
+        async function verify(username, password, done) {
+            try {
+                const admin = await Admin.findOne({ username })
+
+                if (!admin) {
+                    return done(null, false, { message: 'Incorrect credentials' })
+                }
+
+                const passwordValid = await argon2.verify(admin.password_hash, password)
+
+                if (!passwordValid) {
+                    return done(null, false, { message: 'Incorrect credentials' })
+                }
+
+                return done(null, admin, { message: 'Logged in' })
+            } catch (error) {
+                done(error)
+            }
+        }
+    )
+)
+
+/**
+ * Configure loan officer login strategy
+ *
+ * This strategy is used to authenticate a loan officer.
  */
 passport.use(
     'login',

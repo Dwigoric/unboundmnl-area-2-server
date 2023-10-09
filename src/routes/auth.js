@@ -12,9 +12,26 @@ const router = express.Router()
 import LoanOfficer from '../models/loan_officer.js'
 
 /**
+ * POST /admin-login
+ *
+ * This route authenticates an admin by verifying the username and password.
+ * After a successful login, a JWT is created and sent back to the client.
+ * The username and password are authenticated using the `local` strategy.
+ */
+router.post('/admin-login', (req, res, next) => {
+    passport.authenticate('admin-login', { session: false }, (err, admin, info) => {
+        if (err) return next(err)
+        if (!admin) return res.status(401).json(info)
+
+        const token = jwt.sign({ uuid: admin.uuid }, process.env.JWT_SECRET)
+        return res.json({ token })
+    })
+})
+
+/**
  * POST /login
  *
- * This route authenticates a user by verifying the username and password.
+ * This route authenticates a loan officer by verifying the username and password.
  * After a successful login, a JWT is created and sent back to the client.
  * The username and password are authenticated using the `local` strategy.
  */
