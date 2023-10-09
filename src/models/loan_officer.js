@@ -1,5 +1,6 @@
 // Import packages
 import { Schema, model } from 'mongoose'
+import { validate as uuidValidate, version as uuidVersion } from 'uuid'
 
 // Import schema
 import NameSchema from './nameSchema.js'
@@ -29,10 +30,7 @@ const LoanOfficer = model(
             unique: true,
             required: [true, 'UUID is required'],
             validate: {
-                validator: (uuid) => {
-                    const regex = /^[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}$/
-                    return regex.test(uuid)
-                },
+                validator: (uuid) => uuidValidate(uuid) && uuidVersion(uuid) === 5,
                 message: 'UUID must be a valid UUID'
             }
         },
