@@ -23,8 +23,8 @@ router.post('/login', (req, res, next) => {
         if (err) return next(err)
         if (!user) return res.status(401).json(info)
 
-        const token = jwt.sign({ username: user.username, name: user.name }, process.env.JWT_SECRET)
-        return res.json({ token })
+        const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET)
+        return res.json({ token, username: user.username, name: user.name })
     })
 })
 
@@ -56,7 +56,7 @@ router.post('/register', (req, res, next) => {
         })
 
         // Send back a JWT
-        const token = jwt.sign({ username, name, uuid }, process.env.JWT_SECRET)
+        const token = jwt.sign({ uuid }, process.env.JWT_SECRET)
         return res.json({ token })
     })
 })
