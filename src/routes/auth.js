@@ -3,6 +3,7 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import passport from 'passport'
 import argon2 from 'argon2'
+import { v5 as uuidV5 } from 'uuid'
 
 // Create router
 const router = express.Router()
@@ -44,15 +45,18 @@ router.post('/register', (req, res, next) => {
         // Hash the password
         const password_hash = await argon2.hash(password)
 
+        // Create UUID for the loan officer
+        const uuid = uuidV5()
+
         // Create a new loan officer
-        await LoanOfficer.create({ username, password_hash, name }).catch((err) => {
+        await LoanOfficer.create({ username, password_hash, name, uuid }).catch((err) => {
             // If there was an error creating the loan officer, send back an error
             console.error(err)
             return res.status(500).json({ message: 'Error creating loan officer' })
         })
 
         // Send back a JWT
-        const token = jwt.sign({ username, name }, process.env.JWT_SECRET)
+        const token = jwt.sign({ username, name, uuid }, process.env.JWT_SECRET)
         return res.json({ token })
     })
 })
