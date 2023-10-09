@@ -1,5 +1,7 @@
 // Import packages
 import { Schema, model } from 'mongoose'
+import argon2 from 'argon2'
+import { v5 as uuidV5, validate as uuidValidate, version as uuidVersion } from 'uuid'
 
 const Admin = model(
     'Admin',
@@ -10,11 +12,9 @@ const Admin = model(
             required: [true, 'Username is required'],
             validate: {
                 validator: (username) => {
-                    const regex = /^[a-zA-Z0-9_]{6,20}$/
-                    return regex.test(username)
+                    return username === 'admin'
                 },
-                message:
-                    'Username must be between 6 and 20 characters and contain only letters, numbers, and underscores'
+                message: 'Username must be "admin"'
             }
         },
         password_hash: {
@@ -26,14 +26,29 @@ const Admin = model(
             unique: true,
             required: [true, 'UUID is required'],
             validate: {
-                validator: (uuid) => {
-                    const regex = /^[a-zA-Z0-9]{8}-([a-zA-Z0-9]{4}-){3}[a-zA-Z0-9]{12}$/
-                    return regex.test(uuid)
-                },
+                validator: (uuid) => uuidValidate(uuid) && uuidVersion(uuid) === 5,
                 message: 'UUID must be a valid UUID'
             }
         }
     })
 )
+
+// Create a new admin if one does not exist
+Admin.findOne({ username: 'admin' }, 'username')
+    .exec()
+    .then(async (existing) => {
+        if (!existing) {
+            const password_hash = await argon2.hash('admin')
+            const uuid = uuidV5('admin', uuidV5.URL)
+
+            const admin = new Admin({
+                username: 'admin',
+                password_hash,
+                uuid
+            })
+
+            admin.save()
+        }
+    })
 
 export default Admin
