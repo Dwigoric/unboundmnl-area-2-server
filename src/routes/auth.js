@@ -46,7 +46,7 @@ router.post('/register', (req, res, next) => {
         const password_hash = await argon2.hash(password)
 
         // Create UUID for the loan officer
-        const uuid = uuidV5()
+        const uuid = uuidV5(Date.now().toString(), uuidV5.URL)
 
         // Create a new loan officer
         await LoanOfficer.create({ username, password_hash, name, uuid }).catch((err) => {
