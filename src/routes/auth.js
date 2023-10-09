@@ -42,7 +42,7 @@ router.post('/register', (req, res, next) => {
         const { username, password, name } = req.body
 
         // Hash the password
-        const password_hash = argon2.hash(password)
+        const password_hash = await argon2.hash(password)
 
         // Create a new loan officer
         await LoanOfficer.create({ username, password_hash, name }).catch((err) => {
