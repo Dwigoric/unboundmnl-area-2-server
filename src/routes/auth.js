@@ -12,37 +12,33 @@ const router = express.Router()
 import LoanOfficer from '../models/loan_officer.js'
 
 /**
- * POST /admin-login
- *
- * This route authenticates an admin by verifying the username and password.
- * After a successful login, a JWT is created and sent back to the client.
- * The username and password are authenticated using the `local` strategy.
- */
-router.post('/admin-login', (req, res, next) => {
-    passport.authenticate('admin-login', { session: false }, (err, admin, info) => {
-        if (err) return next(err)
-        if (!admin) return res.status(401).json(info)
-
-        const token = jwt.sign({ uuid: admin.uuid }, process.env.JWT_SECRET)
-        return res.json({ token })
-    })
-})
-
-/**
  * POST /login
  *
- * This route authenticates a loan officer by verifying the username and password.
+ * This route authenticates an admin or a loan officer by verifying the username and password.
  * After a successful login, a JWT is created and sent back to the client.
  * The username and password are authenticated using the `local` strategy.
  */
 router.post('/login', (req, res, next) => {
-    passport.authenticate('login', { session: false }, (err, user, info) => {
-        if (err) return next(err)
-        if (!user) return res.status(401).json(info)
+    const { username } = req.body
 
-        const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET)
-        return res.json({ token, username: user.username, name: user.name })
-    })
+    const authStrategy =
+        username === 'admin'
+            ? passport.authenticate('admin-login', { session: false }, (err, admin, info) => {
+                  if (err) return next(err)
+                  if (!admin) return res.status(401).json(info)
+
+                  const token = jwt.sign({ uuid: admin.uuid }, process.env.JWT_SECRET)
+                  return res.json({ token })
+              })
+            : passport.authenticate('login', { session: false }, (err, user, info) => {
+                  if (err) return next(err)
+                  if (!user) return res.status(401).json(info)
+
+                  const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET)
+                  return res.json({ token, username: user.username, name: user.name })
+              })
+
+    authStrategy(req, res, next)
 })
 
 /**
@@ -75,7 +71,7 @@ router.post('/register', (req, res, next) => {
         // Send back a JWT
         const token = jwt.sign({ uuid }, process.env.JWT_SECRET)
         return res.json({ token })
-    })
+    })(req, res, next)
 })
 
 export default router
