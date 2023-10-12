@@ -14,6 +14,22 @@ router.get('/', async function(req, res, next) {
 });
 
 /**
+ * Search the users listing by username
+ */
+router.get("/search", async function(req, res, next) {
+    try {
+      const loanees = await Loanee.find({
+        username: {
+          $regex: req.query.search
+        }
+      }).lean();
+      return res.json(loanees);
+    } catch (e) {
+      return next(e);
+    }
+})
+
+/**
  * Add a new user to the users listing.
  */
 router.post('/add', async function(req, res, next) {
@@ -54,5 +70,6 @@ router.patch('/edit', async function(req, res, next) {
     return next(e);
   }
 })
+
 
 export default router;
