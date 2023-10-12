@@ -47,8 +47,8 @@ router.post('/login', (req, res, next) => {
  * This route creates a new loan officer.
  * The admin must be logged in to use this route.
  */
-router.post('/register', (req, res, next) => {
-    passport.authenticate('register', { session: false }, async (err, user, info) => {
+router.post('/register-officer', (req, res, next) => {
+    passport.authenticate('register-officer', { session: false }, async (err, user, info) => {
         if (err) return next(err)
         if (!user) return res.status(401).json(info)
 
@@ -68,9 +68,8 @@ router.post('/register', (req, res, next) => {
             return res.status(500).json({ message: 'Error creating loan officer' })
         })
 
-        // Send back a JWT
-        const token = jwt.sign({ uuid }, process.env.JWT_SECRET)
-        return res.json({ token })
+        // Send back a created status
+        return res.status(201).json({ uuid, message: 'Loan officer created' })
     })(req, res, next)
 })
 

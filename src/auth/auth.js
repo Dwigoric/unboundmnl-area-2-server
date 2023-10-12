@@ -85,19 +85,18 @@ passport.use(
  * to use this strategy.
  */
 passport.use(
-    'register',
+    'register-officer',
     new JwtStrategy(
         {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: process.env.JWT_SECRET
         },
         async function verify(payload, done) {
-            // Check if admin is used to register a new loan officer
-            if (payload.id !== 'admin') {
-                return done(null, false, { message: 'Incorrect credentials' })
-            }
-            // Check the Admin model to verify the admin exists
-            if (!(await Admin.exists({ username: payload.username }))) {
+            // Retrieve admin from request body's UUID
+            const admin = await Admin.findOne({ uuid: payload.uuid })
+
+            // Check if admin exists
+            if (!admin) {
                 return done(null, false, { message: 'Incorrect credentials' })
             }
 
