@@ -37,6 +37,11 @@ const LoanOfficer = model(
         name: {
             type: NameSchema,
             required: [true, 'Name is required']
+        },
+        role: {
+            type: String,
+            required: [true, 'Role is required'],
+            enum: ['admin', 'officer'] // TODO: List all roles
         }
     })
 )
