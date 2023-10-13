@@ -58,8 +58,8 @@ router.post('/register-officer', (req, res, next) => {
         if (err) return next(err)
         if (!user) return res.status(401).json(info)
 
-        // Get the loan officer's username, password, and name
-        const { username, password, name } = req.body
+        // Get the loan officer's username, password, name, and role
+        const { username, password, name, role } = req.body
 
         // Hash the password
         const password_hash = await argon2.hash(password)
@@ -69,7 +69,7 @@ router.post('/register-officer', (req, res, next) => {
 
         // Create a new loan officer
         try {
-            await LoanOfficer.create({ username, password_hash, name, uuid })
+            await LoanOfficer.create({ username, password_hash, name, role, uuid })
 
             // Send back a created status
             return res.status(201).json({ uuid, message: 'Loan officer created' })
