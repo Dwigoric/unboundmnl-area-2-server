@@ -65,14 +65,15 @@ router.post('/register-officer', (req, res, next) => {
         const uuid = uuidV5(Date.now().toString(), uuidV5.URL)
 
         // Create a new loan officer
-        await LoanOfficer.create({ username, password_hash, name, uuid }).catch((err) => {
-            // If there was an error creating the loan officer, send back an error
-            console.error(err)
-            return res.status(500).json({ message: 'Error creating loan officer' })
-        })
+        try {
+            await LoanOfficer.create({ username, password_hash, name, uuid })
 
-        // Send back a created status
-        return res.status(201).json({ uuid, message: 'Loan officer created' })
+            // Send back a created status
+            return res.status(201).json({ uuid, message: 'Loan officer created' })
+        } catch (error) {
+            // If there was an error creating the loan officer, send back an error
+            return res.status(500).json({ message: error.message })
+        }
     })(req, res, next)
 })
 
