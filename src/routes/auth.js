@@ -27,14 +27,17 @@ router.post('/login', (req, res, next) => {
                   if (err) return next(err)
                   if (!admin) return res.status(401).json(info)
 
-                  const token = jwt.sign({ uuid: admin.uuid }, process.env.JWT_SECRET)
+                  const token = jwt.sign(
+                      { uuid: admin.uuid, role: 'admin' },
+                      process.env.JWT_SECRET
+                  )
                   return res.json({ token })
               })
             : passport.authenticate('login', { session: false }, (err, user, info) => {
                   if (err) return next(err)
                   if (!user) return res.status(401).json(info)
 
-                  const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET)
+                  const token = jwt.sign({ uuid: user.uuid, role: 'admin' }, process.env.JWT_SECRET)
                   return res.json({ token, username: user.username, name: user.name })
               })
 
