@@ -43,8 +43,7 @@ router.post('/add', async function(req, res, next) {
     return res.json(newLoanee);
   } catch (e) {
     if (e.name === 'ValidationError') {
-      // console.error(e.stack);
-      return res.status(400).json({message: "Invalid data format"});
+      return res.status(400).json({message: e.errors[Object.keys(e.errors)[0]].message});
     }
     return next(e)
   }
@@ -64,12 +63,10 @@ router.patch('/edit', async function(req, res, next) {
     return res.json(updatedLoanee);
   } catch(e) {
     if (e.name === 'ValidationError') {
-      // console.error(e.stack);
-      return res.status(400).json({message: "Invalid data format"});
+      return res.status(400).json({message: e.errors[Object.keys(e.errors)[0]].message});
     }
     return next(e);
   }
 })
-
 
 export default router;

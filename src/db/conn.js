@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
-const url = process.env.MONGODB_URI ?? 'mongodb://localhost:27017/'
+
+// Default MongoDB URI
+const DEFAULT_MONGODB_URI = 'mongodb://localhost:27017/'
 
 class Database {
     /**
@@ -7,6 +9,13 @@ class Database {
      * @returns {Promise<Mongoose>}
      */
     init() {
+        // Warn if MONGODB_URI is not set
+        if (!process.env.MONGODB_URI)
+            console.warn(`MONGODB_URI not set, using default: ${DEFAULT_MONGODB_URI}`)
+
+        // Set the MongoDB URI
+        const url = process.env.MONGODB_URI || DEFAULT_MONGODB_URI
+
         return mongoose.connect(url).then(() => {
             console.log('Database connection successful')
         })

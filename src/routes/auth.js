@@ -27,14 +27,17 @@ router.post('/login', (req, res, next) => {
                   if (err) return next(err)
                   if (!admin) return res.status(401).json(info)
 
-                  const token = jwt.sign({ uuid: admin.uuid }, process.env.JWT_SECRET)
+                  const token = jwt.sign(
+                      { uuid: admin.uuid, role: 'admin' },
+                      process.env.JWT_SECRET
+                  )
                   return res.json({ token })
               })
             : passport.authenticate('login', { session: false }, (err, user, info) => {
                   if (err) return next(err)
                   if (!user) return res.status(401).json(info)
 
-                  const token = jwt.sign({ uuid: user.uuid }, process.env.JWT_SECRET)
+                  const token = jwt.sign({ uuid: user.uuid, role: 'admin' }, process.env.JWT_SECRET)
                   return res.json({ token, username: user.username, name: user.name })
               })
 
@@ -47,8 +50,8 @@ router.post('/login', (req, res, next) => {
  * This route creates a new loan officer.
  * The admin must be logged in to use this route.
  */
-router.post('/register', (req, res, next) => {
-    passport.authenticate('register', { session: false }, async (err, user, info) => {
+router.post('/register-officer', (req, res, next) => {
+    passport.authenticate('register-officer', { session: false }, async (err, user, info) => {
         if (err) return next(err)
         if (!user) return res.status(401).json(info)
 
@@ -62,15 +65,15 @@ router.post('/register', (req, res, next) => {
         const uuid = uuidV5(Date.now().toString(), uuidV5.URL)
 
         // Create a new loan officer
-        await LoanOfficer.create({ username, password_hash, name, uuid }).catch((err) => {
-            // If there was an error creating the loan officer, send back an error
-            console.error(err)
-            return res.status(500).json({ message: 'Error creating loan officer' })
-        })
+        try {
+            await LoanOfficer.create({ username, password_hash, name, uuid })
 
-        // Send back a JWT
-        const token = jwt.sign({ uuid }, process.env.JWT_SECRET)
-        return res.json({ token })
+            // Send back a created status
+            return res.status(201).json({ uuid, message: 'Loan officer created' })
+        } catch (error) {
+            // If there was an error creating the loan officer, send back an error
+            return res.status(500).json({ message: error.message })
+        }
     })(req, res, next)
 })
 
