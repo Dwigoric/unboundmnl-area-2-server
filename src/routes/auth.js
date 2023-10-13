@@ -28,7 +28,7 @@ router.post('/login', (req, res, next) => {
                   if (!admin) return res.status(401).json(info)
 
                   const token = jwt.sign(
-                      { uuid: admin.uuid, role: 'admin' },
+                      { uuid: admin.uuid, type: 'admin' },
                       process.env.JWT_SECRET
                   )
                   return res.json({ token })
@@ -37,7 +37,10 @@ router.post('/login', (req, res, next) => {
                   if (err) return next(err)
                   if (!user) return res.status(401).json(info)
 
-                  const token = jwt.sign({ uuid: user.uuid, role: 'admin' }, process.env.JWT_SECRET)
+                  const token = jwt.sign(
+                      { uuid: user.uuid, type: 'officer' },
+                      process.env.JWT_SECRET
+                  )
                   return res.json({ token, username: user.username, name: user.name })
               })
 
