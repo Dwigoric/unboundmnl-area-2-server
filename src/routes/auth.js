@@ -41,7 +41,7 @@ router.post('/login', (req, res, next) => {
                       { uuid: user.uuid, type: 'officer' },
                       process.env.JWT_SECRET
                   )
-                  return res.json({ token, username: user.username, name: user.name })
+                  return res.json({ token })
               })
 
     authStrategy(req, res, next)
