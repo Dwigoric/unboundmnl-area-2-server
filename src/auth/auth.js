@@ -109,12 +109,12 @@ passport.use(
 /**
  * Configure JWT strategy
  *
- * This strategy is used to authenticate a user using a JWT.
+ * This strategy is used to authenticate an admin or a loan officer using a JWT.
  * JWT authentication is used to protect endpoints that require
- * authentication.
+ * authentication of either an admin or a loan officer.
  */
 passport.use(
-    'jwt',
+    'is-manager',
     new JwtStrategy(
         {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -122,13 +122,15 @@ passport.use(
         },
         async function verify(payload, done) {
             try {
-                const loanOfficer = await LoanOfficer.findOne({ username: payload.username })
+                const manager = await (payload.type === 'admin' ? Admin : LoanOfficer).findOne({
+                    username: payload.username
+                })
 
-                if (!loanOfficer) {
+                if (!manager) {
                     return done(null, false)
                 }
 
-                done(null, loanOfficer)
+                done(null, manager)
             } catch (error) {
                 done(error)
             }
