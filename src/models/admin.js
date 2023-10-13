@@ -35,7 +35,7 @@ const Admin = model(
 
 // Create a new admin if one does not exist
 Admin.findOne({ username: 'admin' }, 'username')
-    .exec()
+    .lean()
     .then(async (existing) => {
         if (!existing) {
             const password_hash = await argon2.hash('admin')

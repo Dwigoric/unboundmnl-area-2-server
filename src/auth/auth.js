@@ -22,7 +22,7 @@ passport.use(
         },
         async function verify(username, password, done) {
             try {
-                const admin = await Admin.findOne({ username })
+                const admin = await Admin.findOne({ username }).lean()
 
                 if (!admin) {
                     return done(null, false, { message: 'Incorrect credentials' })
@@ -56,7 +56,7 @@ passport.use(
         },
         async function verify(username, password, done) {
             try {
-                const loanOfficer = await LoanOfficer.findOne({ username })
+                const loanOfficer = await LoanOfficer.findOne({ username }).lean()
 
                 if (!loanOfficer) {
                     return done(null, false, { message: 'Incorrect credentials' })
@@ -93,7 +93,7 @@ passport.use(
         },
         async function verify(payload, done) {
             // Retrieve admin from request body's UUID
-            const admin = await Admin.findOne({ uuid: payload.uuid })
+            const admin = await Admin.findOne({ uuid: payload.uuid }).lean()
 
             // Check if admin exists
             if (!admin) {
@@ -122,9 +122,11 @@ passport.use(
         },
         async function verify(payload, done) {
             try {
-                const manager = await (payload.type === 'admin' ? Admin : LoanOfficer).findOne({
-                    username: payload.username
-                })
+                const manager = await (payload.type === 'admin' ? Admin : LoanOfficer)
+                    .findOne({
+                        username: payload.username
+                    })
+                    .lean()
 
                 if (!manager) {
                     return done(null, false)

@@ -19,7 +19,7 @@ router.get('/', async (req, res, next) => {
         if (!manager) return res.status(401).json(info)
 
         try {
-            const officers = await LoanOfficer.find()
+            const officers = await LoanOfficer.find().lean()
 
             // Remove sensitive data
             officers.forEach((officer) => delete officer.password_hash)
@@ -42,7 +42,7 @@ router.get('/:id', async (req, res, next) => {
         if (!manager) return res.status(401).json(info)
 
         try {
-            const officer = await LoanOfficer.findOne({ uuid: req.params.id })
+            const officer = await LoanOfficer.findOne({ uuid: req.params.id }).lean()
 
             // Remove sensitive data
             delete officer.password_hash
