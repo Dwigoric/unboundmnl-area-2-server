@@ -42,12 +42,12 @@ router.get('/:id', async (req, res, next) => {
         if (!manager) return res.status(401).json(info)
 
         try {
-            const officer = await LoanOfficer.findOne({ uuid: req.params.id }).lean()
-
             // Remove sensitive data
-            delete officer.password_hash
+            delete manager.password_hash
+            delete manager._id
+            delete manager.__v
 
-            res.status(200).json({ officer })
+            res.status(200).json({ officer: manager })
         } catch (err) {
             res.status(500).send({ message: err.message })
         }

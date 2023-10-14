@@ -117,15 +117,13 @@ passport.use(
     'is-manager',
     new JwtStrategy(
         {
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            jwtFromRequest: ExtractJwt.fromUrlQueryParameter('access_token'),
             secretOrKey: process.env.JWT_SECRET
         },
         async function verify(payload, done) {
             try {
                 const manager = await (payload.type === 'admin' ? Admin : LoanOfficer)
-                    .findOne({
-                        username: payload.username
-                    })
+                    .findOne({ uuid: payload.uuid })
                     .lean()
 
                 if (!manager) {
