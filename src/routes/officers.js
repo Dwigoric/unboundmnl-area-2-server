@@ -4,6 +4,7 @@ import passport from 'passport'
 
 // Import models
 import LoanOfficer from '../models/loan_officer.js'
+import Admin from '../models/admin.js'
 
 // Create router
 const router = express.Router()
@@ -42,12 +43,19 @@ router.get('/:id', async (req, res, next) => {
         if (!manager) return res.status(401).json(info)
 
         try {
-            // Remove sensitive data
-            delete manager.password_hash
-            delete manager._id
-            delete manager.__v
+            const admin = await Admin.findOne({ username: 'admin' }).lean()
 
-            res.status(200).json({ officer: manager })
+            // Compare UUID to determine if admin or loan officer
+            let officer = admin
+            if (admin.uuid !== req.params.id)
+                officer = await LoanOfficer.findOne({ uuid: req.params.id }).lean()
+
+            // Remove sensitive data
+            delete officer.password_hash
+            delete officer._id
+            delete officer.__v
+
+            res.status(200).json({ officer })
         } catch (err) {
             res.status(500).send({ message: err.message })
         }
