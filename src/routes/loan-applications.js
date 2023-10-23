@@ -47,21 +47,29 @@ router.post('/:loaneeId', async (req, res, next) => {
         const loanee = await Loanee.findOne({ uuid: loaneeId }).lean()
 
         // Create new loan application
-        const loanApplication = new LoanApplication({
-            loanee: loanee._id,
-            amount: req.body.amount,
-            term: req.body.term,
-            new: req.body.new,
-            renewal: req.body.renewal,
-            loan_type: req.body.loan_type,
-            status: req.body.status
-        })
+        try {
+            await LoanApplication.create({
+                loanee: loanee._id,
+                amount: req.body.amount,
+                term: req.body.term,
+                new: req.body.new,
+                renewal: req.body.renewal,
+                loan_type: req.body.loan_type,
+                status: req.body.status
+            })
 
-        // Save loan application
-        await loanApplication.save()
-
-        // Return loan application
-        return res.status(200).json({ message: 'Loan application created successfully' })
+            // Return loan application
+            return res.status(201).json({ message: 'Loan application created successfully' })
+        } catch (error) {
+            // If there was an error creating the loan officer, send back an error
+            console.error(error)
+            if (error.name === 'ValidationError') {
+                return res
+                    .status(400)
+                    .json({ message: error.errors[Object.keys(error.errors)[0]].message })
+            }
+            return next(error)
+        }
     })(req, res, next)
 })
 

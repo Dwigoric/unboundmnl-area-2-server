@@ -85,7 +85,13 @@ router.post('/register-officer', (req, res, next) => {
             return res.status(201).json({ uuid, message: 'Loan officer created' })
         } catch (error) {
             // If there was an error creating the loan officer, send back an error
-            return res.status(500).json({ message: error.message })
+            console.error(error)
+            if (error.name === 'ValidationError') {
+                return res
+                    .status(400)
+                    .json({ message: error.errors[Object.keys(error.errors)[0]].message })
+            }
+            return next(error)
         }
     })(req, res, next)
 })
