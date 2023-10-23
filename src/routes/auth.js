@@ -61,6 +61,16 @@ router.post('/register-officer', (req, res, next) => {
         // Get the loan officer's username, password, name, and role
         const { username, password, name, role } = req.body
 
+        if (password.length > 255) {
+            // If the password is too long, send back an error
+            return res.status(400).json({ message: 'Password is too long' })
+        }
+
+        if (/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(password)) {
+            // If the password is weak, send back an error
+            return res.status(400).json({ message: 'Password is weak' })
+        }
+
         // Hash the password
         const password_hash = await argon2.hash(password)
 
