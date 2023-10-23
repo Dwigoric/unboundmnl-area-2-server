@@ -6,7 +6,7 @@ import passport from 'passport'
 const router = Router()
 
 // Import models
-import LoanApplication from '../models/loan_application'
+import LoanApplication from '../models/loan_application.js'
 import Loanee from '../models/loanee.js'
 
 /**
