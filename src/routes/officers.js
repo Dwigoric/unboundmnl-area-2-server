@@ -23,7 +23,11 @@ router.get('/', async (req, res, next) => {
             const officers = await LoanOfficer.find().lean()
 
             // Remove sensitive data
-            officers.forEach((officer) => delete officer.password_hash)
+            officers.forEach((officer) => {
+                delete officer.password_hash
+                delete officer._id
+                delete officer.__v
+            })
 
             res.status(200).json({ officers })
         } catch (err) {
