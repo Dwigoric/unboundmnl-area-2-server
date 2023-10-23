@@ -21,5 +21,5 @@ assignees: ''
 
 ## Your Environment
 <!--- Include as many relevant details about the environment you experienced the bug in -->
-* Version used (use first 6 characters of commit hash): 
+* Version used (use first 7 characters of commit hash): 
 * Operating System and version:
