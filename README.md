@@ -22,6 +22,11 @@ If not set, the application will throw an error.
 The URL of the frontend application, defaults to `http://localhost:5173`.
 This is used for CORS.
 
+## Private Files
+Put any private files in the `private` directory.
+This route is protected by `.gitignore` and will not be committed to the repository.
+Put here the template application form and other private files.
+
 ## Optional Development Stuff
 ### [Prettier](https://prettier.io/) for Code Formatting
 You can install the [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension (for VSCode).

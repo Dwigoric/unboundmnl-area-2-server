@@ -1,4 +1,5 @@
 // Default FRONTEND_URL
+
 const DEFAULT_FRONTEND_URL = 'http://localhost:5173'
 
 // Packages
@@ -7,6 +8,7 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import cors from 'cors'
+import passport from 'passport'
 import 'dotenv/config'
 
 // MongoDB
@@ -52,6 +54,19 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static('public'))
 
+// Define private static route behind passport
+app.all('/private/*', (req, res, next) => {
+    passport.authenticate('is-manager', { session: false }, (err, manager, info) => {
+        if (err) return next(err)
+        console.log(info)
+        if (!manager) return res.status(401).json(info)
+
+        next()
+    })(req, res, next)
+})
+app.use('/private', express.static('private'))
+
+// Define routes
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authRouter)
