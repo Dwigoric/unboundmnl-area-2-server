@@ -20,7 +20,7 @@ router.get('/search', async function (req, res, next) {
     try {
         const loanees = await Loanee.find({
             username: {
-                $regex: req.query.search
+                $regex: req.query.username
             }
         }).lean()
         return res.json(loanees)
@@ -53,13 +53,15 @@ router.post('/add', async function (req, res, next) {
 /**
  * Edit the information of a user in the users listing.
  */
-router.patch('/edit', async function (req, res, next) {
+router.post('/edit', async function (req, res, next) {
     try {
         const loanee = await Loanee.findOne({ username: req.body.username })
         if (!loanee) {
             return res.status(400).json({ message: 'Username does not exist' })
         }
-        const updatedLoanee = await Loanee.updateOne({ _id: loanee._id }, req.body)
+        const updatedLoanee = await Loanee.updateOne({ _id: loanee._id }, req.body, {
+            runValidators: true
+        })
         return res.json(updatedLoanee)
     } catch (e) {
         if (e.name === 'ValidationError') {
