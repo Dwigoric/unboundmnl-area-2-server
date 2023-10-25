@@ -58,7 +58,6 @@ app.use(express.static('public'))
 app.all('/private/*', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, (err, manager, info) => {
         if (err) return next(err)
-        console.log(info)
         if (!manager) return res.status(401).json(info)
 
         next()
