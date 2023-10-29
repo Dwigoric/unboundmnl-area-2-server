@@ -88,7 +88,10 @@ passport.use(
     'register-officer',
     new JwtStrategy(
         {
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            jwtFromRequest: ExtractJwt.fromExtractors([
+                ExtractJwt.fromAuthHeaderAsBearerToken(),
+                ExtractJwt.fromUrlQueryParameter('access_token')
+            ]),
             secretOrKey: process.env.JWT_SECRET
         },
         async function verify(payload, done) {
@@ -117,7 +120,10 @@ passport.use(
     'is-manager',
     new JwtStrategy(
         {
-            jwtFromRequest: ExtractJwt.fromUrlQueryParameter('access_token'),
+            jwtFromRequest: ExtractJwt.fromExtractors([
+                ExtractJwt.fromUrlQueryParameter('access_token'),
+                ExtractJwt.fromAuthHeaderAsBearerToken()
+            ]),
             secretOrKey: process.env.JWT_SECRET
         },
         async function verify(payload, done) {

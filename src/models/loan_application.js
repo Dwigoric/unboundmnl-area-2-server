@@ -29,7 +29,7 @@ const LoanApplication = model(
             type: Boolean,
             required: [true, 'Indicate whether this is a new loan or a renewal']
         },
-        loan_type: {
+        type: {
             type: String,
             enum: ['education', 'personal', 'micro', 'utility', 'house', 'emergency', 'commodity'],
             required: [true, 'Loan type is required']
