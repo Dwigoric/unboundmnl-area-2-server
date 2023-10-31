@@ -61,6 +61,16 @@ router.post('/register-officer', (req, res, next) => {
         // Get the loan officer's username, password, name, and role
         const { username, password, name, role } = req.body
 
+        if (password.length > 255) {
+            // If the password is too long, send back an error
+            return res.status(400).json({ message: 'Password is too long' })
+        }
+
+        if (/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(password)) {
+            // If the password is weak, send back an error
+            return res.status(400).json({ message: 'Password is weak' })
+        }
+
         // Hash the password
         const password_hash = await argon2.hash(password)
 
@@ -75,7 +85,13 @@ router.post('/register-officer', (req, res, next) => {
             return res.status(201).json({ uuid, message: 'Loan officer created' })
         } catch (error) {
             // If there was an error creating the loan officer, send back an error
-            return res.status(500).json({ message: error.message })
+            console.error(error)
+            if (error.name === 'ValidationError') {
+                return res
+                    .status(400)
+                    .json({ message: error.errors[Object.keys(error.errors)[0]].message })
+            }
+            return next(error)
         }
     })(req, res, next)
 })

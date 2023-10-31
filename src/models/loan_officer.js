@@ -41,7 +41,7 @@ const LoanOfficer = model(
         role: {
             type: String,
             required: [true, 'Role is required'],
-            enum: ['admin', 'officer'] // TODO: List all roles
+            enum: ['manager', 'treasurer', 'credit committee']
         }
     })
 )

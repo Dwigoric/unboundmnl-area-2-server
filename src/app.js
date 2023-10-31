@@ -1,4 +1,5 @@
 // Default FRONTEND_URL
+
 const DEFAULT_FRONTEND_URL = 'http://localhost:5173'
 
 // Packages
@@ -7,6 +8,7 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import cors from 'cors'
+import passport from 'passport'
 import 'dotenv/config'
 
 // MongoDB
@@ -21,6 +23,7 @@ import indexRouter from './routes/index.js'
 import usersRouter from './routes/users.js'
 import authRouter from './routes/auth.js'
 import officerRoute from './routes/officers.js'
+import loanApplications from './routes/loan-applications.js'
 
 const app = express()
 
@@ -44,16 +47,30 @@ if (!process.env.JWT_SECRET) {
     process.exit(1)
 }
 
+logger.token('url', (req) => req.path)
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static('public'))
 
+// Define private static route behind passport
+app.all('/private/*', (req, res, next) => {
+    passport.authenticate('is-manager', { session: false }, (err, manager, info) => {
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
+
+        next()
+    })(req, res, next)
+})
+app.use('/private', express.static('private'))
+
+// Define routes
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authRouter)
 app.use('/officers', officerRoute)
+app.use('/loan-applications', loanApplications)
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
