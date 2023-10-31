@@ -14,15 +14,15 @@ import Loanee from '../models/loanee.js'
  *
  * Get all loan applications of a loanee
  */
-router.get('/:loaneeId', async (req, res, next) => {
+router.get('/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
-        const loaneeId = req.params.loaneeId
+        const { username } = req.params
 
         // Get loanee by UUID
-        const loanee = await Loanee.findOne({ uuid: loaneeId }).lean()
+        const loanee = await Loanee.findOne({ username }).lean()
 
         const loans = await LoanApplication.find({ loanee: loanee._id }).populate('loanee').lean()
 
