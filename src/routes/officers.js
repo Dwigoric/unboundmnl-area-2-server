@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
         if (!manager) return res.status(401).json(info)
 
         try {
-            const officers = await LoanOfficer.find().lean()
+            const officers = await LoanOfficer.find({ active: true }).lean()
 
             // Remove sensitive data
             officers.forEach((officer) => {
@@ -60,6 +60,28 @@ router.get('/:id', async (req, res, next) => {
             delete officer.__v
 
             res.status(200).json({ officer })
+        } catch (err) {
+            res.status(500).send({ message: err.message })
+        }
+    })(req, res, next)
+})
+
+/**
+ * DELETE /:id
+ *
+ * Mark officer as inactive by UUID. This route is only accessible to the admin.
+ */
+router.delete('/:id', async (req, res, next) => {
+    passport.authenticate('admin', { session: false }, async (err, admin, info) => {
+        if (err) return next(err)
+        if (!admin) return res.status(401).json(info)
+
+        const officer = await LoanOfficer.findOne({ uuid: req.params.id }).lean()
+        if (!officer) return res.status(404).json({ message: 'Loan officer not found' })
+
+        try {
+            await LoanOfficer.updateOne({ uuid: req.params.id }, { active: false })
+            res.status(200).json({ message: 'Loan officer marked inactive' })
         } catch (err) {
             res.status(500).send({ message: err.message })
         }

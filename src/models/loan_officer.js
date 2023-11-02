@@ -8,6 +8,10 @@ import NameSchema from './nameSchema.js'
 const LoanOfficer = model(
     'LoanOfficer',
     new Schema({
+        active: {
+            type: Boolean,
+            default: true
+        },
         username: {
             type: String,
             unique: true,

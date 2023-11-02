@@ -54,9 +54,9 @@ router.post('/login', (req, res, next) => {
  * The admin must be logged in to use this route.
  */
 router.post('/register-officer', (req, res, next) => {
-    passport.authenticate('register-officer', { session: false }, async (err, user, info) => {
+    passport.authenticate('admin', { session: false }, async (err, admin, info) => {
         if (err) return next(err)
-        if (!user) return res.status(401).json(info)
+        if (!admin) return res.status(401).json(info)
 
         // Get the loan officer's username, password, name, and role
         const { username, password, name, role } = req.body

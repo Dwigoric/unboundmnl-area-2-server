@@ -85,7 +85,7 @@ passport.use(
  * to use this strategy.
  */
 passport.use(
-    'register-officer',
+    'admin',
     new JwtStrategy(
         {
             jwtFromRequest: ExtractJwt.fromExtractors([
