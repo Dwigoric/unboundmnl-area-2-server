@@ -47,3 +47,8 @@ yarn
 ```sh
 yarn start
 ```
+
+### Automatically Restart the Server on Changes
+```sh
+yarn watch
+```
