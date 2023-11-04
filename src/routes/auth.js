@@ -74,15 +74,17 @@ router.post('/register-officer', (req, res, next) => {
         // Hash the password
         const password_hash = await argon2.hash(password)
 
-        // Create UUID for the loan officer
-        const uuid = uuidV5(Date.now().toString(), uuidV5.URL)
-
         // Create a new loan officer
         try {
-            await LoanOfficer.create({ username, password_hash, name, role, uuid })
+            const loanOfficer = await new LoanOfficer({
+                username,
+                password_hash,
+                name,
+                role
+            }).save()
 
             // Send back a created status
-            return res.status(201).json({ uuid, message: 'Loan officer created' })
+            return res.status(201).json({ uuid: loanOfficer.id, message: 'Loan officer created' })
         } catch (error) {
             // If there was an error creating the loan officer, send back an error
             console.error(error)

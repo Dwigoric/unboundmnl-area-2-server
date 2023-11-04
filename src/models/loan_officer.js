@@ -1,6 +1,6 @@
 // Import packages
 import { Schema, model } from 'mongoose'
-import { validate as uuidValidate, version as uuidVersion } from 'uuid'
+import { v5 as uuidV5, validate as uuidValidate, version as uuidVersion } from 'uuid'
 
 // Import schema
 import NameSchema from './nameSchema.js'
@@ -29,10 +29,11 @@ const LoanOfficer = model(
             type: String,
             required: [true, 'Password is required']
         },
-        uuid: {
+        id: {
             type: String,
             unique: true,
-            required: [true, 'UUID is required'],
+            immutable: true,
+            default: () => uuidV5(Date.now().toString(), uuidV5.URL),
             validate: {
                 validator: (uuid) => uuidValidate(uuid) && uuidVersion(uuid) === 5,
                 message: 'UUID must be a valid UUID'
