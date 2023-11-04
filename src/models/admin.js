@@ -22,7 +22,7 @@ const Admin = model(
             type: String,
             required: [true, 'Password is required']
         },
-        uuid: {
+        id: {
             type: String,
             unique: true,
             immutable: true,

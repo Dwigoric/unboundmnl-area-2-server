@@ -96,7 +96,7 @@ passport.use(
         },
         async function verify(payload, done) {
             // Retrieve admin from request body's UUID
-            const admin = await Admin.findOne({ uuid: payload.uuid }).lean()
+            const admin = await Admin.findOne({ id: payload.uuid }).lean()
 
             // Check if admin exists
             if (!admin) {
@@ -129,7 +129,7 @@ passport.use(
         async function verify(payload, done) {
             try {
                 const manager = await (payload.type === 'admin' ? Admin : LoanOfficer)
-                    .findOne({ uuid: payload.uuid })
+                    .findOne({ id: payload.uuid })
                     .lean()
 
                 if (!manager) {

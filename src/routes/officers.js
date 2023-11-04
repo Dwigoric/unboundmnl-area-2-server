@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
         if (!manager) return res.status(401).json(info)
 
         try {
-            const officers = await LoanOfficer.find({ active: true }).lean()
+            const officers = await LoanOfficer.find().lean()
 
             // Remove sensitive data
             officers.forEach((officer) => {
@@ -52,7 +52,7 @@ router.get('/:id', async (req, res, next) => {
             // Compare UUID to determine if admin or loan officer
             let officer = admin
             if (admin.uuid !== req.params.id)
-                officer = await LoanOfficer.findOne({ uuid: req.params.id }).lean()
+                officer = await LoanOfficer.findOne({ id: req.params.id }).lean()
 
             // Remove sensitive data
             delete officer.password_hash
@@ -76,11 +76,11 @@ router.delete('/:id', async (req, res, next) => {
         if (err) return next(err)
         if (!admin) return res.status(401).json(info)
 
-        const officer = await LoanOfficer.findOne({ uuid: req.params.id }).lean()
+        const officer = await LoanOfficer.findOne({ id: req.params.id }).lean()
         if (!officer) return res.status(404).json({ message: 'Loan officer not found' })
 
         try {
-            await LoanOfficer.updateOne({ uuid: req.params.id }, { active: false })
+            await LoanOfficer.updateOne({ id: req.params.id }, { active: false })
             res.status(200).json({ message: 'Loan officer marked inactive' })
         } catch (err) {
             res.status(500).send({ message: err.message })
