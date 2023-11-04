@@ -6,7 +6,7 @@ import passport from 'passport'
 const router = Router()
 
 // Import models
-import LoanApplication from '../models/loan_application.js'
+import Loan from '../models/loan.js'
 import Loanee from '../models/loanee.js'
 
 /**
@@ -24,7 +24,7 @@ router.get('/:username', async (req, res, next) => {
         // Get loanee by UUID
         const loanee = await Loanee.findOne({ username }).lean()
 
-        const loans = await LoanApplication.find({ loanee: loanee._id }).populate('loanee').lean()
+        const loans = await Loan.find({ username: loanee.username }).populate('loanee').lean()
 
         // Return loans
         return res.status(200).json(loans)
@@ -48,14 +48,20 @@ router.put('/:username', async (req, res, next) => {
 
         // Create new loan application
         try {
-            await LoanApplication.create({
-                loanee: loanee._id,
-                amount: req.body.amount,
+            await Loan.create({
+                loanID: 'not implemented yet',
+                username: loanee.username,
+                loanType: 'emergency',
                 term: req.body.term,
-                new: req.body.new,
-                renewal: req.body.renewal,
-                type: req.body.type,
-                status: req.body.status
+                submissionDate: Date.now(),
+                coborrowerName: {
+                    given: 'not',
+                    last: 'implemented yet'
+                },
+                originalLoanAmount: req.body.amount,
+                ledger: [],
+                status: 'pending',
+                classification: req.body.classification
             })
 
             // Return loan application

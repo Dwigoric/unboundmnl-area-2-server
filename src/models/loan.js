@@ -33,10 +33,7 @@ const LoanSchema = new Schema({
         type: Date,
         required: true
     },
-    approvalDate: {
-        type: Date,
-        required: true
-    },
+    approvalDate: Date,
     coborrowerName: {
         type: NameSchema,
         required: true
@@ -55,7 +52,18 @@ const LoanSchema = new Schema({
             },
             message: 'Status must be either "pending", "accepted", "rejected", or "complete"'
         }
+    },
+    classification: {
+        type: String,
+        required: true,
+        validate: {
+            validator: (classification) => {
+                return ['new', 'renewal'].includes(classification)
+            },
+            message: 'Classification must be either "new" or "renewal"'
+        }
     }
+
 })
 
 const Loan = model('Loan', LoanSchema)

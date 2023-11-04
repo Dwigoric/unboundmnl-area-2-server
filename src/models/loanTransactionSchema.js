@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose'
 
-import { NameSchema } from './nameSchema.js'
+import NameSchema from './nameSchema.js'
 
 const LoanTransactionSchema = new Schema({
     transactionID: {
