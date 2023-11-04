@@ -7,7 +7,7 @@ import NameSchema from './nameSchema.js'
 const LoanTransactionSchema = new Schema({
     transactionID: {
         type: String,
-        required: true,
+        unique: true,
         immutable: true,
         default: () => Date.now().toString(36).toUpperCase() // Base36 string from current timestamp
     },

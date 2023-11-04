@@ -8,7 +8,7 @@ import DepositTransactionSchema from './depositTransactionSchema.js'
 const DepositSchema = new Schema({
     depositID: {
         type: String,
-        required: true,
+        unique: true,
         immutable: true,
         default: () => uuidV5(Date.now().toString(), uuidV5.URL)
     },
