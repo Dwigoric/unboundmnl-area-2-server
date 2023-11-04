@@ -72,11 +72,7 @@ const LoaneeSchema = new Schema({
     // loans: [Loan]
 })
 
-LoaneeSchema.pre('find', function () {
-    this.where({ deleted: false })
-})
-
-LoaneeSchema.pre('findOne', function () {
+LoaneeSchema.pre(['find', 'findOne'], function () {
     this.where({ deleted: false })
 })
 

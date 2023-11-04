@@ -48,11 +48,8 @@ const LoanOfficerSchema = new Schema({
     }
 })
 
-LoanOfficerSchema.pre('find', () => {
-    this.where({ active: { $ne: false } })
-})
-
-LoanOfficerSchema.pre('findOne', () => {
+// This middleware's methods matches all queries that start with 'find'
+LoanOfficerSchema.pre(/^find/, () => {
     this.where({ active: { $ne: false } })
 })
 
