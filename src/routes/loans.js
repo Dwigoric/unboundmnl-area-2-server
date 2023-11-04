@@ -43,13 +43,16 @@ router.put('/new/:username', async (req, res, next) => {
 
         const { username } = req.params
 
-        // Get loanee by UUID
+        // Get loanee by username
         const loanee = await Loanee.findOne({ username }).lean()
+
+        if (!loanee) {
+            return res.status(400).json({ message: 'Loanee does not exist' })
+        }
 
         // Create new loan application
         try {
             await Loan.create({
-                loanID: 'not implemented yet',
                 username: loanee.username,
                 loanType: 'emergency',
                 term: req.body.term,
@@ -84,10 +87,10 @@ router.put('/new/:username', async (req, res, next) => {
 
 /**
  * POST /review-application
- * 
+ *
  * Approve or reject a loan application
- * 
- *  req.body must be of the form: 
+ *
+ *  req.body must be of the form:
  *  {
  *      loanID: String
  *      approved: boolean
@@ -99,21 +102,29 @@ router.post('/review-application', async (req, res, next) => {
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingLoan = await Loan.findOne({loanID: req.body.loanID})
+            const existingLoan = await Loan.findOne({ loanID: req.body.loanID })
             if (!existingLoan) {
-                return res.status(400).json({message: 'Loan application does not exist'})
+                return res.status(400).json({ message: 'Loan application does not exist' })
             } else if (existingLoan.status != 'pending') {
-                return res.status(400).json({message: 'Cannot approve an application that is not pending approval'})
+                return res
+                    .status(400)
+                    .json({ message: 'Cannot approve an application that is not pending approval' })
             }
 
-            await Loan.updateOne({loanID: req.body.loanID}, {
-                status: req.body.approved ? 'approved' : 'rejected'
-            }, {
-                runValidators: true
-            })
+            await Loan.updateOne(
+                { loanID: req.body.loanID },
+                {
+                    status: req.body.approved ? 'approved' : 'rejected'
+                },
+                {
+                    runValidators: true
+                }
+            )
 
-            return res.status(200)
-                .json({ message: `Loan application ${req.body.approved ? "approved" : "rejected"}`, error: false })
+            return res.status(200).json({
+                message: `Loan application ${req.body.approved ? 'approved' : 'rejected'}`,
+                error: false
+            })
         } catch (error) {
             console.error(error)
             if (error.name === 'ValidationError') {

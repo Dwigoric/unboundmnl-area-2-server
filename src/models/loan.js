@@ -1,27 +1,38 @@
+// Import packages
 import { Schema, model } from 'mongoose'
+import { v5 as uuidV5 } from 'uuid'
+
+// Import schema
 import LoanTransactionSchema from './loanTransactionSchema.js'
 import NameSchema from './nameSchema.js'
 
 const LoanSchema = new Schema({
     loanID: {
         type: String,
-        required: true
+        unique: true,
+        immutable: true,
+        default: () => uuidV5(Date.now().toString(), uuidV5.URL)
     },
     username: {
-        type: String, 
+        type: String,
         required: true
     },
     loanType: {
-        type: String, 
+        type: String,
         required: true,
         validate: {
             validator: (loanType) => {
                 return [
-                    'emergency', 'multi-purpose', 'educational', 
-                    'petty cash', 'commercial', 'livelihood'
+                    'emergency',
+                    'multi-purpose',
+                    'educational',
+                    'petty cash',
+                    'commercial',
+                    'livelihood'
                 ].includes(loanType)
             },
-            message: 'Loan type must be "emergency", "multi-purpose", "educational",' + 
+            message:
+                'Loan type must be "emergency", "multi-purpose", "educational",' +
                 ' "petty cash", "commercial", or "livelihood"'
         }
     },
@@ -31,7 +42,8 @@ const LoanSchema = new Schema({
     },
     submissionDate: {
         type: Date,
-        required: true
+        required: true,
+        immutable: true
     },
     approvalDate: Date,
     coborrowerName: {
@@ -40,7 +52,8 @@ const LoanSchema = new Schema({
     },
     originalLoanAmount: {
         type: Number,
-        required: true
+        required: true,
+        immutable: true
     },
     ledger: [LoanTransactionSchema],
     status: {
@@ -63,7 +76,6 @@ const LoanSchema = new Schema({
             message: 'Classification must be either "new" or "renewal"'
         }
     }
-
 })
 
 const Loan = model('Loan', LoanSchema)

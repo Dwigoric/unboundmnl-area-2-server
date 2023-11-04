@@ -1,19 +1,25 @@
+// Import packages
 import { Schema, model } from 'mongoose'
+import { v5 as uuidV5 } from 'uuid'
+
+// Import schema
 import DepositTransactionSchema from './depositTransactionSchema.js'
 
 const DepositSchema = new Schema({
     depositID: {
         type: String,
         required: true,
-        // validation?
+        immutable: true,
+        default: () => uuidV5(Date.now().toString(), uuidV5.URL)
     },
     username: {
         type: String,
-        required: true,
+        required: true
     },
     approvalDate: {
         type: Date,
         required: true,
+        immutable: true
     },
     ledger: [DepositTransactionSchema],
     status: {
