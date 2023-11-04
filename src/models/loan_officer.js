@@ -8,7 +8,8 @@ import NameSchema from './nameSchema.js'
 const LoanOfficerSchema = new Schema({
     active: {
         type: Boolean,
-        default: true
+        default: true,
+        index: 1
     },
     username: {
         type: String,

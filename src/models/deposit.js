@@ -14,7 +14,8 @@ const DepositSchema = new Schema({
     },
     username: {
         type: String,
-        required: true
+        required: true,
+        index: 1
     },
     approvalDate: {
         type: Date,

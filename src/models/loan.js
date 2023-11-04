@@ -15,7 +15,8 @@ const LoanSchema = new Schema({
     },
     username: {
         type: String,
-        required: true
+        required: true,
+        index: 1
     },
     loanType: {
         type: String,

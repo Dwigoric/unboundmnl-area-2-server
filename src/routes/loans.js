@@ -105,7 +105,7 @@ router.post('/review-application', async (req, res, next) => {
             const existingLoan = await Loan.findOne({ loanID: req.body.loanID })
             if (!existingLoan) {
                 return res.status(400).json({ message: 'Loan application does not exist' })
-            } else if (existingLoan.status != 'pending') {
+            } else if (existingLoan.status !== 'pending') {
                 return res
                     .status(400)
                     .json({ message: 'Cannot approve an application that is not pending approval' })
