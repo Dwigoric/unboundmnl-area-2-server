@@ -8,8 +8,7 @@ const LoanTransactionSchema = new Schema({
     transactionID: {
         type: String,
         unique: true,
-        immutable: true,
-        default: () => Date.now().toString(36).toUpperCase() // Base36 string from current timestamp
+        immutable: true
     },
     ORNumber: {
         type: String,
@@ -46,6 +45,11 @@ const LoanTransactionSchema = new Schema({
         required: true,
         immutable: true
     }
+})
+
+LoanTransactionSchema.pre('save', (next) => {
+    if (this.isNew) this.transactionID = Date.now().toString(36).toUpperCase()
+    next()
 })
 
 export default LoanTransactionSchema

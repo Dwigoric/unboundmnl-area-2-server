@@ -32,7 +32,6 @@ const LoanOfficerSchema = new Schema({
         type: String,
         unique: true,
         immutable: true,
-        default: () => uuidV5(Date.now().toString(), uuidV5.URL),
         validate: {
             validator: (uuid) => uuidValidate(uuid) && uuidVersion(uuid) === 5,
             message: 'UUID must be a valid UUID'
@@ -55,6 +54,11 @@ LoanOfficerSchema.pre('find', () => {
 
 LoanOfficerSchema.pre('findOne', () => {
     this.where({ active: { $ne: false } })
+})
+
+LoanOfficerSchema.pre('save', (next) => {
+    if (this.isNew) this.id = uuidV5(Date.now().toString(), uuidV5.URL)
+    next()
 })
 
 const LoanOfficer = model('LoanOfficer', LoanOfficerSchema)

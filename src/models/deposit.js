@@ -9,8 +9,7 @@ const DepositSchema = new Schema({
     depositID: {
         type: String,
         unique: true,
-        immutable: true,
-        default: () => uuidV5(Date.now().toString(), uuidV5.URL)
+        immutable: true
     },
     username: {
         type: String,
@@ -33,6 +32,11 @@ const DepositSchema = new Schema({
             message: 'Status must be either "pending", "accepted", "rejected", or "complete"'
         }
     }
+})
+
+DepositSchema.pre('save', (next) => {
+    if (this.isNew) this.depositID = uuidV5(Date.now().toString(), uuidV5.URL)
+    next()
 })
 
 const Deposit = model('Deposit', DepositSchema)

@@ -10,8 +10,7 @@ const LoanSchema = new Schema({
     loanID: {
         type: String,
         unique: true,
-        immutable: true,
-        default: () => uuidV5(Date.now().toString(), uuidV5.URL)
+        immutable: true
     },
     username: {
         type: String,
@@ -77,6 +76,11 @@ const LoanSchema = new Schema({
             message: 'Classification must be either "new" or "renewal"'
         }
     }
+})
+
+LoanSchema.pre('save', (next) => {
+    if (this.isNew) this.loanID = uuidV5(Date.now().toString(), uuidV5.URL)
+    next()
 })
 
 const Loan = model('Loan', LoanSchema)
