@@ -1,40 +1,50 @@
+// Import packages
 import { Schema } from 'mongoose'
 
+// Import schema
 import NameSchema from './nameSchema.js'
 
 const LoanTransactionSchema = new Schema({
     transactionID: {
         type: String,
-        required: true
-        // validation
+        required: true,
+        immutable: true,
+        default: () => Date.now().toString(36).toUpperCase() // Base36 string from current timestamp
     },
     ORNumber: {
-        type: String, 
-        required: true
+        type: String,
+        required: true,
+        immutable: true
     },
     date: {
         type: Date,
-        required: true
+        required: true,
+        immutable: true
     },
     amountPaid: {
         type: Number,
-        required: true
+        required: true,
+        immutable: true
     },
     balance: {
         type: Number,
-        required: true
+        required: true,
+        immutable: true
     },
     interestPaid: {
         type: Number,
-        required: true
+        required: true,
+        immutable: true
     },
     finesPaid: {
         type: Number,
-        required: true
+        required: true,
+        immutable: true
     },
     officerInCharge: {
         type: NameSchema,
-        required: true
+        required: true,
+        immutable: true
     }
 })
 
