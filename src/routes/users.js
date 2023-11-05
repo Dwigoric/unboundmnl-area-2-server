@@ -18,11 +18,7 @@ router.get('/', async function (req, res, next) {
  */
 router.get('/search', async function (req, res, next) {
     try {
-        const loanees = await Loanee.find({
-            username: {
-                $regex: req.query.username
-            }
-        }).lean()
+        const loanees = await Loanee.find({ $text: { $search: req.query.username } }).lean()
         return res.json(loanees)
     } catch (e) {
         return next(e)

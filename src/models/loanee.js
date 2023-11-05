@@ -72,6 +72,14 @@ const LoaneeSchema = new Schema({
     // loans: [Loan]
 })
 
+// Finding by text will search both username and name fields
+LoaneeSchema.index({
+    username: 'text',
+    'name.given': 'text',
+    'name.middle': 'text',
+    'name.last': 'text'
+})
+
 LoaneeSchema.pre(['find', 'findOne'], function () {
     this.where({ deleted: false })
 })
