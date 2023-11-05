@@ -43,6 +43,8 @@ router.put('/new/:username', async (req, res, next) => {
 
         const { username } = req.params
 
+        console.log(req.body)
+
         // Get loanee by username
         const loanee = await Loanee.findOne({ username }).lean()
 
@@ -54,7 +56,7 @@ router.put('/new/:username', async (req, res, next) => {
         try {
             await Loan.create({
                 username: loanee.username,
-                loanType: 'emergency',
+                loanType: req.body.type,
                 term: req.body.term,
                 submissionDate: Date.now(),
                 coborrowerName: {
@@ -63,7 +65,7 @@ router.put('/new/:username', async (req, res, next) => {
                 },
                 originalLoanAmount: req.body.amount,
                 ledger: [],
-                status: 'pending',
+                status: req.body.status,
                 classification: req.body.classification
             })
 
