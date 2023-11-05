@@ -51,7 +51,7 @@ router.get('/:id', async (req, res, next) => {
 
             // Compare UUID to determine if admin or loan officer
             let officer = admin
-            if (admin.uuid !== req.params.id)
+            if (admin.id !== req.params.id)
                 officer = await LoanOfficer.findOne({ id: req.params.id }).lean()
 
             // Remove sensitive data
