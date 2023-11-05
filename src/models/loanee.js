@@ -7,14 +7,6 @@ const LoaneeSchema = new Schema({
     username: {
         type: String,
         required: [true, 'Username is required'],
-        validate: {
-            validator: (username) => {
-                const regex = /^[a-zA-Z0-9_]{6,20}$/
-                return regex.test(username)
-            },
-            message:
-                'Username must be between 6 and 20 characters and contain only letters, numbers, and underscores'
-        }
     },
     name: {
         type: NameSchema,
