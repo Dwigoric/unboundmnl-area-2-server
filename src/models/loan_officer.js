@@ -54,7 +54,7 @@ LoanOfficerSchema.pre(/^find/, function () {
 })
 
 LoanOfficerSchema.pre('save', function (next) {
-    if (this.isNew) this.id = uuidV5(Date.now().toString(), uuidV5.URL)
+    if (this.isNew) this.set('id', uuidV5(Date.now().toString(), uuidV5.URL))
     next()
 })
 

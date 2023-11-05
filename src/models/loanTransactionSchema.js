@@ -48,7 +48,7 @@ const LoanTransactionSchema = new Schema({
 })
 
 LoanTransactionSchema.pre('save', function (next) {
-    if (this.isNew) this.transactionID = Date.now().toString(36).toUpperCase()
+    if (this.isNew) this.set('transactionID', Date.now().toString(36).toUpperCase())
     next()
 })
 

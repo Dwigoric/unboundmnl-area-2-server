@@ -79,7 +79,7 @@ const LoanSchema = new Schema({
 })
 
 LoanSchema.pre('save', function (next) {
-    if (this.isNew) this.loanID = uuidV5(Date.now().toString(), uuidV5.URL)
+    if (this.isNew) this.set('loanID', uuidV5(Date.now().toString(), uuidV5.URL))
     next()
 })
 
