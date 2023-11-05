@@ -47,7 +47,7 @@ if (!process.env.JWT_SECRET) {
     process.exit(1)
 }
 
-logger.token('url', (req) => req.baseUrl + req.path)
+logger.token('url', (req) => (req.baseUrl || '') + req.path)
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
