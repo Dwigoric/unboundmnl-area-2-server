@@ -35,7 +35,18 @@ router.post('/add', async function (req, res, next) {
         if (existingLoanee) {
             return res.status(400).json({ message: 'Username already taken' })
         }
-        const newLoanee = await Loanee.create(req.body)
+
+        let loaneeInfo = req.body
+        const empty = function(obj) {
+            return Object.entries(obj).every(([key, val]) => {
+                return key === '_id' || val === '' || val === null || (typeof val === "object" && empty(val))
+            })
+        }
+        if (empty(loaneeInfo.spouse)) {
+            loaneeInfo.spouse = null
+        }
+
+        const newLoanee = await Loanee.create(loaneeInfo)
         return res.json(newLoanee)
     } catch (e) {
         console.error(e)
@@ -55,7 +66,18 @@ router.post('/edit', async function (req, res, next) {
         if (!loanee) {
             return res.status(400).json({ message: 'Username does not exist' })
         }
-        const updatedLoanee = await Loanee.updateOne({ _id: loanee._id }, req.body, {
+
+        let loaneeInfo = req.body
+        const empty = function(obj) {
+            return Object.entries(obj).every(([key, val]) => {
+                return key === '_id' || val === '' || val === null || (typeof val === "object" && empty(val))
+            })
+        }
+        if (empty(loaneeInfo.spouse)) {
+            loaneeInfo.spouse = null
+        }
+
+        const updatedLoanee = await Loanee.updateOne({ _id: loanee._id }, loaneeInfo, {
             runValidators: true
         })
         return res.json(updatedLoanee)
