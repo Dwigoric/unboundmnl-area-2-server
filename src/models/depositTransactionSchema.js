@@ -39,7 +39,7 @@ const DepositTransactionSchema = new Schema({
     }
 })
 
-DepositTransactionSchema.pre('save', (next) => {
+DepositTransactionSchema.pre('save', function (next) {
     if (this.isNew) this.transactionID = Date.now().toString(36).toUpperCase()
     next()
 })

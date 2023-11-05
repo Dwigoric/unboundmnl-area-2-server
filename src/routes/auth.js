@@ -3,7 +3,6 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import passport from 'passport'
 import argon2 from 'argon2'
-import { v5 as uuidV5 } from 'uuid'
 
 // Create router
 const router = express.Router()

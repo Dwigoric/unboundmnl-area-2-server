@@ -49,11 +49,11 @@ const LoanOfficerSchema = new Schema({
 })
 
 // This middleware's methods matches all queries that start with 'find'
-LoanOfficerSchema.pre(/^find/, () => {
+LoanOfficerSchema.pre(/^find/, function () {
     this.where({ active: { $ne: false } })
 })
 
-LoanOfficerSchema.pre('save', (next) => {
+LoanOfficerSchema.pre('save', function (next) {
     if (this.isNew) this.id = uuidV5(Date.now().toString(), uuidV5.URL)
     next()
 })

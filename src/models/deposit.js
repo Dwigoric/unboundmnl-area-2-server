@@ -34,7 +34,7 @@ const DepositSchema = new Schema({
     }
 })
 
-DepositSchema.pre('save', (next) => {
+DepositSchema.pre('save', function (next) {
     if (this.isNew) this.depositID = uuidV5(Date.now().toString(), uuidV5.URL)
     next()
 })
