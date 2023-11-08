@@ -24,6 +24,7 @@ import usersRouter from './routes/users.js'
 import authRouter from './routes/auth.js'
 import officerRouter from './routes/officers.js'
 import loansRouter from './routes/loans.js'
+import depositsRouter from './routes/deposits.js'
 
 const app = express()
 
@@ -71,6 +72,7 @@ app.use('/users', usersRouter)
 app.use('/auth', authRouter)
 app.use('/officers', officerRouter)
 app.use('/loans', loansRouter)
+app.use('/deposits', depositsRouter)
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
