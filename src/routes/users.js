@@ -37,9 +37,14 @@ router.post('/add', async function (req, res, next) {
         }
 
         let loaneeInfo = req.body
-        const empty = function(obj) {
+        const empty = function (obj) {
             return Object.entries(obj).every(([key, val]) => {
-                return key === '_id' || val === '' || val === null || (typeof val === "object" && empty(val))
+                return (
+                    key === '_id' ||
+                    val === '' ||
+                    val === null ||
+                    (typeof val === 'object' && empty(val))
+                )
             })
         }
         if (empty(loaneeInfo.spouse)) {
@@ -68,9 +73,14 @@ router.post('/edit', async function (req, res, next) {
         }
 
         let loaneeInfo = req.body
-        const empty = function(obj) {
+        const empty = function (obj) {
             return Object.entries(obj).every(([key, val]) => {
-                return key === '_id' || val === '' || val === null || (typeof val === "object" && empty(val))
+                return (
+                    key === '_id' ||
+                    val === '' ||
+                    val === null ||
+                    (typeof val === 'object' && empty(val))
+                )
             })
         }
         if (empty(loaneeInfo.spouse)) {

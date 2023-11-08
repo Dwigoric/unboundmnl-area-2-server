@@ -142,4 +142,92 @@ router.post('/review-application', async (req, res, next) => {
     })(req, res, next)
 })
 
+/**
+ * POST /edit-loan
+ *
+ * Edit a loan or loan application
+ *
+ * req.body contains the data of the loan to edit. Finds a loan in the database using LoanID.
+ * NOTE: Does not edit loan ledgers, loan IDs, or submission dates.
+ */
+router.post('/edit-loan', async (req, res, next) => {
+    passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
+
+        try {
+            const existingLoan = await Loan.findOne({ loanID: req.body.loanID })
+            if (!existingLoan) {
+                return res.status(400).json({ message: 'Loan application does not exist' })
+            } else {
+                // Do not edit loan ledgers, loan IDs, or submission dates.
+                let loanInfo = req.body
+                if (loanInfo.ledger) {
+                    delete loanInfo.ledger
+                }
+                delete loanInfo.loanID
+                delete loanInfo.submissionDate
+
+                await Loan.updateOne({ loanID: req.body.loanID }, loanInfo, {
+                    runValidators: true
+                })
+
+                return res.json({ message: 'Loan application successfully edited', error: false })
+            }
+        } catch (error) {
+            console.error(error)
+            if (error.name === 'ValidationError') {
+                return res.status(400).json({
+                    message: error.errors[Object.keys(error.errors)[0]].message,
+                    error: true
+                })
+            }
+            return next(error)
+        }
+    })(req, res, next)
+})
+
+/**
+ * POST /delete-loan
+ *
+ * Delete a loan or loan application
+ *
+ * Request body contains; {
+ *      loanID: loan ID of the loan to be deleted
+ * }
+ *
+ * This functionality only soft deletes the loan;
+ * the deleted loan will still be visible in the database
+ */
+router.post('/delete-loan', async (req, res, next) => {
+    passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
+
+        try {
+            const existingLoan = await Loan.findOne({ loanID: req.body.loanID })
+            if (!existingLoan) {
+                return res.status(400).json({ message: 'Loan application does not exist' })
+            } else {
+                await Loan.updateOne(
+                    { loanID: req.body.loanID },
+                    {
+                        deleted: true
+                    }
+                )
+
+                return res.json({ message: 'Loan application successfully deleted', error: false })
+            }
+        } catch (error) {
+            console.error(error)
+            if (error.name === 'ValidationError') {
+                return res.status(400).json({
+                    message: error.errors[Object.keys(error.errors)[0]].message,
+                    error: true
+                })
+            }
+            return next(error)
+        }
+    })(req, res, next)
+})
 export default router

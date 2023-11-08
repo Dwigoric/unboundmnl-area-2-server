@@ -78,12 +78,17 @@ const LoanSchema = new Schema({
             },
             message: 'Classification must be either "new" or "renewal"'
         }
-    }
+    },
+    deleted: { type: Boolean, default: false }
 })
 
 LoanSchema.pre('save', function (next) {
     if (this.isNew) this.set('loanID', uuidV5(Date.now().toString(), uuidV5.URL))
     next()
+})
+
+LoanSchema.pre(['find', 'findOne'], function () {
+    this.where({ deleted: false })
 })
 
 const Loan = model('Loan', LoanSchema)
