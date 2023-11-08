@@ -8,6 +8,7 @@ const LoanTransactionSchema = new Schema({
     transactionID: {
         type: String,
         unique: true,
+        sparse: true,
         immutable: true
     },
     ORNumber: {
