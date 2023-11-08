@@ -45,7 +45,10 @@ const LoanSchema = new Schema({
         required: true,
         immutable: true
     },
-    approvalDate: Date,
+    approvalDate: {
+        type: Date,
+        immutable: true
+    },
     coborrowerName: {
         type: NameSchema,
         required: true

@@ -18,7 +18,6 @@ const DepositSchema = new Schema({
     },
     approvalDate: {
         type: Date,
-        required: true,
         immutable: true
     },
     ledger: [DepositTransactionSchema],
