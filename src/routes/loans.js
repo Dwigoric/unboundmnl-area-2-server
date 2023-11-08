@@ -24,7 +24,11 @@ router.get('/get/:username', async (req, res, next) => {
         // Get loanee by UUID
         const loanee = await Loanee.findOne({ username }).lean()
 
-        const loans = await Loan.find({ username: loanee.username }).populate('loanee').lean()
+        if (!loanee) {
+            return res.status(404).json({ message: 'Loanee does not exist' })
+        }
+
+        const loans = await Loan.find({ username: loanee.username }).lean()
 
         // Return loans
         return res.status(200).json(loans)
@@ -43,13 +47,11 @@ router.put('/new/:username', async (req, res, next) => {
 
         const { username } = req.params
 
-        console.log(req.body)
-
         // Get loanee by username
         const loanee = await Loanee.findOne({ username }).lean()
 
         if (!loanee) {
-            return res.status(400).json({ message: 'Loanee does not exist' })
+            return res.status(404).json({ message: 'Loanee does not exist' })
         }
 
         // Create new loan application
