@@ -6,7 +6,7 @@ import LocationSchema from './locationSchema.js'
 const LoaneeSchema = new Schema({
     username: {
         type: String,
-        required: [true, 'Username is required'],
+        required: [true, 'Username is required']
     },
     name: {
         type: NameSchema,
@@ -65,12 +65,22 @@ const LoaneeSchema = new Schema({
 })
 
 // Finding by text will search both username and name fields
-LoaneeSchema.index({
-    username: 'text',
-    'name.given': 'text',
-    'name.middle': 'text',
-    'name.last': 'text'
-})
+LoaneeSchema.index(
+    {
+        username: 'text',
+        'name.given': 'text',
+        'name.middle': 'text',
+        'name.last': 'text'
+    },
+    {
+        weights: {
+            username: 10,
+            'name.given': 5,
+            'name.middle': 3,
+            'name.last': 5
+        }
+    }
+)
 
 LoaneeSchema.pre(['find', 'findOne'], function () {
     this.where({ deleted: false })
