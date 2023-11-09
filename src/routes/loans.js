@@ -36,6 +36,35 @@ router.get('/get/:username', async (req, res, next) => {
 })
 
 /**
+ * GET /
+ *
+ * Get all loans
+ */
+router.get('/', async (req, res, next) => {
+    passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
+
+        const loans = await Loan.find({ deleted: false }).lean()
+        // Remove ledgers and unnecessary fields
+        loans.forEach((loan) => {
+            delete loan.ledger
+            delete loan.deleted
+            delete loan.term
+            delete loan.submissionDate
+            delete loan.approvalDate
+            delete loan.coborrowerName
+
+            delete loan.classification
+            delete loan.__v
+            delete loan._id
+        })
+        // Return loans
+        return res.status(200).json({ loans, error: false })
+    })(req, res, next)
+})
+
+/**
  * PUT /new/:username
  *
  * Create a new loan application for a loanee
@@ -97,15 +126,15 @@ router.put('/new/:username', async (req, res, next) => {
  *      approved: boolean
  *  }
  */
-router.post('/review-application', async (req, res, next) => {
+router.post('/review-application/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingLoan = await Loan.findOne({ loanID: req.body.loanID })
+            const existingLoan = await Loan.findOne({ loanID: req.params.loanID })
             if (!existingLoan) {
-                return res.status(400).json({ message: 'Loan application does not exist' })
+                return res.status(404).json({ message: 'Loan application does not exist' })
             } else if (existingLoan.status !== 'pending') {
                 return res
                     .status(400)
