@@ -10,32 +10,6 @@ import Loan from '../models/loan.js'
 import Loanee from '../models/loanee.js'
 
 /**
- * GET /get/:loanee-id
- *
- * Get all loan applications of a loanee
- */
-router.get('/get/:username', async (req, res, next) => {
-    passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
-        if (err) return next(err)
-        if (!manager) return res.status(401).json(info)
-
-        const { username } = req.params
-
-        // Get loanee by UUID
-        const loanee = await Loanee.findOne({ username }).lean()
-
-        if (!loanee) {
-            return res.status(404).json({ message: 'Loanee does not exist' })
-        }
-
-        const loans = await Loan.find({ username: loanee.username }).lean()
-
-        // Return loans
-        return res.status(200).json(loans)
-    })(req, res, next)
-})
-
-/**
  * GET /
  *
  * Get all loans
@@ -61,6 +35,35 @@ router.get('/', async (req, res, next) => {
         })
         // Return loans
         return res.status(200).json({ loans, error: false })
+    })(req, res, next)
+})
+
+router.get('/get/:loanid', async (req, res, next) => {
+    passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        try {
+            if (err) return next(err)
+            if (!manager) return res.status(401).json(info)
+
+            const loan = await Loan.findOne({ deleted: false, loanID: req.params.loanid }).lean()
+
+            // remove unnecessary fields
+            delete loan.classification
+            delete loan.__v
+            delete loan._id
+
+            // Return loans
+            return res.status(200).json({ loan, error: false })
+        } catch (error) {
+            // If there was an error creating the loan officer, send back an error
+            console.error(error)
+            if (error.name === 'ValidationError') {
+                return res.status(400).json({
+                    message: error.errors[Object.keys(error.errors)[0]].message,
+                    error: true
+                })
+            }
+            return next(error)
+        }
     })(req, res, next)
 })
 
