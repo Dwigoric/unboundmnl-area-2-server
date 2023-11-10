@@ -85,6 +85,14 @@ router.put('/new/:username', async (req, res, next) => {
 
         // Create new loan application
         try {
+            if (
+                Object.entries(req.body.coborrowerName).every(([key, val]) => {
+                    return val === '' || val === null
+                })
+            ) {
+                req.body.coborrowerName = null
+            }
+
             await Loan.create({
                 username: loanee.username,
                 loanType: req.body.type,
@@ -193,6 +201,14 @@ router.post('/edit-loan', async (req, res, next) => {
                 }
                 delete loanInfo.loanID
                 delete loanInfo.submissionDate
+
+                if (
+                    Object.entries(loanInfo.coborrowerName).every(([key, val]) => {
+                        return val === '' || val === null
+                    })
+                ) {
+                    loanInfo.coborrowerName = null
+                }
 
                 await Loan.updateOne({ loanID: req.body.loanID }, loanInfo, {
                     runValidators: true

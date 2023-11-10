@@ -50,8 +50,7 @@ const LoanSchema = new Schema({
         immutable: true
     },
     coborrowerName: {
-        type: NameSchema,
-        required: true
+        type: NameSchema
     },
     originalLoanAmount: {
         type: Number,
