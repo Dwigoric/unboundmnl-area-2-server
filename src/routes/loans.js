@@ -154,7 +154,7 @@ router.post('/review-application/:loanID', async (req, res, next) => {
             }
 
             await Loan.updateOne(
-                { loanID: req.body.loanID },
+                { loanID: req.params.loanID },
                 {
                     status: req.body.approved ? 'approved' : 'rejected'
                 },
