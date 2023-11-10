@@ -97,6 +97,7 @@ router.put('/new/:username', async (req, res, next) => {
                 username: loanee.username,
                 loanType: req.body.type,
                 term: req.body.term,
+                paymentFrequency: req.body.paymentFrequency,
                 submissionDate: Date.now(),
                 coborrowerName: req.body.coborrowerName,
                 originalLoanAmount: req.body.amount,

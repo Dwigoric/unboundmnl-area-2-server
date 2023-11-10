@@ -40,6 +40,16 @@ const LoanSchema = new Schema({
         type: Number,
         required: true
     },
+    paymentFrequency: {
+        type: String,
+        required: true,
+        validate: {
+            validator: (val) => {
+                return ['daily', 'weekly', 'monthly'].includes(val)
+            },
+            message: 'Payment frequency must be either "daily", "weekly", or "monthly"'
+        }
+    },
     submissionDate: {
         type: Date,
         required: true,
