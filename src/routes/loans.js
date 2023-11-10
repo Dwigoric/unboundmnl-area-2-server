@@ -9,6 +9,17 @@ const router = Router()
 import Loan from '../models/loan.js'
 import Loanee from '../models/loanee.js'
 
+// Ledger routes
+import ledgerRouter from './loan-ledgers.js'
+router.use(
+    '/:loanID/ledger',
+    (req, res, next) => {
+        req.loanID = req.params.loanID
+        next()
+    },
+    ledgerRouter
+)
+
 /**
  * GET /
  *
