@@ -30,20 +30,13 @@ router.get('/', async (req, res, next) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
-        const loans = await Loan.find({ deleted: false }).lean()
-        // Remove ledgers and unnecessary fields
-        loans.forEach((loan) => {
-            delete loan.ledger
-            delete loan.deleted
-            delete loan.term
-            delete loan.submissionDate
-            delete loan.approvalDate
-            delete loan.coborrowerName
+        const loans = await Loan.find({ deleted: false })
+            .select(
+                '-ledger -deleted -term -submissionDate -approvalDate ' +
+                    '-coborrowerName -classification -__v -_id'
+            )
+            .lean()
 
-            delete loan.classification
-            delete loan.__v
-            delete loan._id
-        })
         // Return loans
         return res.status(200).json({ loans, error: false })
     })(req, res, next)
@@ -55,12 +48,9 @@ router.get('/get/:loanid', async (req, res, next) => {
             if (err) return next(err)
             if (!manager) return res.status(401).json(info)
 
-            const loan = await Loan.findOne({ deleted: false, loanID: req.params.loanid }).lean()
-
-            // remove unnecessary fields
-            delete loan.classification
-            delete loan.__v
-            delete loan._id
+            const loan = await Loan.findOne({ deleted: false, loanID: req.params.loanid })
+                .select('-classification -__v -_id')
+                .lean()
 
             // Return loans
             return res.status(200).json({ loan, error: false })
