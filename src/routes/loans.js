@@ -53,7 +53,11 @@ router.get('/get/:loanid', async (req, res, next) => {
                 .lean()
 
             // Return loans
-            return res.status(200).json({ loan, error: false })
+            if (loan) {
+                return res.status(200).json({ loan, error: false })
+            } else {
+                return res.status(400).json({ message: 'Loan ID does not exist', error: true })
+            }
         } catch (error) {
             // If there was an error creating the loan officer, send back an error
             console.error(error)

@@ -30,12 +30,17 @@ const DepositSchema = new Schema({
             },
             message: 'Status must be either "pending", "accepted", "rejected", or "complete"'
         }
-    }
+    },
+    deleted: { type: Boolean, default: false }
 })
 
 DepositSchema.pre('save', function (next) {
     if (this.isNew) this.set('depositID', uuidV5(Date.now().toString(), uuidV5.URL))
     next()
+})
+
+DepositSchema.pre(['find', 'findOne'], function () {
+    this.where({ deleted: false })
 })
 
 const Deposit = model('Deposit', DepositSchema)
