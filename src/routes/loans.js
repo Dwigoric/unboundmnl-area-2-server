@@ -30,7 +30,10 @@ router.get('/', async (req, res, next) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
-        const loans = await Loan.find({ deleted: false })
+        const options = { deleted: false }
+        if (req.query.pending === 'true') options.status = 'pending'
+
+        const loans = await Loan.find(options)
             .select(
                 '-ledger -deleted -term -submissionDate -approvalDate ' +
                     '-coborrowerName -classification -__v -_id'
