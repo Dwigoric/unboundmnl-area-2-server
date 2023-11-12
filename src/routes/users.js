@@ -7,6 +7,9 @@ import Loanee from '../models/loanee.js'
 /* GET users listing. */
 router.get('/', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
+
         try {
             const loanees = await Loanee.find()
                 .select('-_id -name._id -spouse._id -spouse.name._id')
@@ -24,6 +27,9 @@ router.get('/', async function (req, res, next) {
  */
 router.get('/search', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
+
         try {
             const loanees = await Loanee.find()
                 .select('-_id -name._id -spouse._id -spouse.name._id')
@@ -41,6 +47,9 @@ router.get('/search', async function (req, res, next) {
  */
 router.post('/add', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
+
         try {
             const username = req.body.username
             const existingLoanee = await Loanee.findOne({ username: username })
@@ -80,6 +89,9 @@ router.post('/add', async function (req, res, next) {
  */
 router.post('/edit', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
+
         try {
             const loanee = await Loanee.findOne({ username: req.body.username })
             if (!loanee) {
@@ -116,6 +128,9 @@ router.post('/edit', async function (req, res, next) {
 
 router.post('/delete', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
+
         try {
             const loanee = await Loanee.findOne({ username: req.body.username })
             if (!loanee) {
