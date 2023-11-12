@@ -31,7 +31,7 @@ router.get('/search', async function (req, res, next) {
         if (!manager) return res.status(401).json(info)
 
         try {
-            const loanees = await Loanee.find()
+            const loanees = await Loanee.find({ $text: { $search: req.query.username } })
                 .select('-_id -name._id -spouse._id -spouse.name._id')
                 .lean()
 
