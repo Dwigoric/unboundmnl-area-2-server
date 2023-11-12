@@ -46,6 +46,15 @@ router.get('/get/:depositid', async (req, res, next) => {
  * PUT /:username
  *
  * Create a new deposit of a member given their username
+ *
+ * req.body is of the format {
+ *      username
+ *      approvalDate,
+ *      status (optional),
+ *      category,
+ *      interest rate,
+ *      original deposit amount
+ * }
  */
 router.put('/new/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -63,15 +72,26 @@ router.put('/new/:username', async (req, res, next) => {
         // Create new deposit
         try {
             await Deposit.create({
-                username,
+                username: username,
+                approvalDate: req.body.approvalDate,
+                category: req.body.category,
+                interestRate: req.body.interestRate,
+                originalDepositAmount: req.body.originalDepositAmount,
                 ledger: [],
                 status: req.body.status || 'pending'
             })
 
             // Return deposit status
             return res.status(201).json({ message: 'Deposit created successfully', error: false })
-        } catch (err) {
-            console.error(err)
+        } catch (error) {
+            console.error(error)
+            if (error.name === 'ValidationError') {
+                return res.status(400).json({
+                    message: error.errors[Object.keys(error.errors)[0]].message,
+                    error: true
+                })
+            }
+            return next(error)
         }
     })(req, res, next)
 })

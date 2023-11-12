@@ -20,6 +20,14 @@ const DepositSchema = new Schema({
         type: Date,
         immutable: true
     },
+    interestRate: {
+        type: Number,
+        required: true
+    },
+    originalDepositAmount: {
+        type: Number,
+        required: true
+    },
     ledger: [DepositTransactionSchema],
     status: {
         type: String,
@@ -30,6 +38,10 @@ const DepositSchema = new Schema({
             },
             message: 'Status must be either "pending", "accepted", "rejected", or "complete"'
         }
+    },
+    category: {
+        type: String,
+        required: true
     },
     deleted: { type: Boolean, default: false }
 })
