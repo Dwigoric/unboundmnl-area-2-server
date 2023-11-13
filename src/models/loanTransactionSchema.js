@@ -16,7 +16,12 @@ const LoanTransactionSchema = new Schema({
         required: true,
         immutable: true
     },
-    date: {
+    paymentDate: {
+        type: Date,
+        required: true,
+        immutable: true
+    },
+    submissionDate: {
         type: Date,
         required: true,
         immutable: true

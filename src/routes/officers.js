@@ -27,6 +27,7 @@ router.get('/', async (req, res, next) => {
                 delete officer.password_hash
                 delete officer._id
                 delete officer.__v
+                delete officer.name._id
             })
 
             res.status(200).json({ officers })
