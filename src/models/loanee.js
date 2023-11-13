@@ -20,10 +20,10 @@ const LoaneeSchema = new Schema({
         type: String,
         required: [true, 'Birthplace is required']
     },
-    gender: {
+    sex: {
         type: String,
         enum: ['M', 'F'],
-        required: [true, 'Gender is required']
+        required: [true, 'Sex is required']
     },
     civil_status: {
         type: String,
