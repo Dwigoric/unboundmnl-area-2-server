@@ -1,7 +1,20 @@
+// Packages
 import express from 'express'
 import passport from 'passport'
+
+// Initialize router
 const router = express.Router()
 
+// Methods
+function empty(obj) {
+    return Object.entries(obj).every(([key, val]) => {
+        return (
+            key === '_id' || val === '' || val === null || (typeof val === 'object' && empty(val))
+        )
+    })
+}
+
+// Schema
 import Loanee from '../models/loanee.js'
 
 /* GET users listing. */
@@ -58,16 +71,6 @@ router.post('/add', async function (req, res, next) {
             }
 
             let loaneeInfo = req.body
-            const empty = function (obj) {
-                return Object.entries(obj).every(([key, val]) => {
-                    return (
-                        key === '_id' ||
-                        val === '' ||
-                        val === null ||
-                        (typeof val === 'object' && empty(val))
-                    )
-                })
-            }
             if (empty(loaneeInfo.spouse)) {
                 loaneeInfo.spouse = null
             }
@@ -99,16 +102,6 @@ router.post('/edit', async function (req, res, next) {
             }
 
             let loaneeInfo = req.body
-            const empty = function (obj) {
-                return Object.entries(obj).every(([key, val]) => {
-                    return (
-                        key === '_id' ||
-                        val === '' ||
-                        val === null ||
-                        (typeof val === 'object' && empty(val))
-                    )
-                })
-            }
             if (empty(loaneeInfo.spouse)) {
                 loaneeInfo.spouse = null
             }
