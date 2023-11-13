@@ -31,7 +31,8 @@ router.get('/', async (req, res, next) => {
         if (!manager) return res.status(401).json(info)
 
         const options = { deleted: false }
-        if (req.query.pending === 'true') options.status = 'pending'
+        if (['approved', 'pending', 'rejected'].includes(req.query.status))
+            options.status = req.query.status
 
         const loans = await Loan.find(options)
             .select(
