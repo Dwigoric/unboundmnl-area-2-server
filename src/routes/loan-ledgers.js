@@ -68,7 +68,10 @@ router.put('/', (req, res, next) => {
         const { ledger } = loan
 
         // Add transaction to ledger
-        ledger.push(req.body)
+        ledger.push({
+            ...req.body,
+            transactionID: Date.now().toString(36).toUpperCase()
+        })
 
         try {
             // Update loan
@@ -110,11 +113,30 @@ router.patch('/:txID', (req, res, next) => {
         if (!transaction)
             return res.status(404).json({ error: true, message: 'Transaction not found' })
 
+        let query = {
+            'ledger.$.ORNumber': req.body.ORNumber,
+            'ledger.$.paymentDate': req.body.paymentDate,
+            'ledger.$.submissionDate': req.body.submissionDate,
+            'ledger.$.amountPaid': req.body.amountPaid,
+            'ledger.$.balance': req.body.balance,
+            'ledger.$.interestPaid': req.body.interestPaid,
+            'ledger.$.finesPaid': req.body.finesPaid
+        }
+        if (req.body.officerInCharge) {
+            Object.assign(query, {
+                'ledger.$.officerInCharge.given': req.body.officerInCharge.given,
+                'ledger.$.officerInCharge.middle': req.body.officerInCharge.middle,
+                'ledger.$.officerInCharge.last': req.body.officerInCharge.last
+            })
+        }
+
         try {
             // Update transaction
-            await Loan.updateOne(
+            const k = await Loan.updateOne(
                 { deleted: false, loanID, 'ledger.transactionID': txID },
-                { $set: { 'ledger.$': req.body } }
+                {
+                    $set: query
+                }
             )
 
             // Return a 200 response

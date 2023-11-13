@@ -13,13 +13,11 @@ const LoanTransactionSchema = new Schema({
     },
     ORNumber: {
         type: String,
-        required: true,
-        immutable: true
+        required: true
     },
     paymentDate: {
         type: Date,
-        required: true,
-        immutable: true
+        required: true
     },
     submissionDate: {
         type: Date,
@@ -28,28 +26,23 @@ const LoanTransactionSchema = new Schema({
     },
     amountPaid: {
         type: Number,
-        required: true,
-        immutable: true
+        required: true
     },
     balance: {
         type: Number,
-        required: true,
-        immutable: true
+        required: true
     },
     interestPaid: {
         type: Number,
-        required: true,
-        immutable: true
+        required: true
     },
     finesPaid: {
         type: Number,
-        required: true,
-        immutable: true
+        required: true
     },
     officerInCharge: {
         type: NameSchema,
-        required: true,
-        immutable: true
+        required: true
     }
 })
 
