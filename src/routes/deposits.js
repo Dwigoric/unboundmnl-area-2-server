@@ -25,6 +25,11 @@ router.get('/', async (req, res, next) => {
     })(req, res, next)
 })
 
+/**
+ * GET /get/:depositid
+ *
+ * Get a deposit given its deposit ID
+ */
 router.get('/get/:depositid', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -38,6 +43,37 @@ router.get('/get/:depositid', async (req, res, next) => {
             return res.status(200).json({ deposit, error: false })
         } else {
             return res.status(400).json({ message: 'Deposit ID does not exist', error: true })
+        }
+    })(req, res, next)
+})
+
+/**
+ * GET /:username
+ *
+ * Get all deposits of a member given their username
+ */
+router.get('/:username', async (req, res, next) => {
+    passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        try {
+            if (err) return next(err)
+            if (!manager) return res.status(401).json(info)
+
+            const { username } = req.params
+
+            const loanee = await Loanee.findOne({ username }).lean()
+
+            if (!loanee) {
+                return res.status(404).json({ message: 'Loanee does not exist' })
+            }
+
+            const deposits = await Deposit.find({ username, deleted: false })
+                .select('-__v -_id')
+                .lean()
+
+            return res.status(200).json({ deposits, error: false })
+        } catch (error) {
+            console.error(error)
+            return next(error)
         }
     })(req, res, next)
 })

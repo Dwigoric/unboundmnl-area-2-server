@@ -45,6 +45,11 @@ router.get('/', async (req, res, next) => {
     })(req, res, next)
 })
 
+/**
+ * GET /get/:loanid
+ *
+ * Get a loan given its loan ID
+ */
 router.get('/get/:loanid', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         try {
@@ -69,6 +74,36 @@ router.get('/get/:loanid', async (req, res, next) => {
                     error: true
                 })
             }
+            console.error(error)
+            return next(error)
+        }
+    })(req, res, next)
+})
+
+/**
+ * GET /:username
+ *
+ * Get all loans for a loanee
+ */
+router.get('/:username', async (req, res, next) => {
+    passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
+        try {
+            if (err) return next(err)
+            if (!manager) return res.status(401).json(info)
+
+            const { username } = req.params
+
+            const loanee = await Loanee.findOne({ username }).lean()
+
+            if (!loanee) {
+                return res.status(404).json({ message: 'Loanee does not exist' })
+            }
+
+            const loans = await Loan.find({ username, deleted: false }).select('-__v -_id').lean()
+
+            // Return loans
+            return res.status(200).json({ loans, error: false })
+        } catch (error) {
             console.error(error)
             return next(error)
         }
