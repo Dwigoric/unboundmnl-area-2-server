@@ -84,13 +84,13 @@ router.put('/new/:username', async (req, res, next) => {
             // Return deposit status
             return res.status(201).json({ message: 'Deposit created successfully', error: false })
         } catch (error) {
-            console.error(error)
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
                     message: error.errors[Object.keys(error.errors)[0]].message,
                     error: true
                 })
             }
+            console.error(error)
             return next(error)
         }
     })(req, res, next)
@@ -129,13 +129,13 @@ router.post('/edit-deposit', async (req, res, next) => {
                 return res.json({ message: 'Loan application successfully edited', error: false })
             }
         } catch (error) {
-            console.error(error)
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
                     message: error.errors[Object.keys(error.errors)[0]].message,
                     error: true
                 })
             }
+            console.error(error)
             return next(error)
         }
     })(req, res, next)
@@ -175,13 +175,13 @@ router.post('/delete-deposit', async (req, res, next) => {
                 })
             }
         } catch (error) {
-            console.error(error)
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
                     message: error.errors[Object.keys(error.errors)[0]].message,
                     error: true
                 })
             }
+            console.error(error)
             return next(error)
         }
     })(req, res, next)

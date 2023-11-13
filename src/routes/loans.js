@@ -63,13 +63,13 @@ router.get('/get/:loanid', async (req, res, next) => {
             }
         } catch (error) {
             // If there was an error creating the loan officer, send back an error
-            console.error(error)
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
                     message: error.errors[Object.keys(error.errors)[0]].message,
                     error: true
                 })
             }
+            console.error(error)
             return next(error)
         }
     })(req, res, next)
@@ -123,13 +123,13 @@ router.put('/new/:username', async (req, res, next) => {
                 .json({ message: 'Loan application created successfully', error: false })
         } catch (error) {
             // If there was an error creating the loan officer, send back an error
-            console.error(error)
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
                     message: error.errors[Object.keys(error.errors)[0]].message,
                     error: true
                 })
             }
+            console.error(error)
             return next(error)
         }
     })(req, res, next)
@@ -176,13 +176,13 @@ router.post('/review-application/:loanID', async (req, res, next) => {
                 error: false
             })
         } catch (error) {
-            console.error(error)
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
                     message: error.errors[Object.keys(error.errors)[0]].message,
                     error: true
                 })
             }
+            console.error(error)
             return next(error)
         }
     })(req, res, next)
@@ -229,13 +229,13 @@ router.post('/edit-loan', async (req, res, next) => {
                 return res.json({ message: 'Loan application successfully edited', error: false })
             }
         } catch (error) {
-            console.error(error)
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
                     message: error.errors[Object.keys(error.errors)[0]].message,
                     error: true
                 })
             }
+            console.error(error)
             return next(error)
         }
     })(req, res, next)
@@ -273,13 +273,13 @@ router.post('/delete-loan', async (req, res, next) => {
                 return res.json({ message: 'Loan application successfully deleted', error: false })
             }
         } catch (error) {
-            console.error(error)
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
                     message: error.errors[Object.keys(error.errors)[0]].message,
                     error: true
                 })
             }
+            console.error(error)
             return next(error)
         }
     })(req, res, next)

@@ -78,10 +78,10 @@ router.post('/add', async function (req, res, next) {
             const newLoanee = await Loanee.create(loaneeInfo)
             return res.json(newLoanee)
         } catch (e) {
-            console.error(e)
             if (e.name === 'ValidationError') {
                 return res.status(400).json({ message: e.errors[Object.keys(e.errors)[0]].message })
             }
+            console.error(e)
             return next(e)
         }
     })(req, res, next)
