@@ -59,8 +59,12 @@ const LoanSchema = new Schema({
         type: Date,
         immutable: true
     },
-    coborrowerName: {
-        type: NameSchema
+    coborrower: {
+        name: NameSchema,
+        birthday: Date,
+        birthplace: String,
+        occupation: String,
+        contact_no: String
     },
     originalLoanAmount: {
         type: Number,
