@@ -27,11 +27,15 @@ const app = express()
 
 // Configure CORS
 const whitelist = []
-if (!process.env.FRONTEND_URL) console.warn('FRONTEND_URLS not set, allowing all origins')
+if (!process.env.FRONTEND_URLS) console.warn('FRONTEND_URLS not set, allowing all origins')
 else whitelist.push(...process.env.FRONTEND_URL.split(','))
 app.use(
     cors({
-        origin: (origin) => whitelist.length === 0 || whitelist.includes(origin),
+        origin: (origin, callback) => {
+            whitelist.length === 0 || whitelist.includes(origin)
+                ? callback(null, true)
+                : callback(new Error('Not allowed by CORS'))
+        },
         optionsSuccessStatus: 200
     })
 )
