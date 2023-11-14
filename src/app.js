@@ -31,11 +31,7 @@ if (!process.env.FRONTEND_URLS) console.warn('FRONTEND_URLS not set, allowing al
 else whitelist.push(...process.env.FRONTEND_URLS.split(','))
 app.use(
     cors({
-        origin: (origin, callback) => {
-            whitelist.length === 0 || whitelist.includes(origin)
-                ? callback(null, true)
-                : callback(new Error('Not allowed by CORS'))
-        },
+        origin: whitelist.length === 0 ? true : whitelist,
         optionsSuccessStatus: 200
     })
 )
