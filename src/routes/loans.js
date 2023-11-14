@@ -100,7 +100,11 @@ router.get('/:username', async (req, res, next) => {
                 return res.status(404).json({ message: 'Loanee does not exist' })
             }
 
-            const loans = await Loan.find({ username, deleted: false }).select('-__v -_id').lean()
+            const options = { deleted: false }
+            if (['approved', 'pending', 'rejected'].includes(req.query.status))
+                options.status = req.query.status
+
+            const loans = await Loan.find(options).select('-__v -_id').lean()
 
             // Return loans
             return res.status(200).json({ loans, error: false })
