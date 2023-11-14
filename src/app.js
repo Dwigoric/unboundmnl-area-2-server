@@ -1,7 +1,3 @@
-// Default FRONTEND_URL
-
-const DEFAULT_FRONTEND_URL = 'http://localhost:5173'
-
 // Packages
 import createError from 'http-errors'
 import express from 'express'
@@ -30,12 +26,12 @@ import settingsRouter from './routes/settings.js'
 const app = express()
 
 // Configure CORS
-if (!process.env.FRONTEND_URL)
-    console.warn(`FRONTEND_URL not set, using default: ${DEFAULT_FRONTEND_URL}`)
-
+const whitelist = []
+if (!process.env.FRONTEND_URL) console.warn('FRONTEND_URLS not set, allowing all origins')
+else whitelist.push(...process.env.FRONTEND_URL.split(','))
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL || DEFAULT_FRONTEND_URL,
+        origin: (origin) => whitelist.length === 0 || whitelist.includes(origin),
         optionsSuccessStatus: 200
     })
 )
