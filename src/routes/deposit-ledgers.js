@@ -136,10 +136,18 @@ router.patch('/:txID', async (req, res, next) => {
         const query = {
             'ledger.$.ORNumber': req.body.ORNumber,
             'ledger.$.transactionDate': req.body.transactionDate,
-            'ledger.$.amountReceived': req.body.amountReceived,
-            'ledger.$.amountWithdrawn': req.body.amountWithdrawn,
+            'ledger.$.submissionDate': req.body.submissionDate,
+            'ledger.$.depositType': req.body.depositType,
+            'ledger.$.amount': req.body.amount,
             'ledger.$.interest': req.body.interest,
             'ledger.$.balance': req.body.balance
+        }
+        if (req.body.officerInCharge) {
+            Object.assign(query, {
+                'ledger.$.officerInCharge.given': req.body.officerInCharge.given,
+                'ledger.$.officerInCharge.middle': req.body.officerInCharge.middle,
+                'ledger.$.officerInCharge.last': req.body.officerInCharge.last
+            })
         }
 
         try {
