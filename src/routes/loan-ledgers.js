@@ -115,7 +115,7 @@ router.patch('/:txID', (req, res, next) => {
 
         const query = {
             'ledger.$.ORNumber': req.body.ORNumber,
-            'ledger.$.paymentDate': req.body.paymentDate,
+            'ledger.$.transactionDate': req.body.transactionDate,
             'ledger.$.submissionDate': req.body.submissionDate,
             'ledger.$.amountPaid': req.body.amountPaid,
             'ledger.$.balance': req.body.balance,

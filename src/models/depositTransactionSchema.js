@@ -1,6 +1,8 @@
 // Import packages
 import { Schema } from 'mongoose'
 
+import NameSchema from './nameSchema.js'
+
 const DepositTransactionSchema = new Schema({
     transactionID: {
         type: String,
@@ -10,33 +12,41 @@ const DepositTransactionSchema = new Schema({
     },
     ORNumber: {
         type: String,
-        required: true,
-        immutable: true
+        required: true
     },
     transactionDate: {
         type: Date,
-        required: true,
-        immutable: true
+        required: true
     },
-    amountReceived: {
-        type: Number,
-        required: true,
-        immutable: true
+    submissionDate: {
+        type: Date,
+        required: true
     },
-    amountWithdrawn: {
-        type: Number,
+    depositType: {
+        type: String,
         required: true,
-        immutable: true
+        validate: {
+            validator: (val) => {
+                return 'deposit', 'withdrawal'.includes(val)
+            },
+            message: 'Deposit Type must be either "deposit" or "withdrawal"'
+        }
+    },
+    amount: {
+        type: Number,
+        required: true
     },
     interest: {
         type: Number,
-        required: true,
-        immutable: true
+        required: true
     },
     balance: {
         type: Number,
-        required: true,
-        immutable: true
+        required: true
+    },
+    officerInCharge: {
+        type: NameSchema,
+        required: true
     }
 })
 

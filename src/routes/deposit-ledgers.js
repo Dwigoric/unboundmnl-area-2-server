@@ -22,7 +22,9 @@ router.get('/', async (req, res, next) => {
 
         const { depositID } = req
 
-        const deposit = await Deposit.find({ deleted: false, depositID }).select('-__v -_id').lean()
+        const deposit = await Deposit.findOne({ deleted: false, depositID })
+            .select('-__v -_id')
+            .lean()
 
         if (!deposit) return res.status(404).json({ error: true, message: 'Deposit not found' })
 
@@ -82,7 +84,10 @@ router.put('/', async (req, res, next) => {
         const { ledger } = deposit
 
         // Add transaction to ledger
-        ledger.push(req.body)
+        ledger.push({
+            ...req.body,
+            transactionID: Date.now().toString(36).toUpperCase()
+        })
 
         try {
             // Update deposit
