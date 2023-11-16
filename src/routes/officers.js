@@ -27,6 +27,7 @@ router.get('/', async (req, res, next) => {
                 delete officer.password_hash
                 delete officer._id
                 delete officer.__v
+                delete officer.name._id
             })
 
             res.status(200).json({ officers })
@@ -51,8 +52,8 @@ router.get('/:id', async (req, res, next) => {
 
             // Compare UUID to determine if admin or loan officer
             let officer = admin
-            if (admin.uuid !== req.params.id)
-                officer = await LoanOfficer.findOne({ uuid: req.params.id }).lean()
+            if (admin.id !== req.params.id)
+                officer = await LoanOfficer.findOne({ id: req.params.id }).lean()
 
             // Remove sensitive data
             delete officer.password_hash
@@ -60,6 +61,28 @@ router.get('/:id', async (req, res, next) => {
             delete officer.__v
 
             res.status(200).json({ officer })
+        } catch (err) {
+            res.status(500).send({ message: err.message })
+        }
+    })(req, res, next)
+})
+
+/**
+ * DELETE /:id
+ *
+ * Mark officer as inactive by UUID. This route is only accessible to the admin.
+ */
+router.delete('/:id', async (req, res, next) => {
+    passport.authenticate('admin', { session: false }, async (err, admin, info) => {
+        if (err) return next(err)
+        if (!admin) return res.status(401).json(info)
+
+        const officer = await LoanOfficer.findOne({ id: req.params.id }).lean()
+        if (!officer) return res.status(404).json({ message: 'Loan officer not found' })
+
+        try {
+            await LoanOfficer.updateOne({ id: req.params.id }, { active: false })
+            res.status(200).json({ message: 'Loan officer marked inactive' })
         } catch (err) {
             res.status(500).send({ message: err.message })
         }

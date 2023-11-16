@@ -3,7 +3,6 @@ import express from 'express'
 import jwt from 'jsonwebtoken'
 import passport from 'passport'
 import argon2 from 'argon2'
-import { v5 as uuidV5 } from 'uuid'
 
 // Create router
 const router = express.Router()
@@ -27,20 +26,14 @@ router.post('/login', (req, res, next) => {
                   if (err) return next(err)
                   if (!admin) return res.status(401).json(info)
 
-                  const token = jwt.sign(
-                      { uuid: admin.uuid, type: 'admin' },
-                      process.env.JWT_SECRET
-                  )
+                  const token = jwt.sign({ uuid: admin.id, type: 'admin' }, process.env.JWT_SECRET)
                   return res.json({ token })
               })
             : passport.authenticate('login', { session: false }, (err, user, info) => {
                   if (err) return next(err)
                   if (!user) return res.status(401).json(info)
 
-                  const token = jwt.sign(
-                      { uuid: user.uuid, type: 'officer' },
-                      process.env.JWT_SECRET
-                  )
+                  const token = jwt.sign({ uuid: user.id, type: 'officer' }, process.env.JWT_SECRET)
                   return res.json({ token })
               })
 
@@ -54,9 +47,9 @@ router.post('/login', (req, res, next) => {
  * The admin must be logged in to use this route.
  */
 router.post('/register-officer', (req, res, next) => {
-    passport.authenticate('register-officer', { session: false }, async (err, user, info) => {
+    passport.authenticate('admin', { session: false }, async (err, admin, info) => {
         if (err) return next(err)
-        if (!user) return res.status(401).json(info)
+        if (!admin) return res.status(401).json(info)
 
         // Get the loan officer's username, password, name, and role
         const { username, password, name, role } = req.body
@@ -74,23 +67,25 @@ router.post('/register-officer', (req, res, next) => {
         // Hash the password
         const password_hash = await argon2.hash(password)
 
-        // Create UUID for the loan officer
-        const uuid = uuidV5(Date.now().toString(), uuidV5.URL)
-
         // Create a new loan officer
         try {
-            await LoanOfficer.create({ username, password_hash, name, role, uuid })
+            const loanOfficer = await new LoanOfficer({
+                username,
+                password_hash,
+                name,
+                role
+            }).save()
 
             // Send back a created status
-            return res.status(201).json({ uuid, message: 'Loan officer created' })
+            return res.status(201).json({ uuid: loanOfficer.id, message: 'Loan officer created' })
         } catch (error) {
             // If there was an error creating the loan officer, send back an error
-            console.error(error)
             if (error.name === 'ValidationError') {
                 return res
                     .status(400)
                     .json({ message: error.errors[Object.keys(error.errors)[0]].message })
             }
+            console.error(error)
             return next(error)
         }
     })(req, res, next)

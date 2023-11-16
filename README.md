@@ -18,9 +18,10 @@ The MongoDB URI to use for the application, defaults to `mongodb://localhost:270
 ### `JWT_SECRET`
 The secret to use for JWT. This is required for the application to run.
 If not set, the application will throw an error.
-### `FRONTEND_URL`
-The URL of the frontend application, defaults to `http://localhost:5173`.
+### `FRONTEND_URLS`
+The comma-separated list of URLs of the frontend application.
 This is used for CORS.
+If no value is set, the application will allow all origins.
 
 ## Private Files
 Put any private files in the `private` directory.
@@ -46,4 +47,9 @@ yarn
 ### Start the Server
 ```sh
 yarn start
+```
+
+### Automatically Restart the Server on Changes
+```sh
+yarn watch
 ```

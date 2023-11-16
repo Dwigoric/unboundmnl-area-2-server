@@ -1,7 +1,3 @@
-// Default FRONTEND_URL
-
-const DEFAULT_FRONTEND_URL = 'http://localhost:5173'
-
 // Packages
 import createError from 'http-errors'
 import express from 'express'
@@ -22,18 +18,20 @@ await database.init().catch((err) => {
 import indexRouter from './routes/index.js'
 import usersRouter from './routes/users.js'
 import authRouter from './routes/auth.js'
-import officerRoute from './routes/officers.js'
-import loanApplications from './routes/loan-applications.js'
+import officerRouter from './routes/officers.js'
+import loansRouter from './routes/loans.js'
+import depositsRouter from './routes/deposits.js'
+import settingsRouter from './routes/settings.js'
 
 const app = express()
 
 // Configure CORS
-if (!process.env.FRONTEND_URL)
-    console.warn(`FRONTEND_URL not set, using default: ${DEFAULT_FRONTEND_URL}`)
-
+const whitelist = []
+if (!process.env.FRONTEND_URLS) console.warn('FRONTEND_URLS not set, allowing all origins')
+else whitelist.push(...process.env.FRONTEND_URLS.split(','))
 app.use(
     cors({
-        origin: process.env.FRONTEND_URL || DEFAULT_FRONTEND_URL,
+        origin: whitelist.length === 0 ? true : whitelist,
         optionsSuccessStatus: 200
     })
 )
@@ -47,7 +45,7 @@ if (!process.env.JWT_SECRET) {
     process.exit(1)
 }
 
-logger.token('url', (req) => req.path)
+logger.token('url', (req) => (req.baseUrl || '') + req.path)
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -69,8 +67,10 @@ app.use('/private', express.static('private'))
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authRouter)
-app.use('/officers', officerRoute)
-app.use('/loan-applications', loanApplications)
+app.use('/officers', officerRouter)
+app.use('/loans', loansRouter)
+app.use('/deposits', depositsRouter)
+app.use('/settings', settingsRouter)
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {

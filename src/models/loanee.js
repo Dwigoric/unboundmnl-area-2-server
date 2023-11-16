@@ -6,15 +6,7 @@ import LocationSchema from './locationSchema.js'
 const LoaneeSchema = new Schema({
     username: {
         type: String,
-        required: [true, 'Username is required'],
-        validate: {
-            validator: (username) => {
-                const regex = /^[a-zA-Z0-9_]{6,20}$/
-                return regex.test(username)
-            },
-            message:
-                'Username must be between 6 and 20 characters and contain only letters, numbers, and underscores'
-        }
+        required: [true, 'Username is required']
     },
     name: {
         type: NameSchema,
@@ -28,10 +20,10 @@ const LoaneeSchema = new Schema({
         type: String,
         required: [true, 'Birthplace is required']
     },
-    gender: {
+    sex: {
         type: String,
         enum: ['M', 'F'],
-        required: [true, 'Gender is required']
+        required: [true, 'Sex is required']
     },
     civil_status: {
         type: String,
@@ -72,11 +64,25 @@ const LoaneeSchema = new Schema({
     // loans: [Loan]
 })
 
-LoaneeSchema.pre('find', function () {
-    this.where({ deleted: false })
-})
+// Finding by text will search both username and name fields
+LoaneeSchema.index(
+    {
+        username: 'text',
+        'name.given': 'text',
+        'name.middle': 'text',
+        'name.last': 'text'
+    },
+    {
+        weights: {
+            username: 10,
+            'name.given': 5,
+            'name.middle': 3,
+            'name.last': 5
+        }
+    }
+)
 
-LoaneeSchema.pre('findOne', function () {
+LoaneeSchema.pre(['find', 'findOne'], function () {
     this.where({ deleted: false })
 })
 

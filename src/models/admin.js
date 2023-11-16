@@ -9,7 +9,8 @@ const Admin = model(
         username: {
             type: String,
             unique: true,
-            required: [true, 'Username is required'],
+            immutable: true,
+            default: 'admin',
             validate: {
                 validator: (username) => {
                     return username === 'admin'
@@ -21,10 +22,11 @@ const Admin = model(
             type: String,
             required: [true, 'Password is required']
         },
-        uuid: {
+        id: {
             type: String,
             unique: true,
-            required: [true, 'UUID is required'],
+            immutable: true,
+            default: () => uuidV5('admin', uuidV5.URL),
             validate: {
                 validator: (uuid) => uuidValidate(uuid) && uuidVersion(uuid) === 5,
                 message: 'UUID must be a valid UUID'
@@ -39,12 +41,10 @@ Admin.findOne({ username: 'admin' }, 'username')
     .then(async (existing) => {
         if (!existing) {
             const password_hash = await argon2.hash('admin')
-            const uuid = uuidV5('admin', uuidV5.URL)
 
             const admin = new Admin({
                 username: 'admin',
-                password_hash,
-                uuid
+                password_hash
             })
 
             admin.save()
