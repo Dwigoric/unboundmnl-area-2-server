@@ -81,17 +81,18 @@ router.put('/', async (req, res, next) => {
 
         if (!deposit) return res.status(404).json({ error: true, message: 'Deposit not found' })
 
-        const { ledger } = deposit
-
-        // Add transaction to ledger
-        ledger.push({
+        // Construct transaction info
+        const transactionInfo = {
             ...req.body,
             transactionID: Date.now().toString(36).toUpperCase()
-        })
+        }
 
         try {
-            // Update deposit
-            await Deposit.updateOne({ deleted: false, depositID }, { $set: { ledger } })
+            // Add transaction to ledger
+            await Deposit.updateOne(
+                { deleted: false, depositID },
+                { $push: { ledger: transactionInfo } }
+            )
 
             // Return transaction
             return res.status(200).json({ error: false, message: 'Transaction successfully added' })

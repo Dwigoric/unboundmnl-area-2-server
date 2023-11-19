@@ -65,17 +65,15 @@ router.put('/', (req, res, next) => {
 
         if (!loan) return res.status(404).json({ error: true, message: 'Loan not found' })
 
-        const { ledger } = loan
-
-        // Add transaction to ledger
-        ledger.push({
+        // Construct transaction info
+        const transactionInfo = {
             ...req.body,
             transactionID: Date.now().toString(36).toUpperCase()
-        })
+        }
 
         try {
-            // Update loan
-            await Loan.updateOne({ deleted: false, loanID }, { $set: { ledger } })
+            // Add transaction to ledger
+            await Loan.updateOne({ deleted: false, loanID }, { $push: { ledger: transactionInfo } })
 
             // Return a 200 response
             return res.status(200).json({ error: false, message: 'Transaction successfully added' })
