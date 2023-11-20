@@ -3,6 +3,7 @@ import { Schema } from 'mongoose'
 
 // Import schema
 import IndividualSettingSchema from './individualSettingSchema.js'
+import TimeSettingSchema from './timeSettingSchema.js'
 
 const LoanSettingsSchema = new Schema(
     {
@@ -10,7 +11,7 @@ const LoanSettingsSchema = new Schema(
         service_fee: IndividualSettingSchema,
         capital_build_up: IndividualSettingSchema,
         savings: IndividualSettingSchema,
-        credit_life_insurance: IndividualSettingSchema
+        time: TimeSettingSchema
     },
     { _id: false }
 )

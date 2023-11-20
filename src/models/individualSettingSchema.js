@@ -3,11 +3,9 @@ import { Schema } from 'mongoose'
 
 const InvidualSettingSchema = new Schema(
     {
-        type: {
+        unit: {
             type: String,
-            required: true,
-            enum: ['percentage', 'fixed amount'],
-            default: 'percentage'
+            required: true
         },
         value: {
             type: Number,

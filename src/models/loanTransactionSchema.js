@@ -15,7 +15,7 @@ const LoanTransactionSchema = new Schema({
         type: String,
         required: true
     },
-    transactionDate: {
+    transactionDatew: {
         type: Date,
         required: true
     },
