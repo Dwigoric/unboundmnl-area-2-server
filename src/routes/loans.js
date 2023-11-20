@@ -36,7 +36,7 @@ router.get('/', async (req, res, next) => {
 
         const loans = await Loan.find(options)
             .select(
-                '-ledger -deleted -term -submissionDate -approvalDate ' +
+                '-ledger -deleted -term -approvalDate ' +
                     '-coborrowerName -classification -__v -_id'
             )
             .lean()
