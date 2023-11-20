@@ -1,5 +1,5 @@
 // Packages
-import { Schema, Model } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
 const NotificationSettingsSchema = new Schema({
     notification_period_1: Number,
@@ -7,6 +7,6 @@ const NotificationSettingsSchema = new Schema({
     notification_period_3: Number
 })
 
-const NotificationSettings = new Model('NotificationSettings', NotificationSettingsSchema)
+const NotificationSettings = new model('NotificationSettings', NotificationSettingsSchema)
 
 export default NotificationSettings
