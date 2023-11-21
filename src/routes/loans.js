@@ -233,14 +233,14 @@ router.post('/review-application/:loanID', async (req, res, next) => {
 })
 
 /**
- * POST /edit-loan
+ * PATCH /edit-loan
  *
  * Edit a loan or loan application
  *
  * req.body contains the data of the loan to edit. Finds a loan in the database using LoanID.
- * NOTE: Does not edit loan ledgers, loan IDs, or submission dates.
+ * NOTE: Does not edit loan ledgers, loan IDs, submission dates, or approval dates.
  */
-router.post('/edit-loan', async (req, res, next) => {
+router.patch('/edit-loan', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
@@ -250,13 +250,15 @@ router.post('/edit-loan', async (req, res, next) => {
             if (!existingLoan) {
                 return res.status(400).json({ message: 'Loan application does not exist' })
             } else {
-                // Do not edit loan ledgers, loan IDs, or submission dates.
-                let loanInfo = req.body
+                // Do not edit loan ledgers, loan IDs, submission dates, or approval dates.
+                let loanInfo = { ...req.body }
                 if (loanInfo.ledger) {
                     delete loanInfo.ledger
                 }
                 delete loanInfo.loanID
                 delete loanInfo.submissionDate
+                delete loanInfo.approvalDate
+                delete loanInfo.originalLoanAmount
 
                 if (
                     Object.entries(loanInfo.coborrower.name).every(([, val]) => {
@@ -266,9 +268,14 @@ router.post('/edit-loan', async (req, res, next) => {
                     loanInfo.coborrower = null
                 }
 
-                await Loan.updateOne({ loanID: req.body.loanID }, loanInfo, {
+                console.log(loanInfo)
+                console.log('body')
+
+                const val = await Loan.updateOne({ loanID: req.body.loanID }, loanInfo, {
                     runValidators: true
                 })
+
+                console.log(val)
 
                 return res.json({ message: 'Loan application successfully edited', error: false })
             }
