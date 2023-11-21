@@ -100,7 +100,7 @@ router.get('/:username', async (req, res, next) => {
                 return res.status(404).json({ message: 'Loanee does not exist' })
             }
 
-            const options = { deleted: false }
+            const options = { username, deleted: false }
             if (['approved', 'pending', 'rejected'].includes(req.query.status))
                 options.status = req.query.status
 
