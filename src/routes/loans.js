@@ -150,6 +150,7 @@ router.put('/new/:username', async (req, res, next) => {
                 term: req.body.term,
                 paymentFrequency: req.body.paymentFrequency,
                 submissionDate: Date.now(),
+                approvalDate: null,
                 coborrower: req.body.coborrower,
                 originalLoanAmount: req.body.amount,
                 ledger: [],
@@ -204,7 +205,10 @@ router.post('/review-application/:loanID', async (req, res, next) => {
             await Loan.updateOne(
                 { loanID: req.params.loanID },
                 {
-                    status: req.body.approved ? 'approved' : 'rejected'
+                    $set: {
+                        status: req.body.approved ? 'approved' : 'rejected',
+                        approvalDate: Date.now()
+                    }
                 },
                 {
                     runValidators: true
