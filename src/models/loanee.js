@@ -74,7 +74,7 @@ LoaneeSchema.index(
     },
     {
         weights: {
-            username: 10,
+            username: 20,
             'name.given': 5,
             'name.middle': 3,
             'name.last': 5
