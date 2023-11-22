@@ -24,46 +24,46 @@ LoanSettings.findOne()
 
         const settings = new LoanSettings({
             emergency: {
-                interest_rate: { type: 'percentage', value: 0, enabled: false },
-                service_fee: { type: 'percentage', value: 0, enabled: false },
-                capital_build_up: { type: 'percentage', value: 0, enabled: false },
-                savings: { type: 'percentage', value: 0, enabled: false },
-                credit_life_insurance: { type: 'percentage', value: 0, enabled: false }
+                interest_rate: { unit: 'percentage', value: 0, enabled: false },
+                service_fee: { unit: 'percentage', value: 0, enabled: false },
+                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
+                savings: { unit: 'percentage', value: 0, enabled: false },
+                credit_life_insurance: { unit: 'percentage', value: 0, enabled: false }
             },
             educational: {
-                interest_rate: { type: 'percentage', value: 0, enabled: false },
-                service_fee: { type: 'percentage', value: 0, enabled: false },
-                capital_build_up: { type: 'percentage', value: 0, enabled: false },
-                savings: { type: 'percentage', value: 0, enabled: false },
-                credit_life_insurance: { type: 'percentage', value: 0, enabled: false }
+                interest_rate: { unit: 'percentage', value: 0, enabled: false },
+                service_fee: { unit: 'percentage', value: 0, enabled: false },
+                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
+                savings: { unit: 'percentage', value: 0, enabled: false },
+                credit_life_insurance: { unit: 'percentage', value: 0, enabled: false }
             },
             pettyCash: {
-                interest_rate: { type: 'percentage', value: 0, enabled: false },
-                service_fee: { type: 'percentage', value: 0, enabled: false },
-                capital_build_up: { type: 'percentage', value: 0, enabled: false },
-                savings: { type: 'percentage', value: 0, enabled: false },
-                credit_life_insurance: { type: 'percentage', value: 0, enabled: false }
+                interest_rate: { unit: 'percentage', value: 0, enabled: false },
+                service_fee: { unit: 'percentage', value: 0, enabled: false },
+                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
+                savings: { unit: 'percentage', value: 0, enabled: false },
+                credit_life_insurance: { unit: 'percentage', value: 0, enabled: false }
             },
             multipurpose: {
-                interest_rate: { type: 'percentage', value: 0, enabled: false },
-                service_fee: { type: 'percentage', value: 0, enabled: false },
-                capital_build_up: { type: 'percentage', value: 0, enabled: false },
-                savings: { type: 'percentage', value: 0, enabled: false },
-                credit_life_insurance: { type: 'percentage', value: 0, enabled: false }
+                interest_rate: { unit: 'percentage', value: 0, enabled: false },
+                service_fee: { unit: 'percentage', value: 0, enabled: false },
+                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
+                savings: { unit: 'percentage', value: 0, enabled: false },
+                credit_life_insurance: { unit: 'percentage', value: 0, enabled: false }
             },
             commercial: {
-                interest_rate: { type: 'percentage', value: 0, enabled: false },
-                service_fee: { type: 'percentage', value: 0, enabled: false },
-                capital_build_up: { type: 'percentage', value: 0, enabled: false },
-                savings: { type: 'percentage', value: 0, enabled: false },
-                credit_life_insurance: { type: 'percentage', value: 0, enabled: false }
+                interest_rate: { unit: 'percentage', value: 0, enabled: false },
+                service_fee: { unit: 'percentage', value: 0, enabled: false },
+                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
+                savings: { unit: 'percentage', value: 0, enabled: false },
+                credit_life_insurance: { unit: 'percentage', value: 0, enabled: false }
             },
             livelihood: {
-                interest_rate: { type: 'percentage', value: 0, enabled: false },
-                service_fee: { type: 'percentage', value: 0, enabled: false },
-                capital_build_up: { type: 'percentage', value: 0, enabled: false },
-                savings: { type: 'percentage', value: 0, enabled: false },
-                credit_life_insurance: { type: 'percentage', value: 0, enabled: false }
+                interest_rate: { unit: 'percentage', value: 0, enabled: false },
+                service_fee: { unit: 'percentage', value: 0, enabled: false },
+                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
+                savings: { unit: 'percentage', value: 0, enabled: false },
+                credit_life_insurance: { unit: 'percentage', value: 0, enabled: false }
             }
         })
 

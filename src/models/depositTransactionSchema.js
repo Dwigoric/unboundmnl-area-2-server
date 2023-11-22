@@ -27,7 +27,7 @@ const DepositTransactionSchema = new Schema({
         required: true,
         validate: {
             validator: (val) => {
-                return 'deposit', 'withdrawal'.includes(val)
+                return ['deposit', 'withdrawal'].includes(val)
             },
             message: 'Deposit Type must be either "deposit" or "withdrawal"'
         }
