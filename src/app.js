@@ -14,6 +14,10 @@ await database.init().catch((err) => {
     process.exit(1)
 })
 
+// Initialize schedules
+import agenda from './schedules/index.js'
+await agenda.init()
+
 // Routes
 import indexRouter from './routes/index.js'
 import usersRouter from './routes/users.js'
