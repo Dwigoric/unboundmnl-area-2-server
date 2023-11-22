@@ -79,9 +79,10 @@ const LoanSchema = new Schema({
         required: true,
         validate: {
             validator: (status) => {
-                return ['pending', 'approved', 'rejected', 'complete'].includes(status)
+                return ['pending', 'approved', 'released', 'rejected', 'complete'].includes(status)
             },
-            message: 'Status must be either "pending", "approved", "rejected", or "complete"'
+            message:
+                'Status must be either "pending", "approved", "released", "rejected", or "complete"'
         }
     },
     classification: {
