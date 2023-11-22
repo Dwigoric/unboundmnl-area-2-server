@@ -151,6 +151,7 @@ router.put('/new/:username', async (req, res, next) => {
                 paymentFrequency: req.body.paymentFrequency,
                 submissionDate: Date.now(),
                 approvalDate: null,
+                dueDate: null,
                 coborrower: req.body.coborrower,
                 originalLoanAmount: req.body.amount,
                 ledger: [],
