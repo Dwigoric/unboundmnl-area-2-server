@@ -12,8 +12,7 @@ const LoanTransactionSchema = new Schema({
         immutable: true
     },
     ORNumber: {
-        type: String,
-        required: true
+        type: String
     },
     transactionDate: {
         type: Date,

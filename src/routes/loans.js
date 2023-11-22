@@ -202,18 +202,40 @@ router.post('/review-application/:loanID', async (req, res, next) => {
                     .json({ message: 'Cannot approve an application that is not pending approval' })
             }
 
-            await Loan.updateOne(
-                { loanID: req.params.loanID },
-                {
-                    $set: {
-                        status: req.body.approved ? 'approved' : 'rejected',
-                        approvalDate: Date.now()
-                    }
-                },
-                {
-                    runValidators: true
+            const query = {
+                $set: {
+                    status: req.body.approved ? 'approved' : 'rejected',
+                    approvalDate: Date.now()
                 }
-            )
+            }
+
+            console.log(existingLoan.ledger, !existingLoan.ledger)
+
+            if (existingLoan.ledger.length === 0) {
+                query.$set.ledger = [
+                    {
+                        transcationID: Date.now().toString(36).toUpperCase(),
+                        transactionDate: Date.now(),
+                        submissionDate: Date.now(),
+                        amountPaid: 500,
+                        balance: existingLoan.originalLoanAmount - 500,
+                        interestPaid: 0,
+                        finesPaid: 0,
+                        officerInCharge: {
+                            last: 'not',
+                            given: 'implemented yet'
+                        }
+                    }
+                ]
+            }
+
+            console.log(query)
+
+            const ret = await Loan.updateOne({ loanID: req.params.loanID }, query, {
+                runValidators: true
+            })
+
+            console.log(ret)
 
             return res.status(200).json({
                 message: `Loan application ${req.body.approved ? 'approved' : 'rejected'}`,
@@ -268,14 +290,9 @@ router.patch('/edit-loan', async (req, res, next) => {
                     loanInfo.coborrower = null
                 }
 
-                console.log(loanInfo)
-                console.log('body')
-
                 const val = await Loan.updateOne({ loanID: req.body.loanID }, loanInfo, {
                     runValidators: true
                 })
-
-                console.log(val)
 
                 return res.json({ message: 'Loan application successfully edited', error: false })
             }
