@@ -95,11 +95,24 @@ const LoanSchema = new Schema({
             message: 'Classification must be either "new" or "renewal"'
         }
     },
+    balance: {
+        type: Number,
+        validate: {
+            validator: (bal) => {
+                return bal >= 0
+            },
+            message: 'Balance must be at least 0'
+        }
+    },
     deleted: { type: Boolean, default: false }
 })
 
 LoanSchema.pre('save', function (next) {
-    if (this.isNew) this.set('loanID', uuidV5(Date.now().toString(), uuidV5.URL))
+    if (this.isNew) {
+        this.set('loanID', uuidV5(Date.now().toString(), uuidV5.URL))
+        this.set('balance', this.originalLoanAmount)
+    }
+
     next()
 })
 

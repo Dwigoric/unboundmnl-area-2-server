@@ -75,6 +75,16 @@ router.put('/', (req, res, next) => {
             // Add transaction to ledger
             await Loan.updateOne({ deleted: false, loanID }, { $push: { ledger: transactionInfo } })
 
+            // Update balance
+            if (loan.balance) {
+                await Loan.updateOne(
+                    { deleted: false, loanID },
+                    {
+                        balance: loan.balance - req.body.amountPaid
+                    }
+                )
+            }
+
             // Return a 200 response
             return res.status(200).json({ error: false, message: 'Transaction successfully added' })
         } catch (error) {

@@ -255,6 +255,15 @@ router.post('/review-application/:loanID', async (req, res, next) => {
                 runValidators: true
             })
 
+            if (existingLoan.balance) {
+                await Loan.updateOne(
+                    { deleted: false, loanID: req.params.loanID },
+                    {
+                        balance: existingLoan.balance - deductions
+                    }
+                )
+            }
+
             return res.status(200).json({
                 message: `Loan application ${req.body.approved ? 'approved' : 'rejected'}`,
                 error: false
