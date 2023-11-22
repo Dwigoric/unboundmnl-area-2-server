@@ -58,6 +58,9 @@ const LoanSchema = new Schema({
     approvalDate: {
         type: Date
     },
+    dueDate: {
+        type: Date
+    },
     coborrower: {
         name: NameSchema,
         birthday: Date,
