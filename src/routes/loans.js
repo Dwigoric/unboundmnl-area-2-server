@@ -8,6 +8,7 @@ const router = Router()
 // Import models
 import Loan from '../models/loan.js'
 import Loanee from '../models/loanee.js'
+import LoanSettings from '../models/loan_settings.js'
 
 // Ledger routes
 import ledgerRouter from './loan-ledgers.js'
@@ -184,8 +185,12 @@ router.put('/new/:username', async (req, res, next) => {
  *
  *  req.body must be of the form:
  *  {
- *      loanID: String
  *      approved: boolean
+ *      oic: {
+ *          last:
+ *          middle:
+ *          first:
+ *      }
  *  }
  */
 router.post('/review-application/:loanID', async (req, res, next) => {
@@ -210,7 +215,28 @@ router.post('/review-application/:loanID', async (req, res, next) => {
                 }
             }
 
-            console.log(existingLoan.ledger, !existingLoan.ledger)
+            const settings = await LoanSettings.findOne().lean()
+
+            if (!settings[existingLoan.loanType]) {
+                return res.status(400).json({
+                    message: 'No loan settings exist for the current loan type',
+                    error: true
+                })
+            }
+
+            let deductions = 0
+
+            for (const deductionType of ['service_fee', 'capital_build_up', 'savings']) {
+                const deductionSetting = settings[existingLoan.loanType][deductionType]
+
+                if (deductionSetting.enabled && deductionSetting.unit === 'percentage') {
+                    deductions += deductionSetting.value * existingLoan.originalLoanAmount * 0.01
+                } else if (deductionSetting.enabled) {
+                    deductions += deductionSetting.value
+                }
+            }
+
+            console.log(req.body)
 
             if (existingLoan.ledger.length === 0) {
                 query.$set.ledger = [
@@ -218,25 +244,18 @@ router.post('/review-application/:loanID', async (req, res, next) => {
                         transcationID: Date.now().toString(36).toUpperCase(),
                         transactionDate: Date.now(),
                         submissionDate: Date.now(),
-                        amountPaid: 500,
-                        balance: existingLoan.originalLoanAmount - 500,
+                        amountPaid: deductions,
+                        balance: existingLoan.originalLoanAmount - deductions,
                         interestPaid: 0,
                         finesPaid: 0,
-                        officerInCharge: {
-                            last: 'not',
-                            given: 'implemented yet'
-                        }
+                        officerInCharge: req.body.oic
                     }
                 ]
             }
 
-            console.log(query)
-
-            const ret = await Loan.updateOne({ loanID: req.params.loanID }, query, {
+            await Loan.updateOne({ loanID: req.params.loanID }, query, {
                 runValidators: true
             })
-
-            console.log(ret)
 
             return res.status(200).json({
                 message: `Loan application ${req.body.approved ? 'approved' : 'rejected'}`,
