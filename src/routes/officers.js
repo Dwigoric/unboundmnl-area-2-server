@@ -63,9 +63,36 @@ router.get('/:id', async (req, res, next) => {
 })
 
 /**
- * PATCH /:id
+ * PATCH /admin/password
  *
- * Update officer's password by UUID. This route is only accessible to the admin and loan officers.
+ * Update admin's password. This route is only accessible to the admin.
+ */
+router.patch('/admin/password', async (req, res, next) => {
+    passport.authenticate('admin', { session: false }, async (err, admin, info) => {
+        if (err) return next(err)
+        if (!admin) return res.status(401).json(info)
+
+        // Validate password
+        const { password } = req.body
+        if (!password || password.length < 8) {
+            return res.status(400).json({ message: 'Password must be at least 8 characters' })
+        }
+
+        const password_hash = await argon2.hash(password)
+
+        try {
+            await Admin.updateOne({ username: 'admin' }, { password_hash })
+            res.status(200).json({ message: 'Admin password updated' })
+        } catch (err) {
+            res.status(500).send({ message: err.message })
+        }
+    })(req, res, next)
+})
+
+/**
+ * PATCH /:id/password
+ *
+ * Update officer's password by UUID. This route is only accessible to the admin.
  */
 router.patch('/:id/password', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
