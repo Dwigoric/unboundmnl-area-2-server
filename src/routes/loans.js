@@ -236,8 +236,6 @@ router.post('/review-application/:loanID', async (req, res, next) => {
                 }
             }
 
-            console.log(req.body)
-
             if (existingLoan.ledger.length === 0) {
                 query.$set.ledger = [
                     {
