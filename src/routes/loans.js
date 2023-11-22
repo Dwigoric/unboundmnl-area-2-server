@@ -251,18 +251,13 @@ router.post('/review-application/:loanID', async (req, res, next) => {
                 ]
             }
 
+            if (existingLoan.balance) {
+                query.$set.balance = existingLoan.balance - deductions
+            }
+
             await Loan.updateOne({ loanID: req.params.loanID }, query, {
                 runValidators: true
             })
-
-            if (existingLoan.balance) {
-                await Loan.updateOne(
-                    { deleted: false, loanID: req.params.loanID },
-                    {
-                        balance: existingLoan.balance - deductions
-                    }
-                )
-            }
 
             return res.status(200).json({
                 message: `Loan application ${req.body.approved ? 'approved' : 'rejected'}`,
@@ -270,6 +265,14 @@ router.post('/review-application/:loanID', async (req, res, next) => {
             })
         } catch (error) {
             if (error.name === 'ValidationError') {
+                if (error.errors.balance) {
+                    return res.status(400).json({
+                        message:
+                            'Cannot accept loan: Loan balance would be less than 0 after initial deductions',
+                        error: true
+                    })
+                }
+
                 return res.status(400).json({
                     message: error.errors[Object.keys(error.errors)[0]].message,
                     error: true

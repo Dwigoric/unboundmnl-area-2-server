@@ -71,19 +71,22 @@ router.put('/', (req, res, next) => {
             transactionID: Date.now().toString(36).toUpperCase()
         }
 
+        const query = {
+            $push: { ledger: transactionInfo }
+        }
+
+        // Update balance
+        if (loan.balance) {
+            query.$set = {
+                balance: loan.balance - req.body.amountPaid
+            }
+        }
+
         try {
             // Add transaction to ledger
-            await Loan.updateOne({ deleted: false, loanID }, { $push: { ledger: transactionInfo } })
-
-            // Update balance
-            if (loan.balance) {
-                await Loan.updateOne(
-                    { deleted: false, loanID },
-                    {
-                        balance: loan.balance - req.body.amountPaid
-                    }
-                )
-            }
+            await Loan.updateOne({ deleted: false, loanID }, query, {
+                runValidators: true
+            })
 
             // Return a 200 response
             return res.status(200).json({ error: false, message: 'Transaction successfully added' })
