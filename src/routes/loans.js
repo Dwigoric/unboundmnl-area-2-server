@@ -301,31 +301,33 @@ router.patch('/:loanID', async (req, res, next) => {
             const { loanID } = req.params
 
             const existingLoan = await Loan.findOne({ loanID })
-            if (!existingLoan) {
+            if (!existingLoan)
                 return res.status(404).json({ message: 'Loan application does not exist' })
-            } else {
-                // Do not edit loan ledgers, loan IDs, submission dates, or approval dates.
-                const loanInfo = { ...req.body }
-                if (loanInfo.ledger) {
-                    delete loanInfo.ledger
-                }
-                delete loanInfo.loanID
-                delete loanInfo.submissionDate
-                delete loanInfo.approvalDate
-                delete loanInfo.originalLoanAmount
 
-                if (
-                    Object.entries(loanInfo.coborrower.name).every(([, val]) => {
-                        return val === '' || val === null
-                    })
-                ) {
-                    loanInfo.coborrower = null
-                }
-
-                await Loan.updateOne({ loanID }, loanInfo, { runValidators: true })
-
-                return res.json({ message: 'Loan application successfully edited', error: false })
+            // Do not edit loan ledgers, loan IDs, submission dates, or approval dates.
+            const loanInfo = { ...req.body }
+            if (loanInfo.ledger) {
+                delete loanInfo.ledger
             }
+            delete loanInfo.loanID
+            delete loanInfo.submissionDate
+            delete loanInfo.approvalDate
+            delete loanInfo.originalLoanAmount
+
+            if (existingLoan.status === 'approved' && loanInfo.status === 'released')
+                loanInfo.releaseDate = Date.now()
+
+            if (
+                Object.entries(loanInfo.coborrower.name).every(([, val]) => {
+                    return val === '' || val === null
+                })
+            ) {
+                loanInfo.coborrower = null
+            }
+
+            await Loan.updateOne({ loanID }, loanInfo, { runValidators: true })
+
+            return res.json({ message: 'Loan application successfully edited', error: false })
         } catch (error) {
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
