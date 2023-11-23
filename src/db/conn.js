@@ -16,9 +16,7 @@ class Database {
         // Set the MongoDB URI
         const url = process.env.MONGODB_URI || DEFAULT_MONGODB_URI
 
-        return mongoose.connect(url).then(() => {
-            console.log('Database connection successful')
-        })
+        return mongoose.connect(url)
         // Do not catch the error; the app should crash on database connection failure
     }
 

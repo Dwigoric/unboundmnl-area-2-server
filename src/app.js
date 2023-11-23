@@ -9,13 +9,13 @@ import 'dotenv/config'
 
 // MongoDB
 import database from './db/conn.js'
-await database.init().catch((err) => {
-    console.error(err)
-    process.exit(1)
-})
-
-// Initialize schedules
-import './schedules/agenda.js'
+await database
+    .init()
+    .then(() => import('./schedules/agenda.js'))
+    .catch((err) => {
+        console.error(err)
+        process.exit(1)
+    })
 
 // Routes
 import indexRouter from './routes/index.js'
