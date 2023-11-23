@@ -41,12 +41,12 @@ router.get('/', async (req, res, next) => {
  *
  * Get a deposit given its deposit ID
  */
-router.get('/get/:depositid', async (req, res, next) => {
+router.get('/:depositID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
-        const deposit = await Deposit.findOne({ deleted: false, depositID: req.params.depositid })
+        const deposit = await Deposit.findOne({ deleted: false, depositID: req.params.depositID })
             .select('-__v -_id')
             .lean()
 
@@ -63,7 +63,7 @@ router.get('/get/:depositid', async (req, res, next) => {
  *
  * Get all deposits of a member given their username
  */
-router.get('/:username', async (req, res, next) => {
+router.get('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         try {
             if (err) return next(err)
@@ -103,7 +103,7 @@ router.get('/:username', async (req, res, next) => {
  *      original deposit amount
  * }
  */
-router.put('/new/:username', async (req, res, next) => {
+router.put('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
@@ -144,20 +144,22 @@ router.put('/new/:username', async (req, res, next) => {
 })
 
 /**
- * POST /edit-deposit
+ * PATCH /:depositID
  *
  * Edit a deposit
  *
  * req.body contains the data of the deposit to edit. Finds a deposit in the database using depositID.
  * NOTE: Does not edit deposit IDs.
  */
-router.post('/edit-deposit', async (req, res, next) => {
+router.patch('/:depositID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingDeposit = await Deposit.findOne({ depositID: req.body.depositID })
+            const { depositID } = req.params
+
+            const existingDeposit = await Deposit.findOne({ depositID })
             if (!existingDeposit) {
                 return res.status(400).json({ message: 'Deposit application does not exist' })
             } else {
@@ -169,9 +171,7 @@ router.post('/edit-deposit', async (req, res, next) => {
                 delete depositInfo.depositID
                 delete depositInfo.approvalDate
 
-                await Deposit.updateOne({ loanID: req.body.loanID }, depositInfo, {
-                    runValidators: true
-                })
+                await Deposit.updateOne({ depositID }, depositInfo, { runValidators: true })
 
                 return res.json({ message: 'Loan application successfully edited', error: false })
             }
@@ -189,28 +189,26 @@ router.post('/edit-deposit', async (req, res, next) => {
 })
 
 /**
- * POST /delete-deposit
+ * DELETE /:depositID
  *
  * Delete a deposit.
  *
- * Request body contains: {
- *      depositID: deposit ID of the deposit to be deleted
- * }
- *
  * This functionality only soft deletes the deposit.
  */
-router.post('/delete-deposit', async (req, res, next) => {
+router.delete('/:depositID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingDeposit = await Deposit.findOne({ depositID: req.body.depositID })
+            const { depositID } = req.params
+
+            const existingDeposit = await Deposit.findOne({ depositID })
             if (!existingDeposit) {
-                return res.status(400).json({ message: 'Deposit does not exist' })
+                return res.status(404).json({ message: 'Deposit does not exist' })
             } else {
                 await Deposit.updateOne(
-                    { DepositID: req.body.DepositID },
+                    { depositID },
                     {
                         deleted: true
                     }
