@@ -48,17 +48,17 @@ router.get('/', async (req, res, next) => {
 })
 
 /**
- * GET /get/:loanid
+ * GET /:loanID
  *
  * Get a loan given its loan ID
  */
-router.get('/get/:loanid', async (req, res, next) => {
+router.get('/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
-        try {
-            if (err) return next(err)
-            if (!manager) return res.status(401).json(info)
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
 
-            const loan = await Loan.findOne({ deleted: false, loanID: req.params.loanid })
+        try {
+            const loan = await Loan.findOne({ deleted: false, loanID: req.params.loanID })
                 .select('-classification -__v -_id')
                 .lean()
 
@@ -83,16 +83,16 @@ router.get('/get/:loanid', async (req, res, next) => {
 })
 
 /**
- * GET /:username
+ * GET /user/:username
  *
- * Get all loans for a loanee
+ * Get all loans for a loanee given their username
  */
-router.get('/:username', async (req, res, next) => {
+router.get('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
-        try {
-            if (err) return next(err)
-            if (!manager) return res.status(401).json(info)
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
 
+        try {
             const { username } = req.params
 
             const loanee = await Loanee.findOne({ username }).lean()
@@ -117,11 +117,11 @@ router.get('/:username', async (req, res, next) => {
 })
 
 /**
- * PUT /new/:username
+ * PUT /user/:username
  *
  * Create a new loan application for a loanee
  */
-router.put('/new/:username', async (req, res, next) => {
+router.put('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
@@ -179,7 +179,7 @@ router.put('/new/:username', async (req, res, next) => {
 })
 
 /**
- * POST /review-application
+ * POST /:loanID/review
  *
  * Approve or reject a loan application
  *
@@ -193,13 +193,15 @@ router.put('/new/:username', async (req, res, next) => {
  *      }
  *  }
  */
-router.post('/review-application/:loanID', async (req, res, next) => {
+router.post('/:loanID/review', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingLoan = await Loan.findOne({ loanID: req.params.loanID })
+            const { loanID } = req.params
+
+            const existingLoan = await Loan.findOne({ loanID })
             if (!existingLoan) {
                 return res.status(404).json({ message: 'Loan application does not exist' })
             } else if (existingLoan.status !== 'pending') {
@@ -255,9 +257,7 @@ router.post('/review-application/:loanID', async (req, res, next) => {
                 query.$set.balance = existingLoan.balance - deductions
             }
 
-            await Loan.updateOne({ loanID: req.params.loanID }, query, {
-                runValidators: true
-            })
+            await Loan.updateOne({ loanID }, query, { runValidators: true })
 
             return res.status(200).json({
                 message: `Loan application ${req.body.approved ? 'approved' : 'rejected'}`,
@@ -285,25 +285,27 @@ router.post('/review-application/:loanID', async (req, res, next) => {
 })
 
 /**
- * PATCH /edit-loan
+ * PATCH /:loanID
  *
  * Edit a loan or loan application
  *
  * req.body contains the data of the loan to edit. Finds a loan in the database using LoanID.
  * NOTE: Does not edit loan ledgers, loan IDs, submission dates, or approval dates.
  */
-router.patch('/edit-loan', async (req, res, next) => {
+router.patch('/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingLoan = await Loan.findOne({ loanID: req.body.loanID })
+            const { loanID } = req.params
+
+            const existingLoan = await Loan.findOne({ loanID })
             if (!existingLoan) {
-                return res.status(400).json({ message: 'Loan application does not exist' })
+                return res.status(404).json({ message: 'Loan application does not exist' })
             } else {
                 // Do not edit loan ledgers, loan IDs, submission dates, or approval dates.
-                let loanInfo = { ...req.body }
+                const loanInfo = { ...req.body }
                 if (loanInfo.ledger) {
                     delete loanInfo.ledger
                 }
@@ -320,9 +322,7 @@ router.patch('/edit-loan', async (req, res, next) => {
                     loanInfo.coborrower = null
                 }
 
-                const val = await Loan.updateOne({ loanID: req.body.loanID }, loanInfo, {
-                    runValidators: true
-                })
+                await Loan.updateOne({ loanID }, loanInfo, { runValidators: true })
 
                 return res.json({ message: 'Loan application successfully edited', error: false })
             }
@@ -340,33 +340,26 @@ router.patch('/edit-loan', async (req, res, next) => {
 })
 
 /**
- * POST /delete-loan
+ * DELETE /:loanID
  *
  * Delete a loan or loan application
- *
- * Request body contains; {
- *      loanID: loan ID of the loan to be deleted
- * }
  *
  * This functionality only soft deletes the loan;
  * the deleted loan will still be visible in the database
  */
-router.post('/delete-loan', async (req, res, next) => {
+router.delete('/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingLoan = await Loan.findOne({ loanID: req.body.loanID })
+            const { loanID } = req.params
+
+            const existingLoan = await Loan.findOne({ loanID })
             if (!existingLoan) {
-                return res.status(400).json({ message: 'Loan application does not exist' })
+                return res.status(404).json({ message: 'Loan application does not exist' })
             } else {
-                await Loan.updateOne(
-                    { loanID: req.body.loanID },
-                    {
-                        deleted: true
-                    }
-                )
+                await Loan.updateOne({ loanID }, { deleted: true })
 
                 return res.json({ message: 'Loan application successfully deleted', error: false })
             }
