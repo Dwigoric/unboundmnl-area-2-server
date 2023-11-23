@@ -1,8 +1,6 @@
 const name = 'process-loan-interests'
 
 const handler = async (job, done) => {
-    console.log('i ran!')
-
     const { Loan } = job.context.models
 
     // TODO: Process loan interests
@@ -10,6 +8,6 @@ const handler = async (job, done) => {
     done()
 }
 
-const every = '* * * * *'
+const every = '0 0 * * *' // Every 12:00 AM
 
 export default { name, handler, every }

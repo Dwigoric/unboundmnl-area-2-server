@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 // Default MongoDB URI
-const DEFAULT_MONGODB_URI = 'mongodb://localhost:27017/unboundmnl-problem-area-2'
+import { DEFAULT_MONGODB_URI } from './default_uri.js'
 
 class Database {
     /**
