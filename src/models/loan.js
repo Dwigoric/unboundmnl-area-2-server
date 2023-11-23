@@ -61,6 +61,13 @@ const LoanSchema = new Schema({
     dueDate: {
         type: Date
     },
+    releaseDate: {
+        type: Date
+    },
+    isPaidForCurrentPeriod: {
+        type: Boolean,
+        default: false
+    },
     coborrower: {
         name: NameSchema,
         birthday: Date,
