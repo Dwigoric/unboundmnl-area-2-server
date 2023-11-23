@@ -1,5 +1,5 @@
 // Import packages
-import { Schema, model } from 'mongoose'
+import { Schema, model, Decimal128 } from 'mongoose'
 import { v5 as uuidV5 } from 'uuid'
 
 // Import schema
@@ -69,7 +69,7 @@ const LoanSchema = new Schema({
         contact_no: String
     },
     originalLoanAmount: {
-        type: Number,
+        type: Decimal128,
         required: true,
         immutable: true
     },
@@ -96,7 +96,7 @@ const LoanSchema = new Schema({
         }
     },
     balance: {
-        type: Number,
+        type: Decimal128,
         validate: {
             validator: (bal) => {
                 return bal >= 0
@@ -114,10 +114,6 @@ LoanSchema.pre('save', function (next) {
     }
 
     next()
-})
-
-LoanSchema.pre(['find', 'findOne'], function () {
-    this.where({ deleted: false })
 })
 
 const Loan = model('Loan', LoanSchema)

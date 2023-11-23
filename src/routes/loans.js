@@ -1,6 +1,7 @@
 // Import packages
 import { Router } from 'express'
 import passport from 'passport'
+import { Decimal } from 'decimal.js'
 
 // Initialize router
 const router = Router()
@@ -12,6 +13,7 @@ import LoanSettings from '../models/loan_settings.js'
 
 // Ledger routes
 import ledgerRouter from './loan-ledgers.js'
+import { parse } from 'path'
 router.use(
     '/:loanID/ledger',
     (req, res, next) => {
@@ -42,8 +44,10 @@ router.get('/', async (req, res, next) => {
             )
             .lean()
 
+        parseDecimal(loans)
+
         // Return loans
-        return res.status(200).json({ loans, error: false })
+        return res.status(200).json({ loans: loans, error: false })
     })(req, res, next)
 })
 
@@ -64,6 +68,7 @@ router.get('/:loanID', async (req, res, next) => {
 
             // Return loans
             if (loan) {
+                parseDecimal(loan)
                 return res.status(200).json({ loan, error: false })
             } else {
                 return res.status(400).json({ message: 'Loan ID does not exist', error: true })
@@ -107,6 +112,7 @@ router.get('/user/:username', async (req, res, next) => {
 
             const loans = await Loan.find(options).select('-__v -_id').lean()
 
+            parseDecimal(loans)
             // Return loans
             return res.status(200).json({ loans, error: false })
         } catch (error) {
@@ -201,7 +207,8 @@ router.post('/:loanID/review', async (req, res, next) => {
         try {
             const { loanID } = req.params
 
-            const existingLoan = await Loan.findOne({ loanID })
+            // Fetch and preprocess existing loans
+            const existingLoan = await Loan.findOne({ loanID }).lean()
             if (!existingLoan) {
                 return res.status(404).json({ message: 'Loan application does not exist' })
             } else if (existingLoan.status !== 'pending') {
@@ -209,16 +216,10 @@ router.post('/:loanID/review', async (req, res, next) => {
                     .status(400)
                     .json({ message: 'Cannot approve an application that is not pending approval' })
             }
+            parseDecimal(existingLoan)
 
-            const query = {
-                $set: {
-                    status: req.body.approved ? 'approved' : 'rejected',
-                    approvalDate: Date.now()
-                }
-            }
-
+            // Fetch settings
             const settings = await LoanSettings.findOne().lean()
-
             if (!settings[existingLoan.loanType]) {
                 return res.status(400).json({
                     message: 'No loan settings exist for the current loan type',
@@ -226,15 +227,28 @@ router.post('/:loanID/review', async (req, res, next) => {
                 })
             }
 
-            let deductions = 0
+            // Calculate deductions
+            let deductions = new Decimal('0')
 
             for (const deductionType of ['service_fee', 'capital_build_up', 'savings']) {
                 const deductionSetting = settings[existingLoan.loanType][deductionType]
 
                 if (deductionSetting.enabled && deductionSetting.unit === 'percentage') {
-                    deductions += deductionSetting.value * existingLoan.originalLoanAmount * 0.01
+                    deductions = deductions.add(
+                        new Decimal(deductionSetting.value)
+                            .mul(existingLoan.originalLoanAmount)
+                            .mul(new Decimal('0.01'))
+                    )
                 } else if (deductionSetting.enabled) {
-                    deductions += deductionSetting.value
+                    deductions = deductions.add(deductionSetting.value)
+                }
+            }
+
+            // Create update query
+            const query = {
+                $set: {
+                    status: req.body.approved ? 'approved' : 'rejected',
+                    approvalDate: Date.now()
                 }
             }
 
@@ -245,7 +259,7 @@ router.post('/:loanID/review', async (req, res, next) => {
                         transactionDate: Date.now(),
                         submissionDate: Date.now(),
                         amountPaid: deductions,
-                        balance: existingLoan.originalLoanAmount - deductions,
+                        balance: deductions.neg().add(existingLoan.balance).toString(),
                         interestPaid: 0,
                         finesPaid: 0,
                         officerInCharge: req.body.oic
@@ -253,8 +267,14 @@ router.post('/:loanID/review', async (req, res, next) => {
                 ]
             }
 
-            if (existingLoan.balance) {
-                query.$set.balance = existingLoan.balance - deductions
+            console.log(
+                deductions.neg(),
+                deductions.neg().add(existingLoan.balance),
+                deductions.neg().add(existingLoan.balance).toString()
+            )
+
+            if (existingLoan.balance && req.body.approved) {
+                query.$set.balance = deductions.neg().add(existingLoan.balance).toString()
             }
 
             await Loan.updateOne({ loanID }, query, { runValidators: true })
@@ -375,4 +395,16 @@ router.delete('/:loanID', async (req, res, next) => {
         }
     })(req, res, next)
 })
+
+// https://stackoverflow.com/questions/53369688/extract-decimal-from-decimal128-with-mongoose-mongodb
+const parseDecimal = (v, i, prev) => {
+    if (v !== null && typeof v === 'object') {
+        if (v.constructor.name === 'Decimal128') prev[i] = parseFloat(v.toString())
+        else
+            Object.entries(v).forEach(([key, value]) =>
+                parseDecimal(value, key, prev ? prev[i] : v)
+            )
+    }
+}
+
 export default router
