@@ -1,5 +1,5 @@
 // Packages
-import { Schema } from 'mongoose'
+import { Schema, Decimal128 } from 'mongoose'
 
 const InvidualSettingSchema = new Schema(
     {
@@ -8,7 +8,7 @@ const InvidualSettingSchema = new Schema(
             required: true
         },
         value: {
-            type: Number,
+            type: Decimal128,
             default: 0
         },
         enabled: {

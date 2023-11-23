@@ -220,6 +220,11 @@ router.post('/:loanID/review', async (req, res, next) => {
 
             // Fetch settings
             const settings = await LoanSettings.findOne().lean()
+
+            console.log(settings)
+            parseDecimal(settings)
+            console.log(settings)
+
             if (!settings[existingLoan.loanType]) {
                 return res.status(400).json({
                     message: 'No loan settings exist for the current loan type',
