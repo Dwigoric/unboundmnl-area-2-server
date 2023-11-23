@@ -80,10 +80,16 @@ router.put('/', (req, res, next) => {
             $push: { ledger: transactionInfo }
         }
 
-        // Update balance
-        if (loan.balance) {
+
+        // Update balance depending on whether transaction is readjustment or not
+        if (loan.balance && req.body.readjusment === false) {
             query.$set = {
-                balance: loan.balance - req.body.amountPaid
+                // Should we include amountDue here?
+                balance: loan.balance + req.body.interestDue - req.body.amountPaid - req.body.interestPaid - req.body.finesPaid
+            }
+        } else {
+            query.$set = {
+                balance: req.body.balance
             }
         }
 

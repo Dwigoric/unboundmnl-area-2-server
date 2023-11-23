@@ -27,6 +27,11 @@ const LoanTransactionSchema = new Schema({
         type: Decimal128,
         required: true
     },
+    amountDue: {
+        type: Decimal128,
+        required: false,
+        default: 0
+    },
     balance: {
         type: Decimal128,
         required: true
@@ -34,6 +39,11 @@ const LoanTransactionSchema = new Schema({
     interestPaid: {
         type: Decimal128,
         required: true
+    },
+    interestDue: {
+        type: Decimal128,
+        required: false,
+        default: 0
     },
     finesPaid: {
         type: Decimal128,

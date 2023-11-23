@@ -161,6 +161,7 @@ router.put('/user/:username', async (req, res, next) => {
                 dueDate: null,
                 coborrower: req.body.coborrower,
                 originalLoanAmount: req.body.amount,
+                balance: req.body.amount,
                 ledger: [],
                 status: req.body.status,
                 classification: req.body.classification
@@ -264,8 +265,10 @@ router.post('/:loanID/review', async (req, res, next) => {
                         transactionDate: Date.now(),
                         submissionDate: Date.now(),
                         amountPaid: deductions,
+                        amountDue: 0,
                         balance: deductions.neg().add(existingLoan.balance).toString(),
                         interestPaid: 0,
+                        interestDue: 0,
                         finesPaid: 0,
                         officerInCharge: req.body.oic
                     }
