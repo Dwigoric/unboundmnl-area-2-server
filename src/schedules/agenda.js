@@ -23,10 +23,10 @@ const graceful = async () => {
 process.on('SIGTERM', graceful)
 process.on('SIGINT', graceful)
 
-async function start() {
-    await agenda.start()
-    for (const jobInfo of Object.values(jobs)) await agenda.every(jobInfo.every, jobInfo.name)
-}
-await start()
+// async function start() {
+//     await agenda.start()
+//     for (const jobInfo of Object.values(jobs)) await agenda.every(jobInfo.every, jobInfo.name)
+// }
+// await start()
 
 export default agenda
