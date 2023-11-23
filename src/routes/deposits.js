@@ -32,6 +32,8 @@ router.get('/', async (req, res, next) => {
 
         const deposits = await Deposit.find({ deleted: false }).select('-__v -_id').lean()
 
+        parseDecimal(deposits)
+
         return res.status(200).json({ deposits, error: false })
     })(req, res, next)
 })
@@ -51,6 +53,7 @@ router.get('/:depositID', async (req, res, next) => {
             .lean()
 
         if (deposit) {
+            parseDecimal(deposit)
             return res.status(200).json({ deposit, error: false })
         } else {
             return res.status(400).json({ message: 'Deposit ID does not exist', error: true })
@@ -80,6 +83,8 @@ router.get('/user/:username', async (req, res, next) => {
             const deposits = await Deposit.find({ username, deleted: false })
                 .select('-__v -_id')
                 .lean()
+
+            parseDecimal(deposits)
 
             return res.status(200).json({ deposits, error: false })
         } catch (error) {
@@ -231,5 +236,17 @@ router.delete('/:depositID', async (req, res, next) => {
         }
     })(req, res, next)
 })
+
+// Helper functions
+// https://stackoverflow.com/questions/53369688/extract-decimal-from-decimal128-with-mongoose-mongodb
+const parseDecimal = (v, i, prev) => {
+    if (v !== null && typeof v === 'object') {
+        if (v.constructor.name === 'Decimal128') prev[i] = parseFloat(v)
+        else
+            Object.entries(v).forEach(([key, value]) =>
+                parseDecimal(value, key, prev ? prev[i] : v)
+            )
+    }
+}
 
 export default router

@@ -1,5 +1,5 @@
 // Import packages
-import { Schema } from 'mongoose'
+import { Schema, Decimal128 } from 'mongoose'
 
 import NameSchema from './nameSchema.js'
 
@@ -33,15 +33,15 @@ const DepositTransactionSchema = new Schema({
         }
     },
     amount: {
-        type: Number,
+        type: Decimal128,
         required: true
     },
     interest: {
-        type: Number,
+        type: Decimal128,
         required: true
     },
     balance: {
-        type: Number,
+        type: Decimal128,
         required: true
     },
     officerInCharge: {

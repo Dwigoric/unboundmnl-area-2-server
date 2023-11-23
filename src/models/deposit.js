@@ -1,5 +1,5 @@
 // Import packages
-import { Schema, model } from 'mongoose'
+import { Schema, model, Decimal128 } from 'mongoose'
 import { v5 as uuidV5 } from 'uuid'
 
 // Import schema
@@ -21,11 +21,11 @@ const DepositSchema = new Schema({
         immutable: true
     },
     interestRate: {
-        type: Number,
+        type: Decimal128,
         required: true
     },
     originalDepositAmount: {
-        type: Number,
+        type: Decimal128,
         required: true
     },
     ledger: [DepositTransactionSchema],

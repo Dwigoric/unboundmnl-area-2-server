@@ -267,12 +267,6 @@ router.post('/:loanID/review', async (req, res, next) => {
                 ]
             }
 
-            console.log(
-                deductions.neg(),
-                deductions.neg().add(existingLoan.balance),
-                deductions.neg().add(existingLoan.balance).toString()
-            )
-
             if (existingLoan.balance && req.body.approved) {
                 query.$set.balance = deductions.neg().add(existingLoan.balance).toString()
             }
