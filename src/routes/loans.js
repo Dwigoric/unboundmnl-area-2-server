@@ -33,10 +33,16 @@ router.get('/', async (req, res, next) => {
         if (!manager) return res.status(401).json(info)
 
         const options = { deleted: false }
-        if (['approved', 'pending', 'rejected'].includes(req.query.status))
-            options.status = req.query.status
+        const optionsList = []
 
-        const loans = await Loan.find(options)
+        const { status } = req.query
+        const statuses = status.split(',')
+        statuses.forEach((s) => {
+            if (['pending', 'approved', 'released', 'rejected', 'complete'].includes(s))
+                optionsList.push({ ...options, status: s })
+        })
+
+        const loans = await Loan.find({ $or: optionsList })
             .select(
                 '-ledger -deleted -term -approvalDate ' +
                     '-coborrowerName -classification -__v -_id'
@@ -106,18 +112,16 @@ router.get('/user/:username', async (req, res, next) => {
             }
 
             const options = { username, deleted: false }
+            const optionsList = []
 
             const { status } = req.query
-            if (
-                status
-                    .split(',')
-                    .some((s) =>
-                        ['pending', 'approved', 'released', 'rejected', 'complete'].includes(s)
-                    )
-            )
-                options.status = req.query.status
+            const statuses = status.split(',')
+            statuses.forEach((s) => {
+                if (['pending', 'approved', 'released', 'rejected', 'complete'].includes(s))
+                    optionsList.push({ ...options, status: s })
+            })
 
-            const loans = await Loan.find(options).select('-__v -_id').lean()
+            const loans = await Loan.find({ $or: optionsList }).select('-__v -_id').lean()
 
             parseDecimal(loans)
             // Return loans
