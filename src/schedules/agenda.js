@@ -28,7 +28,8 @@ process.on('SIGINT', graceful)
 
 async function start() {
     await agenda.start()
-    for (const jobInfo of Object.values(jobs)) await agenda.every(jobInfo.every, jobInfo.name)
+    for (const jobInfo of Object.values(jobs))
+        if (jobInfo.every) await agenda.every(jobInfo.every, jobInfo.name)
 }
 await start()
 
