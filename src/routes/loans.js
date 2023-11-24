@@ -13,7 +13,6 @@ import LoanSettings from '../models/loan_settings.js'
 
 // Ledger routes
 import ledgerRouter from './loan-ledgers.js'
-import { parse } from 'path'
 router.use(
     '/:loanID/ledger',
     (req, res, next) => {
@@ -336,10 +335,24 @@ router.patch('/:loanID', async (req, res, next) => {
             delete loanInfo.approvalDate
             delete loanInfo.originalLoanAmount
 
-            if (existingLoan.status === 'approved' && loanInfo.status === 'released')
-                loanInfo.releaseDate = Date.now()
+            const response = { message: 'Loan application successfully edited', error: false }
+
+            if (existingLoan.status === 'approved' && loanInfo.status === 'released') {
+                loanInfo.releaseDate = new Date()
+
+                loanInfo.dueDate = new Date(Date.now() + 1000 * 60 * 60 * 24)
+                if (existingLoan.paymentFrequency === 'weekly')
+                    loanInfo.dueDate.setDate(loanInfo.dueDate.getDate() + 6)
+                else if (existingLoan.paymentFrequency === 'monthly') {
+                    loanInfo.dueDate.setMonth(loanInfo.dueDate.getMonth() + 1)
+                    loanInfo.dueDate.setDate(loanInfo.dueDate.getDate() - 1)
+                }
+
+                response.dueDate = loanInfo.dueDate
+            }
 
             if (
+                loanInfo.coborrower &&
                 Object.entries(loanInfo.coborrower.name).every(([, val]) => {
                     return val === '' || val === null
                 })
@@ -349,7 +362,7 @@ router.patch('/:loanID', async (req, res, next) => {
 
             await Loan.updateOne({ loanID }, loanInfo, { runValidators: true })
 
-            return res.json({ message: 'Loan application successfully edited', error: false })
+            return res.status(200).json(response)
         } catch (error) {
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
