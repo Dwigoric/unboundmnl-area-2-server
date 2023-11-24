@@ -33,9 +33,7 @@ router.patch('/loans/:loanType', async (req, res, next) => {
             const query = {}
             query[req.params.loanType] = req.body
 
-            const ret = await LoanSettings.findOneAndUpdate({}, query).select('-_id -__v')
-
-            console.log(ret)
+            await LoanSettings.findOneAndUpdate({}, query).select('-_id -__v')
 
             return res.status(200).json({ error: false, message: 'Updated loan settings' })
         } catch (error) {
@@ -64,13 +62,16 @@ router.get('/deposits', async (req, res, next) => {
     })(req, res, next)
 })
 
-router.patch('/deposits', async (req, res, next) => {
+router.patch('/deposits/:depositType', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
         if (err) return next(err)
         if (!admin) return res.status(401).json({ message: info.message })
 
         try {
-            await DepositSettings.findOneAndUpdate({}, req.body).select('-_id -__v')
+            const query = {}
+            query[req.params.depositType] = req.body
+
+            await DepositSettings.findOneAndUpdate({}, query).select('-_id -__v')
 
             return res.status(200).json({ error: false, message: 'Updated deposit settings' })
         } catch (error) {
