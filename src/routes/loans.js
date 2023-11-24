@@ -106,7 +106,15 @@ router.get('/user/:username', async (req, res, next) => {
             }
 
             const options = { username, deleted: false }
-            if (['approved', 'pending', 'rejected'].includes(req.query.status))
+
+            const { status } = req.query
+            if (
+                status
+                    .split(',')
+                    .some((s) =>
+                        ['pending', 'approved', 'released', 'rejected', 'complete'].includes(s)
+                    )
+            )
                 options.status = req.query.status
 
             const loans = await Loan.find(options).select('-__v -_id').lean()
