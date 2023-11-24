@@ -16,19 +16,26 @@ router.get('/loans', async (req, res, next) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json({ message: info.message })
 
-        const settings = await LoanSettings.findOne().select('-_id -__v')
+        const settings = await LoanSettings.findOne().select('-_id -__v').lean()
+
+        parseDecimal(settings)
 
         return res.status(200).json({ settings })
     })(req, res, next)
 })
 
-router.patch('/loans', async (req, res, next) => {
+router.patch('/loans/:loanType', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
         if (err) return next(err)
         if (!admin) return res.status(401).json({ message: info.message })
 
         try {
-            await LoanSettings.findOneAndUpdate({}, req.body).select('-_id -__v')
+            const query = {}
+            query[req.params.loanType] = req.body
+
+            const ret = await LoanSettings.findOneAndUpdate({}, query).select('-_id -__v')
+
+            console.log(ret)
 
             return res.status(200).json({ error: false, message: 'Updated loan settings' })
         } catch (error) {
@@ -49,7 +56,9 @@ router.get('/deposits', async (req, res, next) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json({ message: info.message })
 
-        const settings = await DepositSettings.findOne().select('-_id -__v')
+        const settings = await DepositSettings.findOne().select('-_id -__v').lean()
+
+        parseDecimal(settings)
 
         return res.status(200).json({ settings })
     })(req, res, next)
@@ -82,7 +91,9 @@ router.get('/notifications', async (req, res, next) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json({ message: info.message })
 
-        const settings = await NotificationSettings.findOne().select('-_id -__v')
+        const settings = await NotificationSettings.findOne().select('-_id -__v').lean()
+
+        parseDecimal(settings)
 
         return res.status(200).json({ settings })
     })(req, res, next)
@@ -108,5 +119,16 @@ router.patch('/notifications', async (req, res, next) => {
         }
     })(req, res, next)
 })
+
+// https://stackoverflow.com/questions/53369688/extract-decimal-from-decimal128-with-mongoose-mongodb
+const parseDecimal = (v, i, prev) => {
+    if (v !== null && typeof v === 'object') {
+        if (v.constructor.name === 'Decimal128') prev[i] = parseFloat(v.toString())
+        else
+            Object.entries(v).forEach(([key, value]) =>
+                parseDecimal(value, key, prev ? prev[i] : v)
+            )
+    }
+}
 
 export default router

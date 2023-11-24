@@ -21,16 +21,16 @@ DepositSettings.findOne()
 
         const settings = new DepositSettings({
             shareCapital: {
-                interest_rate: { unit: 'percentage', value: 0, enabled: false },
-                time: { type: 'monthly', value: 0 }
+                interest_rate: { unit: '%', value: 0, enabled: false },
+                time: { type: 'months', value: 0 }
             },
             savings: {
-                interest_rate: { unit: 'percentage', value: 0, enabled: false },
-                time: { type: 'monthly', value: 0 }
+                interest_rate: { unit: '%', value: 0, enabled: false },
+                time: { type: 'months', value: 0 }
             },
             timeDeposit: {
-                interest_rate: { unit: 'percentage', value: 0, enabled: false },
-                time: { type: 'monthly', value: 0 }
+                interest_rate: { unit: '%', value: 0, enabled: false },
+                time: { type: 'months', value: 0 }
             }
         })
 

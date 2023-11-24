@@ -24,46 +24,46 @@ LoanSettings.findOne()
 
         const settings = new LoanSettings({
             emergency: {
-                interest_rate: { unit: 'percentage', value: 0, enabled: false },
-                service_fee: { unit: 'percentage', value: 0, enabled: false },
-                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
-                savings: { unit: 'percentage', value: 0, enabled: false },
-                time: { type: 'monthly', value: 0 }
+                interest_rate: { unit: '%', value: 0, enabled: false },
+                service_fee: { unit: '%', value: 0, enabled: false },
+                capital_build_up: { unit: '%', value: 0, enabled: false },
+                savings: { unit: '%', value: 0, enabled: false },
+                time: { type: 'months', value: 0 }
             },
             educational: {
-                interest_rate: { unit: 'percentage', value: 0, enabled: false },
-                service_fee: { unit: 'percentage', value: 0, enabled: false },
-                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
-                savings: { unit: 'percentage', value: 0, enabled: false },
-                time: { type: 'monthly', value: 0 }
+                interest_rate: { unit: '%', value: 0, enabled: false },
+                service_fee: { unit: '%', value: 0, enabled: false },
+                capital_build_up: { unit: '%', value: 0, enabled: false },
+                savings: { unit: '%', value: 0, enabled: false },
+                time: { type: 'months', value: 0 }
             },
             pettyCash: {
-                interest_rate: { unit: 'percentage', value: 0, enabled: false },
-                service_fee: { unit: 'percentage', value: 0, enabled: false },
-                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
-                savings: { unit: 'percentage', value: 0, enabled: false },
-                time: { type: 'monthly', value: 0 }
+                interest_rate: { unit: '%', value: 0, enabled: false },
+                service_fee: { unit: '%', value: 0, enabled: false },
+                capital_build_up: { unit: '%', value: 0, enabled: false },
+                savings: { unit: '%', value: 0, enabled: false },
+                time: { type: 'months', value: 0 }
             },
             multipurpose: {
-                interest_rate: { unit: 'percentage', value: 0, enabled: false },
-                service_fee: { unit: 'percentage', value: 0, enabled: false },
-                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
-                savings: { unit: 'percentage', value: 0, enabled: false },
-                time: { type: 'monthly', value: 0 }
+                interest_rate: { unit: '%', value: 0, enabled: false },
+                service_fee: { unit: '%', value: 0, enabled: false },
+                capital_build_up: { unit: '%', value: 0, enabled: false },
+                savings: { unit: '%', value: 0, enabled: false },
+                time: { type: 'months', value: 0 }
             },
             commercial: {
-                interest_rate: { unit: 'percentage', value: 0, enabled: false },
-                service_fee: { unit: 'percentage', value: 0, enabled: false },
-                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
-                savings: { unit: 'percentage', value: 0, enabled: false },
-                time: { type: 'monthly', value: 0 }
+                interest_rate: { unit: '%', value: 0, enabled: false },
+                service_fee: { unit: '%', value: 0, enabled: false },
+                capital_build_up: { unit: '%', value: 0, enabled: false },
+                savings: { unit: '%', value: 0, enabled: false },
+                time: { type: 'months', value: 0 }
             },
             livelihood: {
-                interest_rate: { unit: 'percentage', value: 0, enabled: false },
-                service_fee: { unit: 'percentage', value: 0, enabled: false },
-                capital_build_up: { unit: 'percentage', value: 0, enabled: false },
-                savings: { unit: 'percentage', value: 0, enabled: false },
-                time: { type: 'monthly', value: 0 }
+                interest_rate: { unit: '%', value: 0, enabled: false },
+                service_fee: { unit: '%', value: 0, enabled: false },
+                capital_build_up: { unit: '%', value: 0, enabled: false },
+                savings: { unit: '%', value: 0, enabled: false },
+                time: { type: 'months', value: 0 }
             }
         })
 

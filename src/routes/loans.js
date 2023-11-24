@@ -233,9 +233,7 @@ router.post('/:loanID/review', async (req, res, next) => {
             // Fetch settings
             const settings = await LoanSettings.findOne().lean()
 
-            console.log(settings)
             parseDecimal(settings)
-            console.log(settings)
 
             if (!settings[existingLoan.loanType]) {
                 return res.status(400).json({
@@ -250,7 +248,7 @@ router.post('/:loanID/review', async (req, res, next) => {
             for (const deductionType of ['service_fee', 'capital_build_up', 'savings']) {
                 const deductionSetting = settings[existingLoan.loanType][deductionType]
 
-                if (deductionSetting.enabled && deductionSetting.unit === 'percentage') {
+                if (deductionSetting.enabled && deductionSetting.unit === '%') {
                     deductions = deductions.add(
                         new Decimal(deductionSetting.value)
                             .mul(existingLoan.originalLoanAmount)
@@ -281,6 +279,7 @@ router.post('/:loanID/review', async (req, res, next) => {
                         interestPaid: 0,
                         interestDue: 0,
                         finesPaid: 0,
+                        finesDue: 0,
                         officerInCharge: req.body.oic
                     }
                 ]
@@ -355,7 +354,7 @@ router.patch('/:loanID', async (req, res, next) => {
                 loanInfo.dueDate = new Date(Date.now() + 1000 * 60 * 60 * 24)
                 if (existingLoan.paymentFrequency === 'weekly')
                     loanInfo.dueDate.setDate(loanInfo.dueDate.getDate() + 6)
-                else if (existingLoan.paymentFrequency === 'monthly') {
+                else if (existingLoan.paymentFrequency === 'months') {
                     loanInfo.dueDate.setMonth(loanInfo.dueDate.getMonth() + 1)
                     loanInfo.dueDate.setDate(loanInfo.dueDate.getDate() - 1)
                 }

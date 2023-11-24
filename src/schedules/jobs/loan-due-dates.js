@@ -19,7 +19,7 @@ const handler = async (job, done) => {
         dueDate.setDate(dueDate.getDate() + 1)
         if (loan.paymentFrequency === 'weekly') {
             dueDate.setDate(dueDate.getDate() + 6)
-        } else if (loan.paymentFrequency === 'monthly') {
+        } else if (loan.paymentFrequency === 'months') {
             dueDate.setMonth(dueDate.getMonth() + 1)
             dueDate.setDate(dueDate.getDate() - 1)
         }
