@@ -129,6 +129,7 @@ router.put('/user/:username', async (req, res, next) => {
                 category: req.body.category,
                 interestRate: req.body.interestRate,
                 originalDepositAmount: req.body.originalDepositAmount,
+                runningAmount: req.body.originalDepositAmount,
                 ledger: [],
                 status: req.body.status || 'pending'
             })

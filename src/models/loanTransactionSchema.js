@@ -45,6 +45,10 @@ const LoanTransactionSchema = new Schema({
         required: false,
         default: 0
     },
+    finesDue: {
+        type: Decimal128,
+        required: true
+    },
     finesPaid: {
         type: Decimal128,
         required: true

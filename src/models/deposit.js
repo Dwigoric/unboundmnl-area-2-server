@@ -28,6 +28,9 @@ const DepositSchema = new Schema({
         type: Decimal128,
         required: true
     },
+    runningAmount: {
+        type: Decimal128
+    },
     ledger: [DepositTransactionSchema],
     status: {
         type: String,

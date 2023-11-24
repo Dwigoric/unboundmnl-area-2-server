@@ -22,14 +22,14 @@ const DepositTransactionSchema = new Schema({
         type: Date,
         required: true
     },
-    depositType: {
+    transactionType: {
         type: String,
         required: true,
         validate: {
             validator: (val) => {
-                return ['deposit', 'withdrawal'].includes(val)
+                return ['deposit', 'withdrawal', 'Deposit', 'Withdrawal'].includes(val)
             },
-            message: 'Deposit Type must be either "deposit" or "withdrawal"'
+            message: 'Transaction Type must be either "Deposit" or "Withdrawal"'
         }
     },
     amount: {

@@ -95,7 +95,10 @@ router.put('/', async (req, res, next) => {
             // Add transaction to ledger
             await Deposit.updateOne(
                 { deleted: false, depositID },
-                { $push: { ledger: transactionInfo } }
+                { 
+                    $push: { ledger: transactionInfo },
+                    $set: { runningAmount: req.body.balance }
+                }
             )
 
             // Return transaction
