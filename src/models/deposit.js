@@ -29,7 +29,13 @@ const DepositSchema = new Schema({
         required: true
     },
     runningAmount: {
-        type: Decimal128
+        type: Decimal128,
+        validate: {
+            validator: (v) => {
+                return v >= 0
+            },
+            message: 'Running amount must be at least 0'
+        }
     },
     ledger: [DepositTransactionSchema],
     status: {
