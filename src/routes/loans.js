@@ -2,6 +2,7 @@
 import { Router } from 'express'
 import passport from 'passport'
 import { Decimal } from 'decimal.js'
+
 import moment from 'moment'
 moment().format()
 
@@ -237,6 +238,8 @@ router.post('/:loanID/review', async (req, res, next) => {
 
             parseDecimal(settings)
 
+            console.log(existingLoan.loanType)
+
             if (!settings[existingLoan.loanType]) {
                 return res.status(400).json({
                     message: 'No loan settings exist for the current loan type',
@@ -379,6 +382,12 @@ router.patch('/:loanID', async (req, res, next) => {
                 }
                 loanInfo.nextInterestDate = moment(loanInfo.releaseDate)
                     .add(timeSetting.value * timeConversions[timeSetting.type], 'days')
+                    .set({
+                        hour: 0,
+                        minute: 0,
+                        second: 0,
+                        millisecond: 0
+                    })
                     .toDate()
 
                 response.dueDate = loanInfo.dueDate

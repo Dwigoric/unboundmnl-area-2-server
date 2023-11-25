@@ -24,16 +24,16 @@ const LoanSchema = new Schema({
             validator: (loanType) => {
                 return [
                     'emergency',
-                    'multi-purpose',
+                    'multipurpose',
                     'educational',
-                    'petty cash',
+                    'pettyCash',
                     'commercial',
                     'livelihood'
                 ].includes(loanType)
             },
             message:
-                'Loan type must be "emergency", "multi-purpose", "educational",' +
-                ' "petty cash", "commercial", or "livelihood"'
+                'Loan type must be "emergency", "multipurpose", "educational",' +
+                ' "pettyCash", "commercial", or "livelihood"'
         }
     },
     term: {
