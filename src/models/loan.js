@@ -64,6 +64,9 @@ const LoanSchema = new Schema({
     releaseDate: {
         type: Date
     },
+    nextInterestDate: {
+        type: Date
+    },
     isPaidForCurrentPeriod: {
         type: Boolean,
         default: false

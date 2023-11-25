@@ -8,6 +8,6 @@ const handler = async (job, done) => {
     done()
 }
 
-const every = '0 0 * * *' // Every 12:00 AM
+const every = '5 seconds' // Every 12:00 AM
 
 export default { name, handler, every }

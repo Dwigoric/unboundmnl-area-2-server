@@ -7,7 +7,7 @@ import { DEFAULT_MONGODB_URI } from '../db/default_uri.js'
 // Configure Agenda
 const agenda = new Agenda({
     ensureIndex: true,
-    processEvery: '10 minutes',
+    processEvery: '5 seconds',
     db: { address: process.env.MONGODB_URI || DEFAULT_MONGODB_URI }
     // TODO: Use existing mongoose connection
 })
