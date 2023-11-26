@@ -20,6 +20,12 @@ const DepositSchema = new Schema({
         type: Date,
         immutable: true
     },
+    submissionDate: {
+        type: Date
+    },
+    nextInterestDate: {
+        type: Date
+    },
     interestRate: {
         type: Decimal128,
         required: true

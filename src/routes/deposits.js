@@ -1,6 +1,8 @@
 // Packages
 import { Router } from 'express'
 import passport from 'passport'
+import moment from 'moment'
+moment().format()
 
 // Initialize router
 const router = Router()
@@ -8,6 +10,7 @@ const router = Router()
 // Import models
 import Loanee from '../models/loanee.js'
 import Deposit from '../models/deposit.js'
+import DepositSettings from '../models/deposit_settings.js'
 
 // Ledger routes
 import ledgerRouter from './deposit-ledgers.js'
@@ -121,18 +124,50 @@ router.put('/user/:username', async (req, res, next) => {
             return res.status(404).json({ message: 'Loanee does not exist' })
         }
 
+        const submissionDate = Date.now()
+
+        console.log(req.body.category)
+
+        const allSettings = await DepositSettings.findOne().lean()
+        if (!allSettings[req.body.category]) {
+            return res.status(400).json({
+                message: 'No loan settings exist for the current loan type',
+                error: true
+            })
+        }
+        const timeSetting = allSettings[req.body.category].time
+
+        const timeConversions = {
+            days: 1,
+            months: 30,
+            years: 365
+        }
+        const nextInterestDate = moment(submissionDate)
+            .add(timeSetting.value * timeConversions[timeSetting.type], 'days')
+            .set({
+                hour: 0,
+                minute: 0,
+                second: 0,
+                millisecond: 0
+            })
+            .toDate()
+
+        const depositInfo = {
+            username: username,
+            approvalDate: req.body.approvalDate,
+            submissionDate: submissionDate,
+            nextInterestDate: nextInterestDate,
+            category: req.body.category,
+            interestRate: req.body.interestRate,
+            originalDepositAmount: req.body.originalDepositAmount,
+            runningAmount: req.body.originalDepositAmount,
+            ledger: [],
+            status: req.body.status || 'pending'
+        }
+
         // Create new deposit
         try {
-            await Deposit.create({
-                username: username,
-                approvalDate: req.body.approvalDate,
-                category: req.body.category,
-                interestRate: req.body.interestRate,
-                originalDepositAmount: req.body.originalDepositAmount,
-                runningAmount: req.body.originalDepositAmount,
-                ledger: [],
-                status: req.body.status || 'pending'
-            })
+            await Deposit.create(depositInfo)
 
             // Return deposit status
             return res.status(201).json({ message: 'Deposit created successfully', error: false })
