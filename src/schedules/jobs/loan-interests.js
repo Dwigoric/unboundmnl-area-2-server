@@ -8,6 +8,8 @@ moment().format()
 const name = 'process-loan-interests'
 
 const handler = async (job, done) => {
+    console.log('Updating loan interests...')
+
     const loans = await Loan.find({
         nextInterestDate: {
             $lte: Date.now()
@@ -17,8 +19,6 @@ const handler = async (job, done) => {
 
     const allSettings = await LoanSettings.findOne().lean()
     parseDecimal(allSettings)
-
-    console.log('Updating loan interests...')
 
     for (const loan of loans) {
         const loanSettings = allSettings[loan.loanType]
