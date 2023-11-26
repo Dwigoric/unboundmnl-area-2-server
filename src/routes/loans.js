@@ -39,13 +39,15 @@ router.get('/', async (req, res, next) => {
         const optionsList = []
 
         const { status } = req.query
-        const statuses = status.split(',')
-        statuses.forEach((s) => {
-            if (['pending', 'approved', 'released', 'rejected', 'complete'].includes(s))
-                optionsList.push({ ...options, status: s })
-        })
+        if (status) {
+            const statuses = status.split(',')
+            statuses.forEach((s) => {
+                if (['pending', 'approved', 'released', 'rejected', 'complete'].includes(s))
+                    optionsList.push({ ...options, status: s })
+            })
+        }
 
-        const loans = await Loan.find({ $or: optionsList })
+        const loans = await Loan.find(status ? { $or: optionsList } : options)
             .select(
                 '-ledger -deleted -term -approvalDate ' +
                     '-coborrowerName -classification -__v -_id'
