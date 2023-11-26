@@ -88,10 +88,7 @@ passport.use(
     'admin',
     new JwtStrategy(
         {
-            jwtFromRequest: ExtractJwt.fromExtractors([
-                ExtractJwt.fromAuthHeaderAsBearerToken(),
-                ExtractJwt.fromUrlQueryParameter('access_token')
-            ]),
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: process.env.JWT_SECRET
         },
         async function verify(payload, done) {
@@ -120,10 +117,7 @@ passport.use(
     'is-manager',
     new JwtStrategy(
         {
-            jwtFromRequest: ExtractJwt.fromExtractors([
-                ExtractJwt.fromUrlQueryParameter('access_token'),
-                ExtractJwt.fromAuthHeaderAsBearerToken()
-            ]),
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             secretOrKey: process.env.JWT_SECRET
         },
         async function verify(payload, done) {
