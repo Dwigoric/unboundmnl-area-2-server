@@ -7,12 +7,8 @@ const handler = async (job, done) => {
     const loans = await Loan.find({ dueDate: { $lt: new Date() } }).lean()
 
     // Iterate through loans
-    for (const rawLoan of loans) {
-        const loan = await rawLoan
-        if (!loan.isPaidForCurrentPeriod) {
-            // TODO: Add a transaction for penalty
-            continue
-        }
+    for (const loan of loans) {
+        if (!loan.isPaidForCurrentPeriod) continue
 
         // Extend due date
         const dueDate = new Date(loan.dueDate)
