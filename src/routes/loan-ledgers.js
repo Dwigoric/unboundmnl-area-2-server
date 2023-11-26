@@ -77,12 +77,18 @@ router.put('/', (req, res, next) => {
         }
 
         const query = {
-            $push: { ledger: transactionInfo }
+            $push: { ledger: transactionInfo },
+            $set: {}
+        }
+
+        // Determine if transaction is payment, and mark as paid if so
+        if (transactionInfo.transactionType === 'payment') {
+            query.$set = { ...query.$set, isPaidForCurrentPeriod: true }
         }
 
         // Update balance depending on whether transaction is readjustment or not
         if (loan.balance) {
-            query.$set = { balance: req.body.balance }
+            query.$set = { ...query.$set, balance: req.body.balance }
         }
 
         try {
