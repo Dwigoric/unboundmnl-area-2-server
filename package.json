@@ -30,7 +30,6 @@
     "@rushstack/eslint-patch": "^1.6.0",
     "eslint": "^8.54.0",
     "eslint-plugin-import": "^2.29.0",
-    "jsdoc": "^4.0.2",
     "nodemon": "^3.0.1",
     "prettier": "^3.1.0"
   },
