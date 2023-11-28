@@ -1,5 +1,5 @@
 import Loan from '../../models/loan.js'
-import LoanSettings from '../../models/loan_settings.js'
+import LoanSettings from '../../models/loanSettings.js'
 import Decimal from 'decimal.js'
 
 import moment from 'moment'

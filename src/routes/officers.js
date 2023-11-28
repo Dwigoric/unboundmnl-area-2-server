@@ -4,7 +4,7 @@ import passport from 'passport'
 import argon2 from 'argon2'
 
 // Import models
-import LoanOfficer from '../models/loan_officer.js'
+import LoanOfficer from '../models/loanOfficer.js'
 import Admin from '../models/admin.js'
 
 // Create router

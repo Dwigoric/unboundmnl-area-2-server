@@ -10,7 +10,7 @@ const router = Router()
 // Import models
 import Loanee from '../models/loanee.js'
 import Deposit from '../models/deposit.js'
-import DepositSettings from '../models/deposit_settings.js'
+import DepositSettings from '../models/depositSettings.js'
 
 // Ledger routes
 import ledgerRouter from './deposit-ledgers.js'

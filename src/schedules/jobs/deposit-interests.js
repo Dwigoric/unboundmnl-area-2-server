@@ -1,5 +1,5 @@
 import Deposit from '../../models/deposit.js'
-import DepositSettings from '../../models/deposit_settings.js'
+import DepositSettings from '../../models/depositSettings.js'
 import Decimal from 'decimal.js'
 
 import moment from 'moment'

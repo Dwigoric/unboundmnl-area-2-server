@@ -8,7 +8,7 @@ import argon2 from 'argon2'
 const router = express.Router()
 
 // Import models
-import LoanOfficer from '../models/loan_officer.js'
+import LoanOfficer from '../models/loanOfficer.js'
 
 /**
  * POST /login

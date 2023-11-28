@@ -1,8 +1,16 @@
+/**
+ * Module for managing connections to and from the database.
+ * @module db/conn
+ */
+
 import mongoose from 'mongoose'
 
 // Default MongoDB URI
 import { DEFAULT_MONGODB_URI } from './default_uri.js'
 
+/**
+ * @class
+ */
 class Database {
     /**
      * Initialize the database connection

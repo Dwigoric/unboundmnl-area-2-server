@@ -1,3 +1,7 @@
+/**
+ * Database model for Deposit Settings
+ */
+
 // Packages
 import { Schema, model } from 'mongoose'
 

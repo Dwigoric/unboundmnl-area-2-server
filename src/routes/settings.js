@@ -3,8 +3,8 @@ import { Router } from 'express'
 import passport from 'passport'
 
 // Schema
-import LoanSettings from '../models/loan_settings.js'
-import DepositSettings from '../models/deposit_settings.js'
+import LoanSettings from '../models/loanSettings.js'
+import DepositSettings from '../models/depositSettings.js'
 import NotificationSettings from '../models/notificationSettings.js'
 
 // Initialize router

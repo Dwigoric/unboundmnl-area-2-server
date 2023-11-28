@@ -1,8 +1,20 @@
+/**
+ * Database model for Admins
+ * @module models/admin
+ */
+
 // Import packages
 import { Schema, model } from 'mongoose'
 import argon2 from 'argon2'
 import { v5 as uuidV5, validate as uuidValidate, version as uuidVersion } from 'uuid'
 
+/**
+ * @name Admin
+ * @class
+ * @param {string} username - Username of administrators
+ * @param {string} password_hash - Hashed password of administrators
+ * @param {string} id - UUID of administrators (automatically generated on creation)
+ */
 const Admin = model(
     'Admin',
     new Schema({
