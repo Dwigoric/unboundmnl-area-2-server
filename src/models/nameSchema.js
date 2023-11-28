@@ -1,5 +1,17 @@
+/**
+ * Schema for representing a person's name in the Mongoose database.
+ * @module models/loanTransactionSchema
+ */
+
 import { Schema } from 'mongoose'
 
+/**
+ * Schema for representing a person's name in the Mongoose database.
+ *
+ * @prop {String} given - Person's given name
+ * @prop {String} middle - Person's middle name (if any)
+ * @prop {String} last - Person's last name
+ */
 const NameSchema = new Schema({
     given: {
         type: String,

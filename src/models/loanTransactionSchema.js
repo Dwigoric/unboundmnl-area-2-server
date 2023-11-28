@@ -16,13 +16,13 @@ import NameSchema from './nameSchema.js'
  * @prop {String} ORNumber - OR number of transaction. Does not have to be unique.
  * @prop {Date} transactionDate - Date the transaction was made.
  * @prop {Date} submissionDate - Date the transaction was submitted to the system.
- * @prop {Decimal128} amountPaid - Amount paid during transaction.
- * @prop {Decimal128} amountDue - Other amounts due in this transaction outside of interests or fines.
- * @prop {Decimal128} balance -  Outstanding loan balance after transaction.
- * @prop {Decimal128} interestPaid - Amount of interest paid during transaction.
- * @prop {Decimal128} interestDue - Amount of interest added to the loan during transaction.
- * @prop {Decimal128} finesDue - Amount of fines paid during transaction.
- * @prop {Decimal128} finesPaid - Amount of fines added to the loan during transaction.
+ * @prop {mongoose.Decimal128} amountPaid - Amount paid during transaction.
+ * @prop {mongoose.Decimal128} amountDue - Other amounts due in this transaction outside of interests or fines.
+ * @prop {mongoose.Decimal128} balance -  Outstanding loan balance after transaction.
+ * @prop {mongoose.Decimal128} interestPaid - Amount of interest paid during transaction.
+ * @prop {mongoose.Decimal128} interestDue - Amount of interest added to the loan during transaction.
+ * @prop {mongoose.Decimal128} finesDue - Amount of fines paid during transaction.
+ * @prop {mongoose.Decimal128} finesPaid - Amount of fines added to the loan during transaction.
  * @prop {NameSchema} officerInCharge - Name of the officer in charge of the transaction.
  */
 const LoanTransactionSchema = new Schema({

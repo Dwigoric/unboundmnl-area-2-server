@@ -16,9 +16,9 @@ import NameSchema from './nameSchema.js'
  * @prop {Date} transactionDate - Date the transaction was made.
  * @prop {Date} submissionDate - Date the transaction was submitted to the system.
  * @prop {String} transactionType - Type of transaction. Must be either 'Deposit' or 'Withdrawal'.
- * @prop {Decimal128} amount - Amount paid during transaction.
- * @prop {Decimal128} interest - Interest gained during transaction. Separate transactions are made every time interest is calculated.
- * @prop {Decimal128} balance - Remaining balance in the deposit account after transaction.
+ * @prop {mongoose.Decimal128} amount - Amount paid during transaction.
+ * @prop {mongoose.Decimal128} interest - Interest gained during transaction. Separate transactions are made every time interest is calculated.
+ * @prop {mongoose.Decimal128} balance - Remaining balance in the deposit account after transaction.
  * @prop {NameSchema} officerInCharge - Name of the officer in charge of the transaction.
  */
 const DepositTransactionSchema = new Schema({

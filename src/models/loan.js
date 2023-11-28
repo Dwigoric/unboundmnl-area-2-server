@@ -146,11 +146,11 @@ LoanSchema.pre('save', function (next) {
  * @prop {Date} nextInterestDate - When the loan will next gain interest.
  * @prop {Boolean} isPaidForCurrentPeriod - Whether or not the loan is already paid for the current payment period.
  * @prop {Object} coborrower - Loan coborrower. Contains the name (NameSchema), birthday (Date), occupation, and contact number (both Strings) of the coborrower.
- * @prop {Decimal128} originalLoanAmount - Original amount loaned.
+ * @prop {mongoose.Decimal128} originalLoanAmount - Original amount loaned.
  * @prop {LoanTransactionSchema[]} ledger - List of transactions making up the loan.
  * @prop {String} status - Status of the loan. Must be "pending", "approved", "released", "rejected", or "complete".
  * @prop {String} classification - Classification of the loan. Must be "new" or "renewal".
- * @prop {Decimal128} balance - Current outstanding loan balance.
+ * @prop {mongoose.Decimal128} balance - Current outstanding loan balance.
  * @prop {Boolean} deleted - Whether or not the loan is deleted.
  */
 const Loan = model('Loan', LoanSchema)
