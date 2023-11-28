@@ -54,7 +54,7 @@ jobs:
       - name: Upload WRS documentation
         uses: actions/upload-artifact@v3
         with:
-          name: docs
+          name: wrs_docs
           path: |
               artifacts/${{ env.WRS_ARTIFACT }}
               artifacts/report.json
