@@ -60,7 +60,7 @@ const LoaneeSchema = new Schema({
         type: LocationSchema,
         required: [true, 'Address is required']
     },
-    onanimationstartccupation: {
+    occupation: {
         type: String,
         required: [true, 'Occupation is required']
     },
