@@ -43,3 +43,19 @@ find in the [backend repository](%backend-repo-url%/blob/main/.github/workflows/
 
 Please utilize the GitHub issue feature to report any issues,
 usability improvements, or feature requests.
+
+<seealso>
+    <category ref="uh">
+        <a href="Admin.md" />
+        <a href="Authenticating-Logging-In.md" />
+        <a href="Loans.md" />
+        <a href="Deposits.md" />
+        <a href="Profiles.md" />
+    </category>
+    <category ref="ds">
+        <a href="Naming.md" />
+        <a href="Comments.md" />
+        <a href="Code-Style.md" />
+        <a href="Git-Commit-Messages.md" />
+    </category>
+</seealso>

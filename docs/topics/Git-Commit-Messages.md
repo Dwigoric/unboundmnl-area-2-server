@@ -73,3 +73,18 @@ This is a detailed description of the new feature.
 
 Closes #123
 ```
+
+<seealso>
+    <category ref="uh">
+        <a href="Admin.md" />
+        <a href="Authenticating-Logging-In.md" />
+        <a href="Loans.md" />
+        <a href="Deposits.md" />
+        <a href="Profiles.md" />
+    </category>
+    <category ref="ds">
+        <a href="Naming.md" />
+        <a href="Comments.md" />
+        <a href="Code-Style.md" />
+    </category>
+</seealso>
