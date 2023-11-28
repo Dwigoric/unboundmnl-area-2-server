@@ -82,7 +82,7 @@ router.get('/search', async function (req, res, next) {
  * @memberof module:routes/users~router-users
  * @inner
  */
-router.post('/add', async function (req, res, next) {
+router.put('/', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
@@ -118,13 +118,13 @@ router.post('/add', async function (req, res, next) {
  * @memberof module:routes/users~router-users
  * @inner
  */
-router.post('/edit', async function (req, res, next) {
+router.patch('/:username', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const loanee = await Loanee.findOne({ username: req.body.username })
+            const loanee = await Loanee.findOne({ username: req.params.username })
             if (!loanee) {
                 return res.status(400).json({ message: 'Username does not exist' })
             }
@@ -154,13 +154,13 @@ router.post('/edit', async function (req, res, next) {
  * @memberof module:routes/users~router-users
  * @inner
  */
-router.post('/delete', async function (req, res, next) {
+router.delete('/:username', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const loanee = await Loanee.findOne({ username: req.body.username })
+            const loanee = await Loanee.findOne({ username: req.params.username })
             if (!loanee) {
                 return res.status(400).json({ message: 'Username does not exist' })
             }
