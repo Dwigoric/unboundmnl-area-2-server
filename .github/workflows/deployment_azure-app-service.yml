@@ -10,6 +10,10 @@ on:
       - 'Sprint-[0-9]'
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   WRS_INSTANCE: docs/ucwa
   WRS_ARTIFACT: webHelpUCWA2-all.zip
