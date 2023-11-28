@@ -76,7 +76,7 @@ jobs:
 
       - name: Remove unused files and folders
         run: |
-          rm -rf artifacts
+          sudo rm -rf artifacts
           git rm -rf docs 
 
       - name: 'Deploy to Azure Web App'
