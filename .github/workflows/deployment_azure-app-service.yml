@@ -75,11 +75,9 @@ jobs:
           args: unzip -qq artifacts/${{ env.WRS_ARTIFACT }} -d ./public/docs/code
 
       - name: Remove unused files and folders
-        uses: JesseTG/rm@v1.0.0
-        with:
-          path: |
-            artifacts
-            docs
+        run: |
+          git rm -rf artifacts
+          git rm -rf docs 
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
