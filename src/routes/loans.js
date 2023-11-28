@@ -73,7 +73,7 @@ router.get('/:loanID', async (req, res, next) => {
 
         try {
             const loan = await Loan.findOne({ deleted: false, loanID: req.params.loanID })
-                .select('-classification -__v -_id')
+                .select('-classification -ledger -__v -_id')
                 .lean()
 
             // Return loans
@@ -126,7 +126,7 @@ router.get('/user/:username', async (req, res, next) => {
                     optionsList.push({ ...options, status: s })
             })
 
-            const loans = await Loan.find({ $or: optionsList }).select('-__v -_id').lean()
+            const loans = await Loan.find({ $or: optionsList }).select('-__v -_id -ledger').lean()
 
             parseDecimal(loans)
             // Return loans
