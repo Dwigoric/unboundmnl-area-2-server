@@ -32,6 +32,13 @@ jobs:
           echo 'Install dependencies'
           yarn install --immutable
 
+      - name: Build jsdoc documentation
+        uses: andstor/jsdoc-action@v1
+        with:
+          source_dir: .
+          recurse: true
+          output_dir: ./public/docs/jsdoc
+
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
