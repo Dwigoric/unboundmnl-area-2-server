@@ -13,4 +13,25 @@
         <toc-element topic="Code-Style.md"/>
     </toc-element>
     <toc-element topic="Git-Commit-Messages.md"/>
+    <toc-element topic="User-Handbook.md">
+        <toc-element topic="Authenticating-Logging-In.md"/>
+        <toc-element topic="Loans.md">
+            <toc-element topic="Loan-Dashboard.md"/>
+            <toc-element topic="Creating-a-Loan-Application.md"/>
+            <toc-element topic="Loan-Approval-Rejection.md"/>
+        </toc-element>
+        <toc-element topic="Deposits.md">
+            <toc-element topic="Deposit-Dashboard.md"/>
+            <toc-element topic="Creating-New-Deposit.md"/>
+        </toc-element>
+        <toc-element topic="Profiles.md">
+            <toc-element topic="Member-Profiles.md"/>
+            <toc-element topic="Officer-Profiles.md"/>
+        </toc-element>
+        <toc-element topic="Admin.md">
+            <toc-element topic="Changing-Password.md"/>
+            <toc-element topic="Loan-and-Deposit-Settings.md"/>
+            <toc-element topic="Notification-Settings.md"/>
+        </toc-element>
+    </toc-element>
 </instance-profile>
