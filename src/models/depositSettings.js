@@ -1,5 +1,6 @@
 /**
  * Database model for Deposit Settings
+ * @module models/depositSettings
  */
 
 // Packages
@@ -8,6 +9,13 @@ import { Schema, model } from 'mongoose'
 // Import schema
 import DepositSettingsSchema from './depositSettingsSchema.js'
 
+/**
+ * Deposit settings Mongoose model. Stores the current deposit settings.
+ * @prop {DepositSettingsSchema} shareCapital - Settings for share capital deposits.
+ * @prop {DepositSettingsSchema} savings - Settings for savings deposits.
+ * @prop {DepositSettingsSchema} timeDeposit - Settings for time deposits.
+ *
+ */
 const DepositSettings = model(
     'DepositSettings',
     new Schema({

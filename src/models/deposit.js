@@ -88,7 +88,7 @@ DepositSchema.pre(['find', 'findOne'], function () {
  * @prop {Date} nextInterestDate - Next date the deposit will gain interest.
  * @prop {Decimal128} originalDepositAmount - Original amount that was deposited.
  * @prop {Decimal128} runningAmount - Current balance of the deposit.
- * @prop {[DepositTransactionSchema]} ledger - Deposit transaction ledger.
+ * @prop {DepositTransactionSchema[]} ledger - Deposit transaction ledger.
  * @prop {String} status - Current deposit status. One of 'pending', 'accepted', 'rejected', or 'complete'.
  * @prop {String} category - Deposit category. One of 'shareCapital', 'savings', or 'timeDeposit'.
  * @prop {Boolean} deleted - Whether or not the deposit is deleted.

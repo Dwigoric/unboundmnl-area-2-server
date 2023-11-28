@@ -1,3 +1,8 @@
+/**
+ * Model to represent loans.
+ * @module models/loan
+ */
+
 // Import packages
 import { Schema, model, Decimal128 } from 'mongoose'
 import { v5 as uuidV5 } from 'uuid'
@@ -126,6 +131,28 @@ LoanSchema.pre('save', function (next) {
     next()
 })
 
+/**
+ * Model to represent a single loan in the database.
+ *
+ * @prop {String} loanID - Automatically generated ID of the loan. Uses uuidv5.
+ * @prop {String} username - Username of the loanee.
+ * @prop {String} loanType - Type of loan. Can be "emergency", "multipurpose", "educational", "pettyCash", "commercial", or "livelihood".
+ * @prop {Number} term - Term of the loan. How many payments are to be made to complete the loan.
+ * @prop {String} paymentFrequency - How often payments are made for the loan.
+ * @prop {Date} submissionDate - Date when the loan was submitted to the system.
+ * @prop {Date} approvalDate - Date when the loan was approved by an officer.
+ * @prop {Date} dueDate - Date when the loan is due next.
+ * @prop {Date} releaseDate - Date when the loan cash was released to the loanee.
+ * @prop {Date} nextInterestDate - When the loan will next gain interest.
+ * @prop {Boolean} isPaidForCurrentPeriod - Whether or not the loan is already paid for the current payment period.
+ * @prop {Object} coborrower - Loan coborrower. Contains the name (NameSchema), birthday (Date), occupation, and contact number (both Strings) of the coborrower.
+ * @prop {Decimal128} originalLoanAmount - Original amount loaned.
+ * @prop {LoanTransactionSchema[]} ledger - List of transactions making up the loan.
+ * @prop {String} status - Status of the loan. Must be "pending", "approved", "released", "rejected", or "complete".
+ * @prop {String} classification - Classification of the loan. Must be "new" or "renewal".
+ * @prop {Decimal128} balance - Current outstanding loan balance.
+ * @prop {Boolean} deleted - Whether or not the loan is deleted.
+ */
 const Loan = model('Loan', LoanSchema)
 
 export default Loan
