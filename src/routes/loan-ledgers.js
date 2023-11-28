@@ -2,7 +2,11 @@
 import { Router } from 'express'
 import passport from 'passport'
 
-// Initialize router
+/**
+ * Router to mount routes on.
+ * @const
+ * @namespace router-auth
+ */
 const router = Router()
 
 // Models

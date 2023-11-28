@@ -1,8 +1,18 @@
+/**
+ * Express routes for managing deposit ledgers.
+ * @module routes/deposit-ledgers
+ * @requires express
+ */
+
 // Packages
 import { Router } from 'express'
 import passport from 'passport'
 
-// Initialize router
+/**
+ * Router to mount routes on.
+ * @const
+ * @namespace router-deposit-ledgers
+ */
 const router = Router()
 
 // Models
@@ -14,6 +24,11 @@ import Deposit from '../models/deposit.js'
  * GET /
  *
  * Get all deposits
+ *
+ * @name get
+ * @function
+ * @memberof module:routes/deposit-ledgers~router-deposit-ledgers
+ * @inner
  */
 router.get('/', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -39,6 +54,10 @@ router.get('/', async (req, res, next) => {
  * GET /:txID
  *
  * Get information of a transaction
+ * @name get/:txID
+ * @function
+ * @memberof module:routes/deposit-ledgers~router-deposit-ledgers
+ * @inner
  */
 router.get('/:txID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -72,6 +91,11 @@ router.get('/:txID', async (req, res, next) => {
  * PUT /
  *
  * Create a new transaction
+ *
+ * @name put
+ * @function
+ * @memberof module:routes/deposit-ledgers~router-deposit-ledgers
+ * @inner
  */
 router.put('/', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -95,7 +119,7 @@ router.put('/', async (req, res, next) => {
             // Add transaction to ledger
             await Deposit.updateOne(
                 { deleted: false, depositID },
-                { 
+                {
                     $push: { ledger: transactionInfo },
                     $set: { runningAmount: req.body.balance }
                 }
@@ -119,6 +143,11 @@ router.put('/', async (req, res, next) => {
  * PATCH /:txID
  *
  * Update a transaction
+ *
+ * @name patch/:txID
+ * @function
+ * @memberof module:routes/deposit-ledgers~router-deposit-ledgers
+ * @inner
  */
 router.patch('/:txID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {

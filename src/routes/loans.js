@@ -6,7 +6,11 @@ import { Decimal } from 'decimal.js'
 import moment from 'moment'
 moment().format()
 
-// Initialize router
+/**
+ * Router to mount routes on.
+ * @const
+ * @namespace router-auth
+ */
 const router = Router()
 
 // Import models

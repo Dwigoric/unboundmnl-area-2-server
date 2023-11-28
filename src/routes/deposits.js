@@ -4,7 +4,11 @@ import passport from 'passport'
 import moment from 'moment'
 moment().format()
 
-// Initialize router
+/**
+ * Router to mount routes on.
+ * @const
+ * @namespace router-auth
+ */
 const router = Router()
 
 // Import models

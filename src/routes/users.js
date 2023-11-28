@@ -2,7 +2,11 @@
 import express from 'express'
 import passport from 'passport'
 
-// Initialize router
+/**
+ * Router to mount routes on.
+ * @const
+ * @namespace router-auth
+ */
 const router = express.Router()
 
 // Methods

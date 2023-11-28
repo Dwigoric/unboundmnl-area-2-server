@@ -7,7 +7,11 @@ import LoanSettings from '../models/loanSettings.js'
 import DepositSettings from '../models/depositSettings.js'
 import NotificationSettings from '../models/notificationSettings.js'
 
-// Initialize router
+/**
+ * Router to mount routes on.
+ * @const
+ * @namespace router-auth
+ */
 const router = Router()
 
 // Routes for Loans
