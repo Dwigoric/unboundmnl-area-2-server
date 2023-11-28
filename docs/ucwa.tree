@@ -10,6 +10,7 @@
     <toc-element topic="Coding Standards.md">
         <toc-element topic="Naming.md"/>
         <toc-element topic="Comments.md"/>
-        <toc-element topic="Code-Style.md"/>
+        <toc-element topic="Code Style.md"/>
     </toc-element>
+    <toc-element topic="Git Commit Messages.md"/>
 </instance-profile>
