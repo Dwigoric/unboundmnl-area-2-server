@@ -1,3 +1,9 @@
+/**
+ * Express routes for managing officers.
+ * @module routes/officers
+ * @requires express
+ */
+
 // Import packages
 import express from 'express'
 import passport from 'passport'
@@ -7,13 +13,22 @@ import argon2 from 'argon2'
 import LoanOfficer from '../models/loanOfficer.js'
 import Admin from '../models/admin.js'
 
-// Create router
+/**
+ * Router to mount routes on.
+ * @const
+ * @namespace router-officers
+ */
 const router = express.Router()
 
 /**
  * GET /
  *
  * Get all officers. This route is only accessible to the admin and loan officers.
+ *
+ * @name get
+ * @function
+ * @memberof module:routes/officers~router-officers
+ * @inner
  */
 router.get('/', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -36,6 +51,11 @@ router.get('/', async (req, res, next) => {
  * GET /:id
  *
  * Get officer by UUID. This route is only accessible to the admin and loan officers.
+ *
+ * @name get/:id
+ * @function
+ * @memberof module:routes/officers~router-officers
+ * @inner
  */
 router.get('/:id', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -66,6 +86,11 @@ router.get('/:id', async (req, res, next) => {
  * PATCH /admin/password
  *
  * Update admin's password. This route is only accessible to the admin.
+ *
+ * @name patch/admin/password
+ * @function
+ * @memberof module:routes/officers~router-officers
+ * @inner
  */
 router.patch('/admin/password', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
@@ -93,6 +118,10 @@ router.patch('/admin/password', async (req, res, next) => {
  * PATCH /:id/password
  *
  * Update officer's password by UUID. This route is only accessible to the admin.
+ * @name patch/:id/password
+ * @function
+ * @memberof module:routes/officers~router-officers
+ * @inner
  */
 router.patch('/:id/password', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
@@ -123,6 +152,11 @@ router.patch('/:id/password', async (req, res, next) => {
  * DELETE /:id
  *
  * Mark officer as inactive by UUID. This route is only accessible to the admin.
+ *
+ * @name delete/:id
+ * @function
+ * @memberof module:routes/officers~router-officers
+ * @inner
  */
 router.delete('/:id', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {

@@ -1,3 +1,9 @@
+/**
+ * Express routes for managing settings.
+ * @module routes/settings
+ * @requires express
+ */
+
 // Packages
 import { Router } from 'express'
 import passport from 'passport'
@@ -12,11 +18,20 @@ import parseDecimal from '../modules/conversions/parseDecimal.js'
 /**
  * Router to mount routes on.
  * @const
- * @namespace router-auth
+ * @namespace router-settings
  */
 const router = Router()
 
-// Routes for Loans
+/**
+ * GET /loans
+ *
+ * Get all loan-related settings
+ *
+ * @name get/loans
+ * @function
+ * @memberof module:routes/settings~router-settings
+ * @inner
+ */
 router.get('/loans', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -30,6 +45,16 @@ router.get('/loans', async (req, res, next) => {
     })(req, res, next)
 })
 
+/**
+ * PATCH /loans/:loanType
+ *
+ * Edit the settings of a given loan type
+ *
+ * @name patch/loans/:loanType
+ * @function
+ * @memberof module:routes/settings~router-settings
+ * @inner
+ */
 router.patch('/loans/:loanType', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
         if (err) return next(err)
@@ -54,7 +79,16 @@ router.patch('/loans/:loanType', async (req, res, next) => {
     })(req, res, next)
 })
 
-// Routes for Deposits
+/**
+ * GET /deposits
+ *
+ * Get all deposit-related settings
+ *
+ * @name get/deposits
+ * @function
+ * @memberof module:routes/settings~router-settings
+ * @inner
+ */
 router.get('/deposits', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -68,6 +102,16 @@ router.get('/deposits', async (req, res, next) => {
     })(req, res, next)
 })
 
+/**
+ * PATCH /deposits/:depositType
+ *
+ * Edit the settings of a given deposit type
+ *
+ * @name patch/deposits/:depositType
+ * @function
+ * @memberof module:routes/settings~router-settings
+ * @inner
+ */
 router.patch('/deposits/:depositType', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
         if (err) return next(err)
@@ -93,6 +137,16 @@ router.patch('/deposits/:depositType', async (req, res, next) => {
 })
 
 // Routes for Notifications
+/**
+ * GET /notifications
+ *
+ * Get all notification-related settings
+ *
+ * @name get/notifications
+ * @function
+ * @memberof module:routes/settings~router-settings
+ * @inner
+ */
 router.get('/notifications', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -106,6 +160,16 @@ router.get('/notifications', async (req, res, next) => {
     })(req, res, next)
 })
 
+/**
+ * PATCH /notifications
+ *
+ * Edit the notification settings
+ *
+ * @name patch/notifications
+ * @function
+ * @memberof module:routes/settings~router-settings
+ * @inner
+ */
 router.patch('/notifications', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
         if (err) return next(err)

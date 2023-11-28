@@ -1,3 +1,9 @@
+/**
+ * Express routes for managing users.
+ * @module routes/users
+ * @requires express
+ */
+
 // Packages
 import express from 'express'
 import passport from 'passport'
@@ -5,7 +11,7 @@ import passport from 'passport'
 /**
  * Router to mount routes on.
  * @const
- * @namespace router-auth
+ * @namespace router-users
  */
 const router = express.Router()
 
@@ -21,7 +27,13 @@ function empty(obj) {
 // Schema
 import Loanee from '../models/loanee.js'
 
-/* GET users listing. */
+/**
+ * GET users listing.
+ * @name get
+ * @function
+ * @memberof module:routes/users~router-users
+ * @inner
+ */
 router.get('/', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -41,6 +53,10 @@ router.get('/', async function (req, res, next) {
 
 /**
  * Search the users listing by username
+ * @name get/search
+ * @function
+ * @memberof module:routes/users~router-users
+ * @inner
  */
 router.get('/search', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -61,6 +77,10 @@ router.get('/search', async function (req, res, next) {
 
 /**
  * Add a new user to the users listing.
+ * @name post/add
+ * @function
+ * @memberof module:routes/users~router-users
+ * @inner
  */
 router.post('/add', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -93,6 +113,10 @@ router.post('/add', async function (req, res, next) {
 
 /**
  * Edit the information of a user in the users listing.
+ * @name post/edit
+ * @function
+ * @memberof module:routes/users~router-users
+ * @inner
  */
 router.post('/edit', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -123,6 +147,13 @@ router.post('/edit', async function (req, res, next) {
     })(req, res, next)
 })
 
+/**
+ * Delete the information of a user in the users listing.
+ * @name post/delete
+ * @function
+ * @memberof module:routes/users~router-users
+ * @inner
+ */
 router.post('/delete', async function (req, res, next) {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)

@@ -1,3 +1,9 @@
+/**
+ * Express routes for managing loans.
+ * @module routes/loans
+ * @requires express
+ */
+
 // Import packages
 import { Router } from 'express'
 import passport from 'passport'
@@ -9,7 +15,7 @@ moment().format()
 /**
  * Router to mount routes on.
  * @const
- * @namespace router-auth
+ * @namespace router-loans
  */
 const router = Router()
 
@@ -35,6 +41,11 @@ router.use(
  * GET /
  *
  * Get all loans
+ *
+ * @name get
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
 router.get('/', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -71,6 +82,10 @@ router.get('/', async (req, res, next) => {
  * GET /:loanID
  *
  * Get a loan given its loan ID
+ * @name get
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
 router.get('/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -107,6 +122,10 @@ router.get('/:loanID', async (req, res, next) => {
  * GET /user/:username
  *
  * Get all loans for a loanee given their username
+ * @name get/user/:username
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
 router.get('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -148,6 +167,10 @@ router.get('/user/:username', async (req, res, next) => {
  * PUT /user/:username
  *
  * Create a new loan application for a loanee
+ * @name put/user/:username
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
 router.put('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -221,6 +244,11 @@ router.put('/user/:username', async (req, res, next) => {
  *          first:
  *      }
  *  }
+ *
+ * @name post/:loanID/review
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
 router.post('/:loanID/review', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -336,6 +364,11 @@ router.post('/:loanID/review', async (req, res, next) => {
  *
  * req.body contains the data of the loan to edit. Finds a loan in the database using LoanID.
  * NOTE: Does not edit loan ledgers, loan IDs, submission dates, or approval dates.
+ *
+ * @name patch/:loanID
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
 router.patch('/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -433,6 +466,11 @@ router.patch('/:loanID', async (req, res, next) => {
  *
  * This functionality only soft deletes the loan;
  * the deleted loan will still be visible in the database
+ *
+ * @name delete/:loanID
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
 router.delete('/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {

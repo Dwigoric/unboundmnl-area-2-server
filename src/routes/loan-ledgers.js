@@ -1,3 +1,9 @@
+/**
+ * Express routes for managing loan ledgers.
+ * @module routes/loan-ledgers
+ * @requires express
+ */
+
 // Packages
 import { Router } from 'express'
 import passport from 'passport'
@@ -5,7 +11,7 @@ import passport from 'passport'
 /**
  * Router to mount routes on.
  * @const
- * @namespace router-auth
+ * @namespace router-loan-ledgers
  */
 const router = Router()
 
@@ -14,7 +20,16 @@ import Loan from '../models/loan.js'
 
 import parseDecimal from '../modules/conversions/parseDecimal.js'
 
-// Routes
+/**
+ * GET /
+ *
+ * Get all loan ledgers
+ *
+ * @name get
+ * @function
+ * @memberof module:routes/loan-ledgers~router-loan-ledgers
+ * @inner
+ */
 router.get('/', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -35,6 +50,16 @@ router.get('/', (req, res, next) => {
     })(req, res, next)
 })
 
+/**
+ * GET /:txID
+ *
+ * Get information of a transaction
+ *
+ * @name get/:txID
+ * @function
+ * @memberof module:routes/loan-ledgers~router-loan-ledgers
+ * @inner
+ */
 router.get('/:txID', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -64,6 +89,16 @@ router.get('/:txID', (req, res, next) => {
     })(req, res, next)
 })
 
+/**
+ * PUT /
+ *
+ * Create a new transaction
+ *
+ * @name put
+ * @function
+ * @memberof module:routes/loan-ledgers~router-loan-ledgers
+ * @inner
+ */
 router.put('/', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -121,6 +156,16 @@ router.put('/', (req, res, next) => {
     })(req, res, next)
 })
 
+/**
+ * PATCH /:txID
+ *
+ * Update a transaction
+ *
+ * @name patch/:txID
+ * @function
+ * @memberof module:routes/loan-ledgers~router-loan-ledgers
+ * @inner
+ */
 router.patch('/:txID', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)

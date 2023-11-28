@@ -1,3 +1,9 @@
+/**
+ * Express routes for managing deposit information.
+ * @module routes/deposits
+ * @requires express
+ */
+
 // Packages
 import { Router } from 'express'
 import passport from 'passport'
@@ -7,7 +13,7 @@ moment().format()
 /**
  * Router to mount routes on.
  * @const
- * @namespace router-auth
+ * @namespace router-deposits
  */
 const router = Router()
 
@@ -33,6 +39,11 @@ router.use(
  * GET /
  *
  * Get all deposits
+ *
+ * @name get
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
  */
 router.get('/', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -74,6 +85,10 @@ router.get('/:depositID', async (req, res, next) => {
  * GET /:username
  *
  * Get all deposits of a member given their username
+ * @name get/:username
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
  */
 router.get('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -115,6 +130,10 @@ router.get('/user/:username', async (req, res, next) => {
  *      category,
  *      original deposit amount
  * }
+ * @name put/:username
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
  */
 router.put('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -196,6 +215,10 @@ router.put('/user/:username', async (req, res, next) => {
  *
  * req.body contains the data of the deposit to edit. Finds a deposit in the database using depositID.
  * NOTE: Does not edit deposit IDs.
+ * @name patch/:depositID
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
  */
 router.patch('/:depositID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -240,6 +263,10 @@ router.patch('/:depositID', async (req, res, next) => {
  * Delete a deposit.
  *
  * This functionality only soft deletes the deposit.
+ * @name delete/:depositID
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
  */
 router.delete('/:depositID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
