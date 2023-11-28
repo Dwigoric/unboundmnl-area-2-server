@@ -98,7 +98,11 @@ router.put('/', (req, res, next) => {
             })
 
             // Return a 200 response
-            return res.status(200).json({ error: false, message: 'Transaction successfully added' })
+            return res.status(200).json({
+                error: false,
+                message: 'Transaction successfully added',
+                transactionID: transactionInfo.transactionID
+            })
         } catch (error) {
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
