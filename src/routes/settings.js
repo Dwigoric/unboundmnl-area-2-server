@@ -7,6 +7,8 @@ import LoanSettings from '../models/loanSettings.js'
 import DepositSettings from '../models/depositSettings.js'
 import NotificationSettings from '../models/notificationSettings.js'
 
+import parseDecimal from '../modules/conversions/parseDecimal.js'
+
 /**
  * Router to mount routes on.
  * @const
@@ -124,16 +126,5 @@ router.patch('/notifications', async (req, res, next) => {
         }
     })(req, res, next)
 })
-
-// https://stackoverflow.com/questions/53369688/extract-decimal-from-decimal128-with-mongoose-mongodb
-const parseDecimal = (v, i, prev) => {
-    if (v !== null && typeof v === 'object') {
-        if (v.constructor.name === 'Decimal128') prev[i] = parseFloat(v.toString())
-        else
-            Object.entries(v).forEach(([key, value]) =>
-                parseDecimal(value, key, prev ? prev[i] : v)
-            )
-    }
-}
 
 export default router

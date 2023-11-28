@@ -12,6 +12,8 @@ const router = Router()
 // Models
 import Loan from '../models/loan.js'
 
+import parseDecimal from '../modules/conversions/parseDecimal.js'
+
 // Routes
 router.get('/', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -180,17 +182,5 @@ router.patch('/:txID', (req, res, next) => {
         }
     })(req, res, next)
 })
-
-// Helper functions
-// https://stackoverflow.com/questions/53369688/extract-decimal-from-decimal128-with-mongoose-mongodb
-const parseDecimal = (v, i, prev) => {
-    if (v !== null && typeof v === 'object') {
-        if (v.constructor.name === 'Decimal128') prev[i] = parseFloat(v)
-        else
-            Object.entries(v).forEach(([key, value]) =>
-                parseDecimal(value, key, prev ? prev[i] : v)
-            )
-    }
-}
 
 export default router

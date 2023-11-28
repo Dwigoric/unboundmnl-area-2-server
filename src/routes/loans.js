@@ -18,6 +18,8 @@ import Loan from '../models/loan.js'
 import Loanee from '../models/loanee.js'
 import LoanSettings from '../models/loanSettings.js'
 
+import parseDecimal from '../modules/conversions/parseDecimal.js'
+
 // Ledger routes
 import ledgerRouter from './loan-ledgers.js'
 router.use(
@@ -460,16 +462,5 @@ router.delete('/:loanID', async (req, res, next) => {
         }
     })(req, res, next)
 })
-
-// https://stackoverflow.com/questions/53369688/extract-decimal-from-decimal128-with-mongoose-mongodb
-const parseDecimal = (v, i, prev) => {
-    if (v !== null && typeof v === 'object') {
-        if (v.constructor.name === 'Decimal128') prev[i] = parseFloat(v.toString())
-        else
-            Object.entries(v).forEach(([key, value]) =>
-                parseDecimal(value, key, prev ? prev[i] : v)
-            )
-    }
-}
 
 export default router
