@@ -107,7 +107,6 @@ router.get('/user/:username', async (req, res, next) => {
  *      approvalDate,
  *      status (optional),
  *      category,
- *      interest rate,
  *      original deposit amount
  * }
  */

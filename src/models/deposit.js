@@ -1,3 +1,8 @@
+/**
+ * Database model for Deposit info
+ * @module models/deposit
+ */
+
 // Import packages
 import { Schema, model, Decimal128 } from 'mongoose'
 import { v5 as uuidV5 } from 'uuid'
@@ -26,10 +31,6 @@ const DepositSchema = new Schema({
     nextInterestDate: {
         type: Date
     },
-    interestRate: {
-        type: Decimal128,
-        required: true
-    },
     originalDepositAmount: {
         type: Decimal128,
         required: true
@@ -56,7 +57,13 @@ const DepositSchema = new Schema({
     },
     category: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: (category) => {
+                return ['shareCapital', 'savings', 'timeDeposit'].includes(category)
+            },
+            message: 'Category must be either "shareCapital", "savings", or "timeDeposit"'
+        }
     },
     deleted: { type: Boolean, default: false }
 })
@@ -70,6 +77,22 @@ DepositSchema.pre(['find', 'findOne'], function () {
     this.where({ deleted: false })
 })
 
+/**
+ * Deposit Mongoose model. Stores information about deposit transactions, such as
+ * share capital and savings deposits.
+ *
+ * @prop {String} depositID - Automatically generated deposit ID. Uses uuidv5.
+ * @prop {String} username - Username of the user that owns this deposit.
+ * @prop {Date} approvalDate - Date the deposit was approved.
+ * @prop {Date} submissionDate - Date the deposit was submitted to the database.
+ * @prop {Date} nextInterestDate - Next date the deposit will gain interest.
+ * @prop {Decimal128} originalDepositAmount - Original amount that was deposited.
+ * @prop {Decimal128} runningAmount - Current balance of the deposit.
+ * @prop {[DepositTransactionSchema]} ledger - Deposit transaction ledger.
+ * @prop {String} status - Current deposit status. One of 'pending', 'accepted', 'rejected', or 'complete'.
+ * @prop {String} category - Deposit category. One of 'shareCapital', 'savings', or 'timeDeposit'.
+ * @prop {Boolean} deleted - Whether or not the deposit is deleted.
+ */
 const Deposit = model('Deposit', DepositSchema)
 
 export default Deposit
