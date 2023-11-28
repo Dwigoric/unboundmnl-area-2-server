@@ -55,7 +55,7 @@ jobs:
           artifact: ${{ env.WRS_ARTIFACT }}
           docker-version: ${{ env.WRS_DOCKER_VERSION }}
 
-      - name: Upload WRS documentation
+      - name: Upload Writerside documentation artifact
         uses: actions/upload-artifact@v3
         with:
           name: wrs_docs
@@ -64,12 +64,12 @@ jobs:
               artifacts/report.json
           retention-days: 7
 
-      - name: Test documentation
+      - name: Test Writerside documentation
         uses: JetBrains/writerside-checker-action@v1
         with:
           instance: ${{ env.WRS_INSTANCE }}
 
-      - name: Unzip WRS artifact
+      - name: Unzip Writerside artifact
         uses: montudor/action-zip@v1
         with:
           args: unzip -qq artifacts/${{ env.WRS_ARTIFACT }} -d ./public/docs/code
