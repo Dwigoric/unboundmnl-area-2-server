@@ -1,9 +1,24 @@
+/**
+ * Model for representing the current loan settings.
+ * @module models/loanSettings
+ */
+
 // Packages
 import { Schema, model } from 'mongoose'
 
 // Import schema
 import LoanSettingsSchema from './loanSettingsSchema.js'
 
+/**
+ * Model to represent the loan settings.
+ *
+ * @prop {LoanSettingsSchema} emergency - Settings for emergency loans.
+ * @prop {LoanSettingsSchema} educational - Settings for educational loans.
+ * @prop {LoanSettingsSchema} pettyCash - Settings for petty cash loans.
+ * @prop {LoanSettingsSchema} multipurpose - Settings for multipurpose loans.
+ * @prop {LoanSettingsSchema} commercial - Settings for commercial loans.
+ * @prop {LoanSettingsSchema} livelihood - Settings for livelihood loans.
+ */
 const LoanSettings = model(
     'LoanSettings',
     new Schema({
@@ -16,7 +31,7 @@ const LoanSettings = model(
     })
 )
 
-// Create default settings
+// Create default settings if none exist
 LoanSettings.findOne()
     .lean()
     .then((existing) => {
