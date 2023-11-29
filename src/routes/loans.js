@@ -283,8 +283,6 @@ router.post('/:loanID/review', async (req, res, next) => {
 
             parseDecimal(settings)
 
-            console.log(existingLoan.loanType)
-
             if (!settings[existingLoan.loanType]) {
                 return res.status(400).json({
                     message: 'No loan settings exist for the current loan type',
@@ -478,8 +476,12 @@ router.patch('/:loanID', async (req, res, next) => {
 /**
  * DELETE /:loanID
  *
- * Mark a loan or loan application as deleted.
- * loanID is the ID of the loan to delete.
+ * Delete a loan or loan application
+ *
+ * This functionality only soft deletes the loan;
+ * the deleted loan will still be visible in the database
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
  * @name delete/:loanID
  * @function
