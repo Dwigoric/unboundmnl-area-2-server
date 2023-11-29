@@ -1,8 +1,19 @@
+/**
+ * Module implementing Agenda jobs for managing loan payment due dates.
+ * @module schedules/jobs/loan-due-dates
+ */
+
 // Schema
 import Loan from '../../models/loan.js'
 
 const name = 'extend-loan-due-dates'
 
+/**
+ * Handler that updates all loans' due dates on callback.
+ * If a loan is paid for the current loan period, and the current date is beyond
+ * the due date, updates the due date based on the loan's payment frequency and
+ * re-flags it as unpaid for this loan period.
+ */
 const handler = async (job, done) => {
     const loans = await Loan.find({ dueDate: { $lt: new Date() } }).lean()
 

@@ -1,5 +1,5 @@
 /**
- * @module modules/conversions/parseDecimal
+ * @module modules/decimal/parseDecimal
  * @export parseDecimal
  */
 

@@ -1,3 +1,8 @@
+/**
+ * Module for setting up the Express application
+ * @module app
+ */
+
 // Packages
 import createError from 'http-errors'
 import express from 'express'
@@ -26,6 +31,10 @@ import loansRouter from './routes/loans.js'
 import depositsRouter from './routes/deposits.js'
 import settingsRouter from './routes/settings.js'
 
+/**
+ * Express app
+ * @object {express.Express}
+ */
 const app = express()
 
 // Configure CORS

@@ -1,3 +1,8 @@
+/**
+ * Module implementing an Agenda job for regular calculation of deposit interests.
+ * @module schedules/jobs/deposit-interests
+ */
+
 import Deposit from '../../models/deposit.js'
 import DepositSettings from '../../models/depositSettings.js'
 import Decimal from 'decimal.js'
@@ -5,8 +10,15 @@ import Decimal from 'decimal.js'
 import moment from 'moment'
 moment().format()
 
+import parseDecimal from '../../modules/decimal/parseDecimal.js'
+import round2 from '../../modules/decimal/round2.js'
+
 const name = 'process-deposit-interests'
 
+/**
+ * Handler that updates every deposit's interests on callback.
+ * Updates every deposit that is active and currently due for interest.
+ */
 const handler = async (job, done) => {
     console.log('Updating deposit interests...')
 
@@ -76,7 +88,7 @@ const handler = async (job, done) => {
             }
         }
 
-        const ret = await Deposit.updateOne({ depositID: deposit.depositID }, query, {
+        await Deposit.updateOne({ depositID: deposit.depositID }, query, {
             runValidators: true
         })
     }
@@ -84,21 +96,6 @@ const handler = async (job, done) => {
     console.log(`Successfully updated ${deposits.length} deposit interests.`)
 
     done()
-}
-
-// https://stackoverflow.com/questions/53369688/extract-decimal-from-decimal128-with-mongoose-mongodb
-const parseDecimal = (v, i, prev) => {
-    if (v !== null && typeof v === 'object') {
-        if (v.constructor.name === 'Decimal128') prev[i] = parseFloat(v.toString())
-        else
-            Object.entries(v).forEach(([key, value]) =>
-                parseDecimal(value, key, prev ? prev[i] : v)
-            )
-    }
-}
-
-const round2 = function (decimal) {
-    return decimal.mul('100').round().mul('0.01')
 }
 
 const every = '0 1 * * *' // Every 1:00 AM (to avoid desync problems with date checks)
