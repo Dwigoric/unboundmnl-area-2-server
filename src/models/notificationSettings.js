@@ -7,17 +7,21 @@
 import { Schema, model } from 'mongoose'
 
 const NotificationSettingsSchema = new Schema({
-    notification_period_1: Number,
-    notification_period_2: Number,
-    notification_period_3: Number
+    reminder: Number,
+    first_notice: Number,
+    second_notice: Number,
+    third_notice: Number,
+    demand_letter: Number
 })
 
 /**
- * Model to represent deposit settings for a single deposit category.
+ * Model to represent notification settings.
  *
- * @prop {Number} notification_period_1 - How close to the deadline a loan has to be for its entry to turn red.
- * @prop {Number} notification_period_2 - How close to the deadline a loan has to be for its entry to turn orange.
- * @prop {Number} notification_period_3 - How close to the deadline a loan has to be for its entry to turn blue.
+ * @prop {Number} reminder - How close to the deadline a loan has to be for it to warrant a reminder.
+ * @prop {Number} first_notice - How close to the deadline a loan has to be for it to warrant a first notice.
+ * @prop {Number} second_notice - How close to the deadline a loan has to be for it to warrant a second notice.
+ * @prop {Number} third_notice - How close to the deadline a loan has to be for it to warrant a third notice.
+ * @prop {Number} demand_letter - How close to the deadline a loan has to be for it to warrant a demand letter.
  */
 const NotificationSettings = new model('NotificationSettings', NotificationSettingsSchema)
 
@@ -28,11 +32,12 @@ NotificationSettings.findOne()
         if (existing) return
 
         const settings = new NotificationSettings({
-            notification_period_1: 3,
-            notification_period_2: 5,
-            notification_period_3: 7
+            reminder: 14,
+            first_notice: 7,
+            second_notice: 5,
+            third_notice: 3,
+            demand_letter: 1
         })
-
         settings.save()
     })
 
