@@ -9,6 +9,7 @@
     <toc-element topic="Introduction.md"/>
     <toc-element topic="User-Handbook.md">
         <toc-element topic="Authenticating-Logging-In.md"/>
+        <toc-element topic="Logging-Out.md"/>
         <toc-element topic="Loans.md">
             <toc-element topic="Loan-Dashboard.md"/>
             <toc-element topic="Creating-a-Loan-Application.md"/>
