@@ -9,6 +9,33 @@ In developing the product, we must follow the
 Both repositories are written in
 <tooltip term='es6'>ES6</tooltip>.
 
+## Variable Declaration
+
+All variables must be declared using the `const` keyword.
+However, some variables may be declared using the `let` keyword
+if they are to be reassigned later on.
+
+Rule of thumb: **always** use `const` unless you need to reassign the variable.
+
+> Note that in JavaScript, `const` does not mean that the variable is immutable.
+> It only means that the variable cannot be reassigned.
+> If you have an object declared using `const`, you can still modify its properties.
+{ style='note' }
+
+### Example { id="variables-example" }
+
+```javascript
+// Do this
+const a = 1
+
+// NEVER this
+var a = 1
+
+// Sometimes this
+let a = 1
+```
+
+
 <seealso>
     <category ref="uh">
         <a href="Admin.md" />
