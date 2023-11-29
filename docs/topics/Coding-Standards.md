@@ -11,11 +11,13 @@ Both repositories are written in
 
 ## Variable Declaration
 
+<tldr>
+    <p><strong>Always</strong> use <code>const</code> unless you need to reassign the variable.</p>
+</tldr>
+
 All variables must be declared using the `const` keyword.
 However, some variables may be declared using the `let` keyword
 if they are to be reassigned later on.
-
-Rule of thumb: **always** use `const` unless you need to reassign the variable.
 
 > Note that in JavaScript, `const` does not mean that the variable is immutable.
 > It only means that the variable cannot be reassigned.
