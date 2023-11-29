@@ -77,7 +77,7 @@ router.get('/search', async function (req, res, next) {
 
 /**
  * Add a new user to the users listing.
- * @name post/add
+ * @name put
  * @function
  * @memberof module:routes/users~router-users
  * @inner
@@ -113,7 +113,7 @@ router.put('/', async function (req, res, next) {
 
 /**
  * Edit the information of a user in the users listing.
- * @name post/edit
+ * @name patch/username
  * @function
  * @memberof module:routes/users~router-users
  * @inner
@@ -149,7 +149,7 @@ router.patch('/:username', async function (req, res, next) {
 
 /**
  * Delete the information of a user in the users listing.
- * @name post/delete
+ * @name delete/username
  * @function
  * @memberof module:routes/users~router-users
  * @inner
