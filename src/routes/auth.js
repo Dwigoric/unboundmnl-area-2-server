@@ -69,11 +69,6 @@ router.post('/login', (req, res, next) => {
  * @function
  * @memberof module:routes/auth~router-auth
  * @inner
- *
- * @param {String} username - Officer's username for account logins.
- * @param {String} password - Password of officer for account logins.
- * @param {NameSchema} name - Officer's name. An object that follows the `nameSchema` schema.
- * @param {String} role - Officer's role. Can either be "manager", "treasurer", or "credit committee".
  */
 router.post('/register-officer', (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
