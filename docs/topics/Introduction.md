@@ -31,11 +31,9 @@ On the other hand, the backend is deployed on %backend-deployment-platform%.
 
 ### Pipeline
 
-The pipeline is configured using GitHub Actions.
 The pipeline is triggered on every push to the repository.
 
-The frontend pipeline is configured directly from Cloudflare Pages.
-
+The frontend pipeline is configured directly from Cloudflare Pages. 
 The backend pipeline is configured using GitHub Actions, which you may
 find in the [backend repository](%backend-repo-url%/blob/main/.github/workflows/deployment_azure-app-service.yml).
 
