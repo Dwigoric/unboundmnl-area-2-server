@@ -18,7 +18,7 @@ const router = Router()
 // Models
 import Loan from '../models/loan.js'
 
-import parseDecimal from '../modules/conversions/parseDecimal.js'
+import parseDecimal from '../modules/decimal/parseDecimal.js'
 
 /**
  * GET /

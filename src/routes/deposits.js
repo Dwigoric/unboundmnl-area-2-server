@@ -22,7 +22,7 @@ import Loanee from '../models/loanee.js'
 import Deposit from '../models/deposit.js'
 import DepositSettings from '../models/depositSettings.js'
 
-import parseDecimal from '../modules/conversions/parseDecimal.js'
+import parseDecimal from '../modules/decimal/parseDecimal.js'
 
 // Ledger routes
 import ledgerRouter from './deposit-ledgers.js'

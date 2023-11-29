@@ -24,7 +24,7 @@ import Loan from '../models/loan.js'
 import Loanee from '../models/loanee.js'
 import LoanSettings from '../models/loanSettings.js'
 
-import parseDecimal from '../modules/conversions/parseDecimal.js'
+import parseDecimal from '../modules/decimal/parseDecimal.js'
 
 // Ledger routes
 import ledgerRouter from './loan-ledgers.js'

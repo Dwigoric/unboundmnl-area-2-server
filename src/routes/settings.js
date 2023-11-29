@@ -13,7 +13,7 @@ import LoanSettings from '../models/loanSettings.js'
 import DepositSettings from '../models/depositSettings.js'
 import NotificationSettings from '../models/notificationSettings.js'
 
-import parseDecimal from '../modules/conversions/parseDecimal.js'
+import parseDecimal from '../modules/decimal/parseDecimal.js'
 
 /**
  * Router to mount routes on.
