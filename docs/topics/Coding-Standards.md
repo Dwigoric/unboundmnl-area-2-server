@@ -20,6 +20,8 @@ Rule of thumb: **always** use `const` unless you need to reassign the variable.
 > Note that in JavaScript, `const` does not mean that the variable is immutable.
 > It only means that the variable cannot be reassigned.
 > If you have an object declared using `const`, you can still modify its properties.
+> If you want to make an object immutable, you can use the
+> `Object.freeze()` method.
 { style='note' }
 
 ### Example { id="variables-example" }
