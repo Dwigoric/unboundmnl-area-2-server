@@ -56,5 +56,6 @@ Block comments for methods must contain at least the following:
         <a href="Naming.md" />
         <a href="Code-Style.md" />
         <a href="Git-Commit-Messages.md" />
+        <a href="Vue.md"></a>
     </category>
 </seealso>

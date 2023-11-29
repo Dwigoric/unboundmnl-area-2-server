@@ -98,5 +98,6 @@ above each section to describe what it does.
         <a href="Naming.md" />
         <a href="Comments.md" />
         <a href="Git-Commit-Messages.md" />
+        <a href="Vue.md"></a>
     </category>
 </seealso>
