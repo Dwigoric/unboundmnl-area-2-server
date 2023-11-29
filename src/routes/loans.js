@@ -40,7 +40,7 @@ router.use(
 /**
  * GET /
  *
- * Get all loans
+ * Get all loans.
  *
  * @name get
  * @function
@@ -81,7 +81,8 @@ router.get('/', async (req, res, next) => {
 /**
  * GET /:loanID
  *
- * Get a loan given its loan ID
+ * Get a loan given its loan ID.
+ *
  * @name get
  * @function
  * @memberof module:routes/loans~router-loans
@@ -121,7 +122,7 @@ router.get('/:loanID', async (req, res, next) => {
 /**
  * GET /user/:username
  *
- * Get all loans for a loanee given their username
+ * Get all loans for a loanee given their username.
  * @name get/user/:username
  * @function
  * @memberof module:routes/loans~router-loans
@@ -166,7 +167,7 @@ router.get('/user/:username', async (req, res, next) => {
 /**
  * PUT /user/:username
  *
- * Create a new loan application for a loanee
+ * Create a new loan application for a loanee.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
@@ -174,6 +175,15 @@ router.get('/user/:username', async (req, res, next) => {
  * @function
  * @memberof module:routes/loans~router-loans
  * @inner
+ *
+ * @param {String} username - Username of the loanee.
+ * @param {String} loanType - Type of loan. Can be "emergency", "multipurpose", "educational", "pettyCash", "commercial", or "livelihood".
+ * @param {Number} term - Term of the loan. How many payments are to be made to complete the loan.
+ * @param {String} paymentFrequency - How often payments are made for the loan.
+ * @param {Object} coborrower - Loan coborrower. Contains the `name` (NameSchema), `birthday` (Date), `occupation`, and `contact_no` (both Strings) of the coborrower.
+ * @param {mongoose.Decimal128} amount - Original amount loaned.
+ * @param {String} status - Status of the loan. Must be "pending", "approved", "released", "rejected", or "complete".
+ * @param {String} classification - Classification of the loan. Must be "new" or "renewal".
  */
 router.put('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -236,17 +246,9 @@ router.put('/user/:username', async (req, res, next) => {
 /**
  * POST /:loanID/review
  *
- * Approve or reject a loan application
+ * Approve or reject a loan application, then automatically insert a transaction for initial deductions if approved.
  *
- *  req.body must be of the form:
- *  {
- *      approved: boolean
- *      oic: {
- *          last:
- *          middle:
- *          first:
- *      }
- *  }
+ * loanID is the loan ID to review.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
@@ -254,6 +256,8 @@ router.put('/user/:username', async (req, res, next) => {
  * @function
  * @memberof module:routes/loans~router-loans
  * @inner
+ * @param {boolean} approved - Whether or not the loan is approved. Value is true if approved, and false if rejected.
+ * @param {NameSchema} oic - The name of the officer in charge of the review. Is an object that follows the NameSchema.
  */
 router.post('/:loanID/review', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -374,6 +378,11 @@ router.post('/:loanID/review', async (req, res, next) => {
  * @function
  * @memberof module:routes/loans~router-loans
  * @inner
+ *
+ * @param {String} loanType - Type of loan. Can be "emergency", "multipurpose", "educational", "pettyCash", "commercial", or "livelihood".
+ * @param {Number} term - Term of the loan. How many payments are to be made to complete the loan.
+ * @param {String} paymentFrequency - How often payments are made for the loan.
+ * @param {Object} coborrower - Loan coborrower. Contains the `name` (NameSchema), `birthday` (Date), `occupation`, and `contact_no` (both Strings) of the coborrower.
  */
 router.patch('/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -473,7 +482,7 @@ router.patch('/:loanID', async (req, res, next) => {
  * the deleted loan will still be visible in the database
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
- * 
+ *
  * @name delete/:loanID
  * @function
  * @memberof module:routes/loans~router-loans

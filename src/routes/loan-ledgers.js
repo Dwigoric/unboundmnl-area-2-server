@@ -93,7 +93,7 @@ router.get('/:txID', (req, res, next) => {
 /**
  * PUT /
  *
- * Create a new transaction
+ * Create a new transaction. Also updates the loan's outstanding balance.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
@@ -101,6 +101,17 @@ router.get('/:txID', (req, res, next) => {
  * @function
  * @memberof module:routes/loan-ledgers~router-loan-ledgers
  * @inner
+ *
+ * @param {String} ORNumber - OR number of transaction. Does not have to be unique.
+ * @param {Date} transactionDate - Date the transaction was made.
+ * @param {mongoose.Decimal128} amountPaid - Amount paid during transaction.
+ * @param {mongoose.Decimal128} amountDue - Other amounts due in this transaction outside of interests or fines.
+ * @param {mongoose.Decimal128} balance -  Outstanding loan balance after transaction.
+ * @param {mongoose.Decimal128} interestPaid - Amount of interest paid during transaction.
+ * @param {mongoose.Decimal128} interestDue - Amount of interest added to the loan during transaction.
+ * @param {mongoose.Decimal128} finesDue - Amount of fines paid during transaction.
+ * @param {mongoose.Decimal128} finesPaid - Amount of fines added to the loan during transaction.
+ * @param {NameSchema} officerInCharge - Name of the officer in charge of the transaction.
  */
 router.put('/', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -162,7 +173,7 @@ router.put('/', (req, res, next) => {
 /**
  * PATCH /:txID
  *
- * Update a transaction
+ * Update a transaction. txID is the ID of the transaction to update.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
@@ -170,6 +181,15 @@ router.put('/', (req, res, next) => {
  * @function
  * @memberof module:routes/loan-ledgers~router-loan-ledgers
  * @inner
+ *
+ * @param {String} ORNumber - OR number of transaction. Does not have to be unique.
+ * @param {Date} transactionDate - Date the transaction was made.
+ * @param {Date} submissionDate - Date the transaction was submitted to the system.
+ * @param {mongoose.Decimal128} amountPaid - Amount paid during transaction.
+ * @param {mongoose.Decimal128} balance -  Outstanding loan balance after transaction.
+ * @param {mongoose.Decimal128} interestPaid - Amount of interest paid during transaction.
+ * @param {mongoose.Decimal128} finesPaid - Amount of fines added to the loan during transaction.
+ * @param {NameSchema} officerInCharge - Name of the officer in charge of the transaction.
  */
 router.patch('/:txID', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
