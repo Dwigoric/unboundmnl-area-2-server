@@ -41,7 +41,7 @@ All operators must be surrounded by **spaces**.
 #### Example { id="spacing-operators-example" }
 
 ```javascript
-const a = 1 + 2;
+const a = 1 + 2
 ```
 
 ### Keywords
@@ -63,7 +63,7 @@ All commas must be followed by a **space**.
 #### Example { id="spacing-commas-example" }
 
 ```javascript
-const a = [1, 2, 3];
+const a = [1, 2, 3]
 ```
 
 <seealso>
