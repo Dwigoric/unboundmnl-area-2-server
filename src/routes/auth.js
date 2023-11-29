@@ -11,7 +11,7 @@ import passport from 'passport'
 import argon2 from 'argon2'
 
 /**
- * Router to mount routes on.
+ * Router to mount routes on. Accessed through {SERVER_URL}/auth/{route}
  * @const
  * @namespace router-auth
  */
@@ -27,10 +27,13 @@ import LoanOfficer from '../models/loanOfficer.js'
  * After a successful login, a JWT is created and sent back to the client.
  * The username and password are authenticated using the `local` strategy.
  *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name post/login
  * @function
  * @memberof module:routes/auth~router-auth
  * @inner
+ * @param {string} username - Username of the admin or loan officer logging in.
  */
 router.post('/login', (req, res, next) => {
     const { username } = req.body
@@ -60,6 +63,7 @@ router.post('/login', (req, res, next) => {
  *
  * This route creates a new loan officer.
  * The admin must be logged in to use this route.
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
  * @name post/register
  * @function

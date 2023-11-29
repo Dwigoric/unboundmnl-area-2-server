@@ -11,7 +11,7 @@ import moment from 'moment'
 moment().format()
 
 /**
- * Router to mount routes on.
+ * Router to mount routes on. Accessed through {SERVER_URL}/deposits/{route}
  * @const
  * @namespace router-deposits
  */
@@ -123,13 +123,9 @@ router.get('/user/:username', async (req, res, next) => {
  *
  * Create a new deposit of a member given their username
  *
- * req.body is of the format {
- *      username
- *      approvalDate,
- *      status (optional),
- *      category,
- *      original deposit amount
- * }
+ *
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  * @name put/:username
  * @function
  * @memberof module:routes/deposits~router-deposits
@@ -215,6 +211,8 @@ router.put('/user/:username', async (req, res, next) => {
  *
  * req.body contains the data of the deposit to edit. Finds a deposit in the database using depositID.
  * NOTE: Does not edit deposit IDs.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  * @name patch/:depositID
  * @function
  * @memberof module:routes/deposits~router-deposits
@@ -263,6 +261,9 @@ router.patch('/:depositID', async (req, res, next) => {
  * Delete a deposit.
  *
  * This functionality only soft deletes the deposit.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name delete/:depositID
  * @function
  * @memberof module:routes/deposits~router-deposits

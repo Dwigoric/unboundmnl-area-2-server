@@ -14,7 +14,7 @@ import LoanOfficer from '../models/loanOfficer.js'
 import Admin from '../models/admin.js'
 
 /**
- * Router to mount routes on.
+ * Router to mount routes on. Accessed through {SERVER_URL}/officers/{route}
  * @const
  * @namespace router-officers
  */
@@ -87,6 +87,8 @@ router.get('/:id', async (req, res, next) => {
  *
  * Update admin's password. This route is only accessible to the admin.
  *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name patch/admin/password
  * @function
  * @memberof module:routes/officers~router-officers
@@ -118,6 +120,9 @@ router.patch('/admin/password', async (req, res, next) => {
  * PATCH /:id/password
  *
  * Update officer's password by UUID. This route is only accessible to the admin.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name patch/:id/password
  * @function
  * @memberof module:routes/officers~router-officers
@@ -152,6 +157,8 @@ router.patch('/:id/password', async (req, res, next) => {
  * DELETE /:id
  *
  * Mark officer as inactive by UUID. This route is only accessible to the admin.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
  * @name delete/:id
  * @function

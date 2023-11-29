@@ -9,7 +9,8 @@ import { Router } from 'express'
 import passport from 'passport'
 
 /**
- * Router to mount routes on.
+ * Router to mount routes on. Accessed through {SERVER_URL}/loans/{loan_id}/ledger/{route},
+ * where loan_id is the ID of the loan whose ledger is being accessed.
  * @const
  * @namespace router-loan-ledgers
  */
@@ -94,6 +95,8 @@ router.get('/:txID', (req, res, next) => {
  *
  * Create a new transaction
  *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name put
  * @function
  * @memberof module:routes/loan-ledgers~router-loan-ledgers
@@ -160,6 +163,8 @@ router.put('/', (req, res, next) => {
  * PATCH /:txID
  *
  * Update a transaction
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
  * @name patch/:txID
  * @function

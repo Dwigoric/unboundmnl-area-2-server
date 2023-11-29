@@ -9,7 +9,7 @@ import express from 'express'
 import passport from 'passport'
 
 /**
- * Router to mount routes on.
+ * Router to mount routes on. Accessed through {SERVER_URL}/users/{route}
  * @const
  * @namespace router-users
  */
@@ -77,6 +77,9 @@ router.get('/search', async function (req, res, next) {
 
 /**
  * Add a new user to the users listing.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name put
  * @function
  * @memberof module:routes/users~router-users
@@ -113,6 +116,9 @@ router.put('/', async function (req, res, next) {
 
 /**
  * Edit the information of a user in the users listing.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name patch/username
  * @function
  * @memberof module:routes/users~router-users
@@ -149,6 +155,9 @@ router.patch('/:username', async function (req, res, next) {
 
 /**
  * Delete the information of a user in the users listing.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name delete/username
  * @function
  * @memberof module:routes/users~router-users

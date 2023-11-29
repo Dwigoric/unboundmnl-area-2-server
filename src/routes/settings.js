@@ -16,7 +16,7 @@ import NotificationSettings from '../models/notificationSettings.js'
 import parseDecimal from '../modules/decimal/parseDecimal.js'
 
 /**
- * Router to mount routes on.
+ * Router to mount routes on. Accessed through {SERVER_URL}/settings/{route}
  * @const
  * @namespace router-settings
  */
@@ -49,6 +49,8 @@ router.get('/loans', async (req, res, next) => {
  * PATCH /loans/:loanType
  *
  * Edit the settings of a given loan type
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
  * @name patch/loans/:loanType
  * @function
@@ -107,6 +109,8 @@ router.get('/deposits', async (req, res, next) => {
  *
  * Edit the settings of a given deposit type
  *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name patch/deposits/:depositType
  * @function
  * @memberof module:routes/settings~router-settings
@@ -164,6 +168,8 @@ router.get('/notifications', async (req, res, next) => {
  * PATCH /notifications
  *
  * Edit the notification settings
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
  * @name patch/notifications
  * @function

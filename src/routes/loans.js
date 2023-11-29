@@ -167,6 +167,9 @@ router.get('/user/:username', async (req, res, next) => {
  * PUT /user/:username
  *
  * Create a new loan application for a loanee
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name put/user/:username
  * @function
  * @memberof module:routes/loans~router-loans
@@ -244,6 +247,8 @@ router.put('/user/:username', async (req, res, next) => {
  *          first:
  *      }
  *  }
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
  * @name post/:loanID/review
  * @function
@@ -365,6 +370,8 @@ router.post('/:loanID/review', async (req, res, next) => {
  * req.body contains the data of the loan to edit. Finds a loan in the database using LoanID.
  * NOTE: Does not edit loan ledgers, loan IDs, submission dates, or approval dates.
  *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
  * @name patch/:loanID
  * @function
  * @memberof module:routes/loans~router-loans
@@ -467,6 +474,8 @@ router.patch('/:loanID', async (req, res, next) => {
  * This functionality only soft deletes the loan;
  * the deleted loan will still be visible in the database
  *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ * 
  * @name delete/:loanID
  * @function
  * @memberof module:routes/loans~router-loans

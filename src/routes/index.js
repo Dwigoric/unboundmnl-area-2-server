@@ -7,7 +7,7 @@
 import express from 'express'
 
 /**
- * Router to mount routes on.
+ * Router to mount routes on. Accessed through {SERVER_URL}/{route}
  * @const
  * @namespace router-index
  */

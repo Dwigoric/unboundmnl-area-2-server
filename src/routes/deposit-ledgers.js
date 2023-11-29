@@ -9,7 +9,8 @@ import { Router } from 'express'
 import passport from 'passport'
 
 /**
- * Router to mount routes on.
+ * Router to mount routes on. Accessed through {SERVER_URL}/deposits/{deposit_id}/ledger/{route},
+ * where deposit_id is the Deposit ID of the deposit whose ledger is being accessed.
  * @const
  * @namespace router-deposit-ledgers
  */
@@ -25,7 +26,7 @@ import parseDecimal from '../modules/decimal/parseDecimal.js'
 /**
  * GET /
  *
- * Get all deposits
+ * Get all deposit ledgers from the current deposit.
  *
  * @name get
  * @function
@@ -55,7 +56,9 @@ router.get('/', async (req, res, next) => {
 /**
  * GET /:txID
  *
- * Get information of a transaction
+ * Get information of a particular transaction from this deposit.
+ * txID is the transaction ID of the deposit.
+ *
  * @name get/:txID
  * @function
  * @memberof module:routes/deposit-ledgers~router-deposit-ledgers
@@ -92,7 +95,9 @@ router.get('/:txID', async (req, res, next) => {
 /**
  * PUT /
  *
- * Create a new transaction
+ * Create a new transaction under this deposit. req.body must be a valid document following the .
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
  * @name put
  * @function
@@ -144,7 +149,9 @@ router.put('/', async (req, res, next) => {
 /**
  * PATCH /:txID
  *
- * Update a transaction
+ * Update a transaction.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
  * @name patch/:txID
  * @function
