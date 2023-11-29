@@ -54,6 +54,70 @@ The style is a single style tag with the attribute `scoped`.
 View components are stored in the `src/views` directory, while
 components that are used by views are stored in the `src/components`.
 
+## Reactivity
+
+The `ref` function is used to create a reactive reference. This means that
+whenever the value of the reference changes, the component will be re-rendered.
+
+If we want a reactive primitive variable, we must use the `ref` function.
+
+### Example { id="reactivity-example" }
+
+```javascript
+<script setup>
+import { ref } from 'vue'
+
+const count = ref(0)
+
+function increment() {
+    count.value++
+}
+</script>
+```
+
+For objects, such as arrays, we must use the `reactive` function.
+
+### Example { id="reactivity-example-2" }
+
+```javascript
+<script setup>
+import { reactive } from 'vue'
+
+const state = reactive({
+    count: 0
+})
+
+function increment() {
+    state.count++
+}
+
+// `state` cannot be modified directly
+// state = { count: 1 }
+    
+// `state` can be modified like this
+state.count = 1
+    
+// `state` can also be modified like this
+Object.assign(state, { count: 1 })
+
+</script>
+```
+
+Do **NOT** use the `ref` function for objects.
+
+### Example { id="reactivity-example-3" }
+
+```javascript
+<script setup>
+import { ref } from 'vue'
+
+const arr = ref([1, 2, 3])
+
+// This is NOT reactive
+arr.value.push(4)
+</script>
+```
+
 <seealso>
     <category ref="vue">
         <a href="Vuetify.md" />
