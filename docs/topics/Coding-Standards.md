@@ -39,6 +39,29 @@ var a = 1
 let a = 1
 ```
 
+## Equality Operators
+
+<tldr>
+    <p><strong>Always</strong> use <code>===</code> and <code>!==</code>.</p>
+</tldr>
+
+All equality operators must be strict.
+This means that you must use `===` and `!==` instead of `==` and `!=`.
+
+### Example { id="equality-operators-example" }
+
+```javascript
+// Do this
+if (a === b) {
+    // ...
+}
+
+// NEVER this
+if (a == b) {
+    // ...
+}
+```
+
 
 <seealso>
     <category ref="uh">
