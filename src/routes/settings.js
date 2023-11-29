@@ -175,6 +175,17 @@ router.patch('/notifications', async (req, res, next) => {
         if (err) return next(err)
         if (!admin) return res.status(401).json({ message: info.message })
 
+        if (
+            req.body.demand_letter >= req.body.third_notice ||
+            req.body.third_notice >= req.body.second_notice ||
+            req.body.second_notice >= req.body.first_notice ||
+            req.body.first_notice >= req.body.reminder
+        )
+            return res.status(400).json({
+                message: 'The order of the notifications is not correct',
+                error: true
+            })
+
         try {
             await NotificationSettings.findOneAndUpdate({}, req.body).select('-_id -__v')
 
