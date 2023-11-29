@@ -1,6 +1,6 @@
 /**
  * Schema for representing a person's name in the Mongoose database.
- * @module models/loanTransactionSchema
+ * @module models/nameSchema
  */
 
 import { Schema } from 'mongoose'
