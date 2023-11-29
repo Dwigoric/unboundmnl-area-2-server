@@ -93,6 +93,8 @@ router.get('/:id', async (req, res, next) => {
  * @function
  * @memberof module:routes/officers~router-officers
  * @inner
+ *
+ * @param {String} password - Updated password of admin.
  */
 router.patch('/admin/password', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
@@ -120,6 +122,7 @@ router.patch('/admin/password', async (req, res, next) => {
  * PATCH /:id/password
  *
  * Update officer's password by UUID. This route is only accessible to the admin.
+ * id is the ID of the officer whose password is being updated.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
@@ -127,6 +130,8 @@ router.patch('/admin/password', async (req, res, next) => {
  * @function
  * @memberof module:routes/officers~router-officers
  * @inner
+ *
+ * @param {String} password - Updated password of officer.
  */
 router.patch('/:id/password', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
@@ -158,7 +163,7 @@ router.patch('/:id/password', async (req, res, next) => {
  *
  * Mark officer as inactive by UUID. This route is only accessible to the admin.
  *
- * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ * id represents the ID of the officer being marked as inactive.
  *
  * @name delete/:id
  * @function

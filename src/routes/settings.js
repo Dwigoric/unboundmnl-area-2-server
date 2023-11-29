@@ -48,7 +48,9 @@ router.get('/loans', async (req, res, next) => {
 /**
  * PATCH /loans/:loanType
  *
- * Edit the settings of a given loan type
+ * Edit the settings of a given loan type.
+ *
+ * loanType is the loan type whose settings should be edited.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
@@ -56,6 +58,12 @@ router.get('/loans', async (req, res, next) => {
  * @function
  * @memberof module:routes/settings~router-settings
  * @inner
+ *
+ * @param {MandatoryIndividualSettingSchema} interest_rate -The interest rate of the current loan type. Used for automatic interest calculations.
+ * @param {IndividualSettingSchema} service_fee - Initial service fees for the current loan type. Deducted from the loan value upon loan approval.
+ * @param {IndividualSettingSchema} capital_build_up - Capital build-up fee for the current loan type. Deducted from the loan value upon loan approval.
+ * @param {IndividualSettingSchema} savings - Savings contribution for the current loan type. Deducted from the loan value upon loan approval.
+ * @param {TimeSettingSchema} time - Time period between interest applications.
  */
 router.patch('/loans/:loanType', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
@@ -109,12 +117,17 @@ router.get('/deposits', async (req, res, next) => {
  *
  * Edit the settings of a given deposit type
  *
+ * depositType is the deposit type whose settings should be edited.
+ *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
  * @name patch/deposits/:depositType
  * @function
  * @memberof module:routes/settings~router-settings
  * @inner
+ *
+ * @param {MandatoryIndividualSettingSchema} interest_rate - Interest rate of the deposit type.
+ * @param {TimeSettingSchema} time - Time period between interest applications.
  */
 router.patch('/deposits/:depositType', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
@@ -175,6 +188,12 @@ router.get('/notifications', async (req, res, next) => {
  * @function
  * @memberof module:routes/settings~router-settings
  * @inner
+ *
+ * @param {Number} reminder - How close to the deadline a loan has to be for it to warrant a reminder.
+ * @param {Number} first_notice - How close to the deadline a loan has to be for it to warrant a first notice.
+ * @param {Number} second_notice - How close to the deadline a loan has to be for it to warrant a second notice.
+ * @param {Number} third_notice - How close to the deadline a loan has to be for it to warrant a third notice.
+ * @param {Number} demand_letter - How close to the deadline a loan has to be for it to warrant a demand letter.
  */
 router.patch('/notifications', async (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {
