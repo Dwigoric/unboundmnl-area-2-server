@@ -279,8 +279,6 @@ router.post('/:loanID/review', async (req, res, next) => {
 
             parseDecimal(settings)
 
-            console.log(existingLoan.loanType)
-
             if (!settings[existingLoan.loanType]) {
                 return res.status(400).json({
                     message: 'No loan settings exist for the current loan type',
@@ -475,7 +473,7 @@ router.patch('/:loanID', async (req, res, next) => {
  * the deleted loan will still be visible in the database
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
- * 
+ *
  * @name delete/:loanID
  * @function
  * @memberof module:routes/loans~router-loans

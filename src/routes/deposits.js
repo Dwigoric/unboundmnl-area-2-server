@@ -146,8 +146,6 @@ router.put('/user/:username', async (req, res, next) => {
 
         const submissionDate = Date.now()
 
-        console.log(req.body.category)
-
         const allSettings = await DepositSettings.findOne().lean()
         if (!allSettings[req.body.category]) {
             return res.status(400).json({
