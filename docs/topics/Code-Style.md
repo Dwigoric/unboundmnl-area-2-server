@@ -66,6 +66,26 @@ All commas must be followed by a **space**.
 const a = [1, 2, 3]
 ```
 
+### Sections
+
+All sections must be separated by **one blank line**.
+
+#### Example { id="spacing-sections-example" }
+
+```javascript
+function a() {
+    // ...
+}
+
+function b() {
+    // ...
+}
+```
+
+If a function definition contains a significant amount of code,
+it may be separated into sections. Make sure to add a comment
+above each section to describe what it does.
+
 <seealso>
     <category ref="uh">
         <a href="Admin.md" />
