@@ -5,10 +5,10 @@ components. Vuetify is a Material Design component framework for Vue.js. It aims
 to provide clean, semantic and reusable components that make building your
 application a breeze.
 
-## Vuetify API
+## Vuetify Components
 
-The Vuetify API is available
-[here online](https://vuetifyjs.com/en/api/vuetify/).
+The documentation for all Vuetify components can be found
+[here online](https://vuetifyjs.com/en/components/all/).
 
 ## Classes
 
