@@ -95,7 +95,7 @@ router.get('/:txID', async (req, res, next) => {
 /**
  * PUT /
  *
- * Create a new transaction under this deposit. req.body must be a valid document following the .
+ * Create a new transaction under this deposit. Also updates the deposit's balance accordingly.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
@@ -103,6 +103,14 @@ router.get('/:txID', async (req, res, next) => {
  * @function
  * @memberof module:routes/deposit-ledgers~router-deposit-ledgers
  * @inner
+ * @param {String} ORNumber - Deposit OR number. Manually inputted, duplicates are allowed.
+ * @param {Date} transactionDate - Date the transaction was made.
+ * @param {Date} submissionDate - Date the transaction was submitted to the system.
+ * @param {String} transactionType - Type of transaction. Must be either 'Deposit' or 'Withdrawal'.
+ * @param {mongoose.Decimal128} amount - Amount paid during transaction.
+ * @param {mongoose.Decimal128} interest - Interest gained during transaction. Separate transactions are made every time interest is calculated.
+ * @param {mongoose.Decimal128} balance - Remaining balance in the deposit account after transaction.
+ * @param {NameSchema} officerInCharge - Name of the officer in charge of the transaction. Object following the `NameSchema` schema.
  */
 router.put('/', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -149,14 +157,22 @@ router.put('/', async (req, res, next) => {
 /**
  * PATCH /:txID
  *
- * Update a transaction.
+ * Update a transaction in this deposit.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ * txID is the transaction ID of the deposit.
  *
  * @name patch/:txID
  * @function
  * @memberof module:routes/deposit-ledgers~router-deposit-ledgers
  * @inner
+ * @param {String} ORNumber - Deposit OR number. Manually inputted, duplicates are allowed.
+ * @param {Date} transactionDate - Date the transaction was made.
+ * @param {Date} submissionDate - Date the transaction was submitted to the system.
+ * @param {mongoose.Decimal128} amount - Amount paid during transaction.
+ * @param {mongoose.Decimal128} interest - Interest gained during transaction. Separate transactions are made every time interest is calculated.
+ * @param {mongoose.Decimal128} balance - Remaining balance in the deposit account after transaction.
+ * @param {NameSchema} officerInCharge - Name of the officer in charge of the transaction.
  */
 router.patch('/:txID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {

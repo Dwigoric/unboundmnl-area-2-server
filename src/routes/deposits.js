@@ -61,7 +61,13 @@ router.get('/', async (req, res, next) => {
 /**
  * GET /get/:depositid
  *
- * Get a deposit given its deposit ID
+ * Get a deposit given its deposit ID.
+ * depositID is the ID of the deposit.
+ *
+ * @name get/:depositid
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
  */
 router.get('/:depositID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -84,7 +90,9 @@ router.get('/:depositID', async (req, res, next) => {
 /**
  * GET /:username
  *
- * Get all deposits of a member given their username
+ * Get all deposits of a member given their username.
+ * username is the username to search by.
+ *
  * @name get/:username
  * @function
  * @memberof module:routes/deposits~router-deposits
@@ -121,15 +129,21 @@ router.get('/user/:username', async (req, res, next) => {
 /**
  * PUT /:username
  *
- * Create a new deposit of a member given their username
- *
- *
+ * Create a new deposit of a member given their username.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ * username is the username of the member that owns the deposit.
+ *
  * @name put/:username
  * @function
  * @memberof module:routes/deposits~router-deposits
  * @inner
+ *
+ * @param {String} username - Username of the user that owns this deposit.
+ * @param {Date} approvalDate - Date the deposit was approved.
+ * @param {mongoose.Decimal128} originalDepositAmount - Original amount that was deposited.
+ * @param {String} status - Current deposit status. One of 'pending', 'accepted', 'rejected', or 'complete'.
+ * @param {String} category - Deposit category. One of 'shareCapital', 'savings', or 'timeDeposit'.
  */
 router.put('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -145,8 +159,6 @@ router.put('/user/:username', async (req, res, next) => {
         }
 
         const submissionDate = Date.now()
-
-        console.log(req.body.category)
 
         const allSettings = await DepositSettings.findOne().lean()
         if (!allSettings[req.body.category]) {
@@ -207,16 +219,19 @@ router.put('/user/:username', async (req, res, next) => {
 /**
  * PATCH /:depositID
  *
- * Edit a deposit
+ * Edit a deposit (except the deposit's ledger).
  *
- * req.body contains the data of the deposit to edit. Finds a deposit in the database using depositID.
- * NOTE: Does not edit deposit IDs.
+ * depositID represents the ID of the deposit to edit.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
  * @name patch/:depositID
  * @function
  * @memberof module:routes/deposits~router-deposits
  * @inner
+ *
+ * @param {mongoose.Decimal128} originalDepositAmount - Original amount that was deposited.
+ * @param {String} status - Current deposit status. One of 'pending', 'accepted', 'rejected', or 'complete'.
+ * @param {String} category - Deposit category. One of 'shareCapital', 'savings', or 'timeDeposit'.
  */
 router.patch('/:depositID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -258,9 +273,7 @@ router.patch('/:depositID', async (req, res, next) => {
 /**
  * DELETE /:depositID
  *
- * Delete a deposit.
- *
- * This functionality only soft deletes the deposit.
+ * Marks a deposit as deleted.
  *
  * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
