@@ -59,7 +59,7 @@ components that are used by views are stored in the `src/components`.
 The `ref` function is used to create a reactive reference. This means that
 whenever the value of the reference changes, the component will be re-rendered.
 
-If we want a reactive primitive variable, we must use the `ref` function.
+If you want a reactive primitive variable, you must use the `ref` function.
 
 ### Example { id="reactivity-example" }
 
@@ -75,7 +75,7 @@ function increment() {
 </script>
 ```
 
-For objects, such as arrays, we must use the `reactive` function.
+For objects, such as arrays, you must use the `reactive` function.
 
 ### Example { id="reactivity-example-2" }
 

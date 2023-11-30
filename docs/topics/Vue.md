@@ -13,13 +13,13 @@ hand, Vue is also perfectly capable of powering sophisticated Single-Page
 Applications when used in combination with modern tooling and supporting
 libraries.
 
-For this project, we use Vue.js 3 built with [Vite](https://vitejs.dev/).
+This project uses Vue.js 3 built with [Vite](https://vitejs.dev/).
 
 ## Vue API
 
 The Vue API is available
 <a href="https://v3.vuejs.org/api/" >here online</a>.
-We will be using the Composition API, which is available
+This project uses the Composition API, which is available
 <a href="https://v3.vuejs.org/api/composition-api.html" >here online</a>.
 
 <seealso>

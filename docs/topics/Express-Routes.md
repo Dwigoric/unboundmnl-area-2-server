@@ -24,7 +24,7 @@ Route paths can be strings, string patterns, or regular expressions.
 
 ### Resource Naming
 
-For this project, we follow the industry standard of naming conventions,
+This project follows the industry standard of naming conventions,
 which you may find [here](https://restfulapi.net/resource-naming/).
 
 <seealso>
