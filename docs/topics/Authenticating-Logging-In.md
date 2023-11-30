@@ -1,10 +1,27 @@
 # Authenticating/Logging In
 
-Upon product turnover, the designated profile for login is exclusively the ___admin___ profile, which will be promptly provided. Once granted access to the website, the ___admin___ has the capability to establish supplementary profiles for other officers to utilize.
+Upon product turnover, the designated profile for login is
+exclusively the ___admin___ profile, which will be promptly provided.
+Once granted access to the website, the ___admin___ has the capability
+to establish supplementary profiles for other officers to utilize.
 
-## Logging In
-
-To access the website, enter your respective credentials and click on the ___Log In___ button. Additionally, an option to ___Remember me___ is available, enabling users to have their login credentials remembered by their device. This allows swift access to the website without the need to input credentials every time.
+<procedure title="Logging In" id="logging-in" type="steps">
+<step>Enter your credentials on the login form.</step>
+<step>
+Optional: Check the <strong>Remember me</strong> option if
+you wish to have your credentials remembered by your device.
+</step>
+<step>Click on the <strong>Log In</strong> button.</step>
+<img src="login-page.png" alt="Login page screenshot" />
+<p>
+Checking the <strong>Remember me</strong> option will
+allow you to skip the login process on your next visit.
+</p>
+<warning>
+If you are using a public device, it is <strong>highly recommended</strong>
+that you do not check the <strong>Remember me</strong> option.
+</warning>
+</procedure>
 
 
 <seealso>
