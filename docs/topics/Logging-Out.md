@@ -1,8 +1,14 @@
 # Logging Out
 
-To log out from your profile, navigate to the lower section of the navigation drawer where you'll find a designated __'Logout'__ button. Simply click on it to initiate the logout process. 
+To log out from your profile, navigate to the lower section of the navigation
+drawer where you'll find a designated __'Logout'__ button. Simply click on it to
+initiate the logout process. 
 
-If the __'Logout'__ button cannot be seen, please make sure that the navigation drawer is extended. The __'Logout'__ button is only available when the navigation drawer is extended. 
+If the __'Logout'__ button cannot be seen, please make sure that the navigation
+drawer is extended. The __'Logout'__ button is only available when the navigation
+drawer is extended.
+
+![Logout](logout-button.png)
 
 <seealso>
     <category ref="uh">
