@@ -1,5 +1,15 @@
 # User Handbook
 
+This chapter of the documentation details the user-facing features of the
+application. It is intended to be used as a reference for users of the
+application. This serves as the product manual.
+
+In the following sections, you will find information about the features of the
+application, including how to use them.
+
+You may move on to the next section using the button at the bottom of the page,
+starting with <a href="Authenticating-Logging-In.md" />.
+
 <seealso>
     <category ref="uh">
         <a href="Admin.md" />

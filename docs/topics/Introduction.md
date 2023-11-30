@@ -1,5 +1,9 @@
 # Introduction
 
+> You may use the buttons at the bottom of the page or the sidebar to
+> navigate through this documentation.
+{ style='note' }
+
 Welcome to the documentation for the %product%!
 
 In this documentation, you will find information about the %product%
