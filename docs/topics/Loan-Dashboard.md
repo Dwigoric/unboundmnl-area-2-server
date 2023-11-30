@@ -1,5 +1,53 @@
 # Loan Dashboard
 
+The first thing once you enter the website is the ___Loan Dashboard___. This page houses all loans found in the database that are accepted.
+
+Each row contains information on a certain loan. Information present are:
+- Type of Loan
+- Loanee; A button that can forward the user to the loanee's profile.
+- Original Amount of Loan
+- Outstanding Balance
+- Status
+- Due Date
+
+## Sorting, Filtering, and Searching
+
+Additionally, loans are sorted firstly by ___status___, then by ___due date___. Users can add their own sort by clicking the header of the certain field you would like to toggle. An arrow would then appear, pointing up for ascending, and pointing down for descending. Clicking the header once again would remove the sorting of that specific header. Also, the search bar found on the top right of the loan table can help filter specific fields the user wishes to search.
+
+## Signifiers
+
+The ___status___ and ___due date___ both have colors that signify a certain status.
+
+### Status
+
+For ___status___, the colors are as follows:
+
+- Pending: <span style="color:purple;">`purple`</span>,
+- Approved (for release): <span style="color:orange;">`orange`</span>,
+- Approved (released): <span style="color:green;">`green`</span>,
+- Rejected: <span style="color:red;">`red`</span>,
+- Complete: <span style="color:blue;">`blue`</span>.
+
+### Due Date
+
+For ___due date___, this corresponds with the colors found in the settings tab (only accessible by the ___admin___). The colors are as follows:
+
+- Demand Letter: <span style="color:red;">`red`</span>,
+- Third Notice: <span style="color:orange;">`orange`</span>,
+- Second Notice: <span style="color:blue;">`blue`</span>.
+- First Notice: <span style="color:purple;">`purple`</span>,
+- Reminder: <span style="color:gray;">`gray`</span>,
+
+The amount of days for these colors to pop us as well is depending on the settings the ___admin___ has decided to put.
+
+## Accessing the Loan Ledger
+
+To access the loan ledger of a specific loan, find the loan to view, navigate to the right most part of the loan's row and find the arrow. This will forward the user to the loan's ledger page.
+
+
+
+
+
 <seealso>
     <category ref="loans">
         <a href="Creating-a-Loan-Application.md" />
