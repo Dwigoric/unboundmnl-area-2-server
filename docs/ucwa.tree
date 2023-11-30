@@ -14,10 +14,17 @@
             <toc-element topic="Loan-Dashboard.md"/>
             <toc-element topic="Creating-a-Loan-Application.md"/>
             <toc-element topic="Loan-Approval-Rejection.md"/>
+            <toc-element topic="Loan-Ledger.md">
+                <toc-element topic="Adding-Loan-Ledger-Transaction.md"/>
+                <toc-element topic="Marking-Loan-as-Released.md"/>
+            </toc-element>
         </toc-element>
         <toc-element topic="Deposits.md">
             <toc-element topic="Deposit-Dashboard.md"/>
             <toc-element topic="Creating-New-Deposit.md"/>
+            <toc-element topic="Deposit-Ledger.md">
+                <toc-element topic="Adding-Deposit-Ledger-Transaction.md"/>
+            </toc-element>
         </toc-element>
         <toc-element topic="Profiles.md">
             <toc-element topic="Member-Profiles.md"/>
