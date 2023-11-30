@@ -8,8 +8,12 @@ to establish supplementary profiles for other officers to utilize.
 <procedure title="Logging In" id="logging-in" type="steps">
 <step>Enter your credentials on the login form.</step>
 <step>
-Optional: Check the <strong>Remember me</strong> option if
+<em>Optional</em>: Check the <strong>Remember me</strong> option if
 you wish to have your credentials remembered by your device.
+<warning>
+If you are using a public device, it is <strong>highly recommended</strong>
+that you do not check the <strong>Remember me</strong> option.
+</warning>
 </step>
 <step>Click on the <strong>Log In</strong> button.</step>
 <img src="login-page.png" alt="Login page screenshot" />
@@ -17,10 +21,6 @@ you wish to have your credentials remembered by your device.
 Checking the <strong>Remember me</strong> option will
 allow you to skip the login process on your next visit.
 </p>
-<warning>
-If you are using a public device, it is <strong>highly recommended</strong>
-that you do not check the <strong>Remember me</strong> option.
-</warning>
 </procedure>
 
 
