@@ -1,6 +1,9 @@
 # Loan Dashboard
 
-The first thing you see once you enter the website is the ___Loan Dashboard___. This page houses all loans found in the database that are accepted.
+The first thing you see once you enter the website is the ___Loan Dashboard___.
+This page houses all loans found in the database that are accepted.
+
+![Dashboard Page](dashboard-page.png)
 
 Each row contains information on a certain loan. Information present are:
 - Type of Loan
