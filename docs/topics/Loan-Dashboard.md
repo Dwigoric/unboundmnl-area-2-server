@@ -12,7 +12,7 @@ Each row contains information on a certain loan. Information present are:
 
 ## Sorting, Filtering, and Searching
 
-Additionally, loans are sorted firstly by ___status___, then by ___due date___. Users can add their own sort by clicking the header of the certain field you would like to toggle. An arrow would then appear, pointing up for ascending, and pointing down for descending. Clicking the header once again would remove the sorting of that specific header. Also, the search bar found on the top right of the loan table can help filter specific fields the user wishes to search.
+Additionally, loans are sorted firstly by ___status___, then by ___due date___. Users can add their own sort by clicking the header of the certain field they would like to toggle. An arrow would then appear, pointing up for ascending, and pointing down for descending. Clicking the header once again would remove the sorting of that specific header. Also, the search bar found on the top right of the loan table can help filter specific fields the user wishes to search.
 
 ## Signifiers
 
