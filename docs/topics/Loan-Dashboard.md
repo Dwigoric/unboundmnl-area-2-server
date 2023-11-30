@@ -1,6 +1,6 @@
 # Loan Dashboard
 
-The first thing once you enter the website is the ___Loan Dashboard___. This page houses all loans found in the database that are accepted.
+The first thing you see once you enter the website is the ___Loan Dashboard___. This page houses all loans found in the database that are accepted.
 
 Each row contains information on a certain loan. Information present are:
 - Type of Loan
@@ -12,7 +12,7 @@ Each row contains information on a certain loan. Information present are:
 
 ## Sorting, Filtering, and Searching
 
-Additionally, loans are sorted firstly by ___status___, then by ___due date___. Users can add their own sort by clicking the header of the certain field they would like to toggle. An arrow would then appear, pointing up for ascending, and pointing down for descending. Clicking the header once again would remove the sorting of that specific header. Also, the search bar found on the top right of the loan table can help filter specific fields the user wishes to search.
+Additionally, loans are sorted firstly by ___status___, then by ___due date___. Adding your own sort is possible by clicking the header of the certain field you would like to toggle. An arrow would then appear, pointing up for ascending, and pointing down for descending. Clicking the header once again would remove the sorting of that specific header. Also, the search bar found on the top right of the loan table can help filter specific fields you wish to search.
 
 ## Signifiers
 
@@ -42,7 +42,7 @@ The amount of days for these colors to pop us as well is depending on the settin
 
 ## Accessing the Loan Ledger
 
-To access the loan ledger of a specific loan, find the loan to view, navigate to the right most part of the loan's row and find the arrow. This will forward the user to the loan's ledger page.
+To access the loan ledger of a specific loan, find the loan to view, navigate to the right most part of the loan's row and find the arrow. This will forward you to the loan's ledger page.
 
 
 
