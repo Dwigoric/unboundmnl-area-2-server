@@ -14,9 +14,11 @@ Enter or tab.
 </step>
 <step>
 Fill out the loan application form.
+</step>
 <step>
 Click on the <strong>Submit</strong> button to submit the deposit application.
 </step>
+</procedure>
 
 Deposits do not need any approval, hence they are immediately reflected to the system once submitted.
 
