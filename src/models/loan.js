@@ -138,7 +138,7 @@ LoanSchema.pre('save', function (next) {
  * @prop {String} username - Username of the loanee.
  * @prop {String} loanType - Type of loan. Can be "emergency", "multipurpose", "educational", "pettyCash", "commercial", or "livelihood".
  * @prop {Number} term - Term of the loan. How many payments are to be made to complete the loan.
- * @prop {String} paymentFrequency - How often payments are made for the loan.
+ * @prop {String} paymentFrequency - How often payments are made for the loan. Can be "daily", "weekly" or "monthly".
  * @prop {Date} submissionDate - Date when the loan was submitted to the system.
  * @prop {Date} approvalDate - Date when the loan was approved by an officer.
  * @prop {Date} dueDate - Date when the loan is due next.
