@@ -44,14 +44,11 @@ The amount of days for these colors to pop us as well is depending on the settin
 
 To access the loan ledger of a specific loan, find the loan to view, navigate to the right most part of the loan's row and find the arrow. This will forward you to the loan's ledger page.
 
-
-
-
-
 <seealso>
     <category ref="loans">
         <a href="Creating-a-Loan-Application.md" />
         <a href="Loan-Approval-Rejection.md" />
+        <a href="Loan-Ledger.md" />
     </category>
     <category ref="uh">
         <a href="Admin.md" />

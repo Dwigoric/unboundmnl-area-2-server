@@ -42,6 +42,7 @@ You can find instructions on how to approve or reject a loan application at
     <category ref="loans">
         <a href="Loan-Dashboard.md" />
         <a href="Loan-Approval-Rejection.md" />
+        <a href="Loan-Ledger.md" />
     </category>
     <category ref="uh">
         <a href="Admin.md" />
@@ -57,3 +58,4 @@ You can find instructions on how to approve or reject a loan application at
         <a href="Vue.md"></a>
     </category>
 </seealso>
+
