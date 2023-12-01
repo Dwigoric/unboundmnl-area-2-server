@@ -1,9 +1,6 @@
 # Loan Dashboard
 
-The first thing you see once you enter the website is the ___Loan Dashboard___.
-This page houses all loans found in the database that are accepted.
-
-![Dashboard Page](dashboard-page.png)
+The first thing you see once you enter the website is the ___Loan Dashboard___. This page houses all loans found in the database that are accepted.
 
 Each row contains information on a certain loan. Information present are:
 - Type of Loan
@@ -15,7 +12,7 @@ Each row contains information on a certain loan. Information present are:
 
 ## Sorting, Filtering, and Searching
 
-Additionally, loans are sorted firstly by ___status___, then by ___due date___. Adding your own sort is possible by clicking the header of the certain field you would like to toggle. An arrow would then appear, pointing up for ascending, and pointing down for descending. Clicking the header once again would remove the sorting of that specific header. Also, the search bar found on the top right of the loan table can help filter specific fields you wish to search.
+Additionally, loans are sorted firstly by ___status___, then by ___due date___. Adding your own sort is possible by clicking the header of the certain field you would like to toggle. An arrow would then appear, pointing up for ascending, and pointing down for descending. Clicking the header once again would remove the sorting of that specific header. Also, the search bar found on the top left of the loans table can help filter specific fields you wish to search.
 
 ## Signifiers
 
