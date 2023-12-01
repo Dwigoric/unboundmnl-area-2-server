@@ -1,3 +1,8 @@
+/**
+ * Model to represent users (loanees) in the system.
+ * @module models/loanee
+ */
+
 import { Schema, model } from 'mongoose'
 import NameSchema from './nameSchema.js'
 import SpouseSchema from './spouseSchema.js'
@@ -61,7 +66,6 @@ const LoaneeSchema = new Schema({
     },
     spouse: { type: SpouseSchema },
     deleted: { type: Boolean, default: false }
-    // loans: [Loan]
 })
 
 // Finding by text will search both username and name fields
@@ -74,7 +78,7 @@ LoaneeSchema.index(
     },
     {
         weights: {
-            username: 10,
+            username: 20,
             'name.given': 5,
             'name.middle': 3,
             'name.last': 5
@@ -86,6 +90,23 @@ LoaneeSchema.pre(['find', 'findOne'], function () {
     this.where({ deleted: false })
 })
 
+/**
+ * Model to represent deposit settings for a single deposit category.
+ *
+ * @prop {String} username - Username, unique identifier per user.
+ * @prop {NameSchema} name - User's full name.
+ * @prop {Date} birthday - User's birthday.
+ * @prop {String} birthplace - User's birthplace.
+ * @prop {String} sex - User's sex. Must be either 'M' or 'F'
+ * @prop {String} civil_status - User's civil status. Must be either 'Single' or 'Married'
+ * @prop {String} tin_no - TIN number of the user. Must be of the format XXX-XXX-XXX-XXX where X is a number from 0 to 9
+ * @prop {String} contact_no - User's contact number..
+ * @prop {Number} monthly_income - Users' monthly income.
+ * @prop {LocationSchema} address - Users' address.
+ * @prop {String} occupation - Users' occupation.
+ * @prop {SpouseSchema} spouse - Users' spouse, if any.
+ * @prop {Boolean} deleted - Whether or not the user is deleted.
+ */
 const Loanee = model('Loanee', LoaneeSchema)
 
 export default Loanee

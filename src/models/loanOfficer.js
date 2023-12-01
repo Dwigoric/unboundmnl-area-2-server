@@ -1,3 +1,8 @@
+/**
+ * Model for representing loan officers.
+ * @module models/loanOfficer
+ */
+
 // Import packages
 import { Schema, model } from 'mongoose'
 import { v5 as uuidV5, validate as uuidValidate, version as uuidVersion } from 'uuid'
@@ -58,6 +63,16 @@ LoanOfficerSchema.pre('save', function (next) {
     next()
 })
 
+/**
+ * Model to represent a single Loan Officer.
+ *
+ * @prop {Boolean} active - Whether or not the officer account is currently active.
+ * @prop {String} username - Officer's username for account logins.
+ * @prop {String} password_hash - Hashed (argon2) password of officer for account logins.
+ * @prop {String} id - Officer's automatically generated uuid. Uses uuidv5
+ * @prop {NameSchema} name - Officer's name.
+ * @prop {String} role - Officer's role. Can either be "manager", "treasurer", or "credit committee".
+ */
 const LoanOfficer = model('LoanOfficer', LoanOfficerSchema)
 
 export default LoanOfficer

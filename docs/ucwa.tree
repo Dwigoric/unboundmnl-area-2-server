@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="ucwa"
+                 name="UnboundMNL Cooperatives Web App"
+                 start-page="Introduction.md">
+
+    <toc-element topic="Introduction.md"/>
+    <toc-element topic="User-Handbook.md">
+        <toc-element topic="Authenticating-Logging-In.md"/>
+        <toc-element topic="Logging-Out.md"/>
+        <toc-element topic="Loans.md">
+            <toc-element topic="Loan-Dashboard.md"/>
+            <toc-element topic="Creating-a-Loan-Application.md"/>
+            <toc-element topic="Loan-Approval-Rejection.md"/>
+            <toc-element topic="Loan-Ledger.md">
+                <toc-element topic="Adding-Loan-Ledger-Transaction.md"/>
+                <toc-element topic="Marking-Loan-as-Released.md"/>
+            </toc-element>
+        </toc-element>
+        <toc-element topic="Deposits.md">
+            <toc-element topic="Deposit-Dashboard.md"/>
+            <toc-element topic="Creating-New-Deposit.md"/>
+            <toc-element topic="Deposit-Ledger.md">
+                <toc-element topic="Adding-Deposit-Ledger-Transaction.md"/>
+            </toc-element>
+        </toc-element>
+        <toc-element topic="Profiles.md">
+            <toc-element topic="Member-Profiles.md"/>
+            <toc-element topic="Officer-Profiles.md"/>
+        </toc-element>
+        <toc-element topic="Admin.md">
+            <toc-element topic="Changing-Password.md"/>
+            <toc-element topic="Loan-and-Deposit-Settings.md"/>
+            <toc-element topic="Notification-Settings.md"/>
+        </toc-element>
+    </toc-element>
+    <toc-element topic="Coding-Standards.md">
+        <toc-element topic="Naming.md"/>
+        <toc-element topic="Comments.md"/>
+        <toc-element topic="Code-Style.md"/>
+    </toc-element>
+    <toc-element topic="Vue.md">
+        <toc-element topic="Components.md"/>
+        <toc-element topic="Vuetify.md"/>
+    </toc-element>
+    <toc-element topic="Git-Commit-Messages.md"/>
+    <toc-element topic="Express-Routes.md"/>
+</instance-profile>

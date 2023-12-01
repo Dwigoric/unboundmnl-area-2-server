@@ -1,14 +1,36 @@
+/**
+ * Express routes for managing loan ledgers.
+ * @module routes/loan-ledgers
+ * @requires express
+ */
+
 // Packages
 import { Router } from 'express'
 import passport from 'passport'
 
-// Initialize router
+/**
+ * Router to mount routes on. Accessed through {SERVER_URL}/loans/{loan_id}/ledger/{route},
+ * where loan_id is the ID of the loan whose ledger is being accessed.
+ * @const
+ * @namespace router-loan-ledgers
+ */
 const router = Router()
 
 // Models
 import Loan from '../models/loan.js'
 
-// Routes
+import parseDecimal from '../modules/decimal/parseDecimal.js'
+
+/**
+ * GET /
+ *
+ * Get all loan ledgers
+ *
+ * @name get
+ * @function
+ * @memberof module:routes/loan-ledgers~router-loan-ledgers
+ * @inner
+ */
 router.get('/', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -22,10 +44,23 @@ router.get('/', (req, res, next) => {
         if (!loan) return res.status(404).json({ error: true, message: 'Loan not found' })
 
         const { ledger } = loan
+
+        parseDecimal(ledger)
+
         return res.status(200).json({ ledger, error: false })
     })(req, res, next)
 })
 
+/**
+ * GET /:txID
+ *
+ * Get information of a transaction
+ *
+ * @name get/:txID
+ * @function
+ * @memberof module:routes/loan-ledgers~router-loan-ledgers
+ * @inner
+ */
 router.get('/:txID', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -45,14 +80,39 @@ router.get('/:txID', (req, res, next) => {
         // Find transaction
         const transaction = ledger.find((tx) => tx.transactionID === txID)
 
-        if (!transaction)
+        if (!transaction) {
+            parseDecimal(transaction)
             return res.status(404).json({ error: true, message: 'Transaction not found' })
+        }
 
         // Return transaction
         return res.status(200).json({ transaction, error: false })
     })(req, res, next)
 })
 
+/**
+ * PUT /
+ *
+ * Create a new transaction. Also updates the loan's outstanding balance.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
+ * @name put
+ * @function
+ * @memberof module:routes/loan-ledgers~router-loan-ledgers
+ * @inner
+ *
+ * @param {String} ORNumber - OR number of transaction. Does not have to be unique.
+ * @param {Date} transactionDate - Date the transaction was made.
+ * @param {mongoose.Decimal128} amountPaid - Amount paid during transaction.
+ * @param {mongoose.Decimal128} amountDue - Other amounts due in this transaction outside of interests or fines.
+ * @param {mongoose.Decimal128} balance -  Outstanding loan balance after transaction.
+ * @param {mongoose.Decimal128} interestPaid - Amount of interest paid during transaction.
+ * @param {mongoose.Decimal128} interestDue - Amount of interest added to the loan during transaction.
+ * @param {mongoose.Decimal128} finesDue - Amount of fines paid during transaction.
+ * @param {mongoose.Decimal128} finesPaid - Amount of fines added to the loan during transaction.
+ * @param {NameSchema} officerInCharge - Name of the officer in charge of the transaction.
+ */
 router.put('/', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
@@ -65,20 +125,39 @@ router.put('/', (req, res, next) => {
 
         if (!loan) return res.status(404).json({ error: true, message: 'Loan not found' })
 
-        const { ledger } = loan
-
-        // Add transaction to ledger
-        ledger.push({
+        // Construct transaction info
+        const transactionInfo = {
             ...req.body,
             transactionID: Date.now().toString(36).toUpperCase()
-        })
+        }
+
+        const query = {
+            $push: { ledger: transactionInfo },
+            $set: {}
+        }
+
+        // Determine if transaction is payment, and mark as paid if so
+        if (transactionInfo.transactionType === 'payment') {
+            query.$set = { ...query.$set, isPaidForCurrentPeriod: true }
+        }
+
+        // Update balance depending on whether transaction is readjustment or not
+        if (loan.balance) {
+            query.$set = { ...query.$set, balance: req.body.balance }
+        }
 
         try {
-            // Update loan
-            await Loan.updateOne({ deleted: false, loanID }, { $set: { ledger } })
+            // Add transaction to ledger
+            await Loan.updateOne({ deleted: false, loanID }, query, {
+                runValidators: true
+            })
 
             // Return a 200 response
-            return res.status(200).json({ error: false, message: 'Transaction successfully added' })
+            return res.status(200).json({
+                error: false,
+                message: 'Transaction successfully added',
+                transactionID: transactionInfo.transactionID
+            })
         } catch (error) {
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
@@ -91,6 +170,27 @@ router.put('/', (req, res, next) => {
     })(req, res, next)
 })
 
+/**
+ * PATCH /:txID
+ *
+ * Update a transaction. txID is the ID of the transaction to update.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
+ * @name patch/:txID
+ * @function
+ * @memberof module:routes/loan-ledgers~router-loan-ledgers
+ * @inner
+ *
+ * @param {String} ORNumber - OR number of transaction. Does not have to be unique.
+ * @param {Date} transactionDate - Date the transaction was made.
+ * @param {Date} submissionDate - Date the transaction was submitted to the system.
+ * @param {mongoose.Decimal128} amountPaid - Amount paid during transaction.
+ * @param {mongoose.Decimal128} balance -  Outstanding loan balance after transaction.
+ * @param {mongoose.Decimal128} interestPaid - Amount of interest paid during transaction.
+ * @param {mongoose.Decimal128} finesPaid - Amount of fines added to the loan during transaction.
+ * @param {NameSchema} officerInCharge - Name of the officer in charge of the transaction.
+ */
 router.patch('/:txID', (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)

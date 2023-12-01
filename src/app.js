@@ -1,3 +1,8 @@
+/**
+ * Module for setting up the Express application
+ * @module app
+ */
+
 // Packages
 import createError from 'http-errors'
 import express from 'express'
@@ -9,10 +14,13 @@ import 'dotenv/config'
 
 // MongoDB
 import database from './db/conn.js'
-await database.init().catch((err) => {
-    console.error(err)
-    process.exit(1)
-})
+await database
+    .init()
+    .then(() => import('./schedules/agenda.js'))
+    .catch((err) => {
+        console.error(err)
+        process.exit(1)
+    })
 
 // Routes
 import indexRouter from './routes/index.js'
@@ -23,6 +31,10 @@ import loansRouter from './routes/loans.js'
 import depositsRouter from './routes/deposits.js'
 import settingsRouter from './routes/settings.js'
 
+/**
+ * Express app
+ * @object {express.Express}
+ */
 const app = express()
 
 // Configure CORS
@@ -45,7 +57,6 @@ if (!process.env.JWT_SECRET) {
     process.exit(1)
 }
 
-logger.token('url', (req) => (req.baseUrl || '') + req.path)
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))

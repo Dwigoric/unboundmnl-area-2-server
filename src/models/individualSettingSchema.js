@@ -1,16 +1,26 @@
-// Packages
-import { Schema } from 'mongoose'
+/**
+ * Schema to represent an individual setting for financial values, such as interest or fees.
+ * @module models/individualSettingsSchema
+ */
 
+// Packages
+import { Schema, Decimal128 } from 'mongoose'
+
+/**
+ * Schema to represent deposit settings for a single deposit category.
+ *
+ * @prop {String} unit - Unit of the setting amount. Either '%' or 'Fixed'.
+ * @prop {mongoose.Decimal128} value - Value of the setting amount. If unit is '%', how many percent the value represents. If unit is 'Fixed', how much money (in pesos) the value represents.
+ * @prop {Boolean} enabled - Whether or not this particular setting is active.
+ */
 const InvidualSettingSchema = new Schema(
     {
-        type: {
+        unit: {
             type: String,
-            required: true,
-            enum: ['percentage', 'fixed amount'],
-            default: 'percentage'
+            required: true
         },
         value: {
-            type: Number,
+            type: Decimal128,
             default: 0
         },
         enabled: {

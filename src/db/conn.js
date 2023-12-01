@@ -1,8 +1,16 @@
+/**
+ * Module for managing connections to and from the database.
+ * @module db/conn
+ */
+
 import mongoose from 'mongoose'
 
 // Default MongoDB URI
-const DEFAULT_MONGODB_URI = 'mongodb://localhost:27017/unboundmnl-problem-area-2'
+import { DEFAULT_MONGODB_URI } from './default_uri.js'
 
+/**
+ * @class
+ */
 class Database {
     /**
      * Initialize the database connection
@@ -16,9 +24,7 @@ class Database {
         // Set the MongoDB URI
         const url = process.env.MONGODB_URI || DEFAULT_MONGODB_URI
 
-        return mongoose.connect(url).then(() => {
-            console.log('Database connection successful')
-        })
+        return mongoose.connect(url)
         // Do not catch the error; the app should crash on database connection failure
     }
 

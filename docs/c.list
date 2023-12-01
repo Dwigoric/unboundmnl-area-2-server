@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE categories
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/categories.dtd">
+<categories>
+    <category id="loans" name="Loans" order="1" />
+    <category id="deposits" name="Deposits" order="2" />
+    <category id="profiles" name="Profiles" order="3" />
+    <category id="admin" name="Admin" order="4" />
+    <category id="uh" name="User Handbook" order="5" />
+    <category id="vue" name="Vue" order="98" />
+    <category id="ds" name="Development Standards" order="99"/>
+</categories>

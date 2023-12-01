@@ -1,14 +1,24 @@
+/**
+ * Express routes for authorization.
+ * @module routes/auth
+ * @requires express
+ */
+
 // Import packages
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import passport from 'passport'
 import argon2 from 'argon2'
 
-// Create router
+/**
+ * Router to mount routes on. Accessed through {SERVER_URL}/auth/{route}
+ * @const
+ * @namespace router-auth
+ */
 const router = express.Router()
 
 // Import models
-import LoanOfficer from '../models/loan_officer.js'
+import LoanOfficer from '../models/loanOfficer.js'
 
 /**
  * POST /login
@@ -16,6 +26,14 @@ import LoanOfficer from '../models/loan_officer.js'
  * This route authenticates an admin or a loan officer by verifying the username and password.
  * After a successful login, a JWT is created and sent back to the client.
  * The username and password are authenticated using the `local` strategy.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
+ * @name post/login
+ * @function
+ * @memberof module:routes/auth~router-auth
+ * @inner
+ * @param {string} username - Username of the admin or loan officer logging in.
  */
 router.post('/login', (req, res, next) => {
     const { username } = req.body
@@ -45,6 +63,17 @@ router.post('/login', (req, res, next) => {
  *
  * This route creates a new loan officer.
  * The admin must be logged in to use this route.
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
+ * @name post/register
+ * @function
+ * @memberof module:routes/auth~router-auth
+ * @inner
+ *
+ * @param {String} username - Officer's username for account logins.
+ * @param {String} password - Password of officer for account logins.
+ * @param {NameSchema} name - Officer's name. An object that follows the `nameSchema` schema.
+ * @param {String} role - Officer's role. Can either be "manager", "treasurer", or "credit committee".
  */
 router.post('/register-officer', (req, res, next) => {
     passport.authenticate('admin', { session: false }, async (err, admin, info) => {

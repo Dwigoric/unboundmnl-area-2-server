@@ -1,13 +1,30 @@
+/**
+ * Express routes for managing loans.
+ * @module routes/loans
+ * @requires express
+ */
+
 // Import packages
 import { Router } from 'express'
 import passport from 'passport'
+import { Decimal } from 'decimal.js'
 
-// Initialize router
+import moment from 'moment'
+moment().format()
+
+/**
+ * Router to mount routes on.
+ * @const
+ * @namespace router-loans
+ */
 const router = Router()
 
 // Import models
 import Loan from '../models/loan.js'
 import Loanee from '../models/loanee.js'
+import LoanSettings from '../models/loanSettings.js'
+
+import parseDecimal from '../modules/decimal/parseDecimal.js'
 
 // Ledger routes
 import ledgerRouter from './loan-ledgers.js'
@@ -23,7 +40,12 @@ router.use(
 /**
  * GET /
  *
- * Get all loans
+ * Get all loans.
+ *
+ * @name get
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
 router.get('/', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -31,38 +53,54 @@ router.get('/', async (req, res, next) => {
         if (!manager) return res.status(401).json(info)
 
         const options = { deleted: false }
-        if (['approved', 'pending', 'rejected'].includes(req.query.status))
-            options.status = req.query.status
+        const optionsList = []
 
-        const loans = await Loan.find(options)
+        const { status } = req.query
+        if (status) {
+            const statuses = status.split(',')
+            statuses.forEach((s) => {
+                if (['pending', 'approved', 'released', 'rejected', 'complete'].includes(s))
+                    optionsList.push({ ...options, status: s })
+            })
+        }
+
+        const loans = await Loan.find(status ? { $or: optionsList } : options)
             .select(
-                '-ledger -deleted -term -submissionDate -approvalDate ' +
+                '-ledger -deleted -term -approvalDate ' +
                     '-coborrowerName -classification -__v -_id'
             )
             .lean()
 
+        parseDecimal(loans)
+
         // Return loans
-        return res.status(200).json({ loans, error: false })
+        return res.status(200).json({ loans: loans, error: false })
     })(req, res, next)
 })
 
 /**
- * GET /get/:loanid
+ * GET /:loanID
  *
- * Get a loan given its loan ID
+ * Get a loan given its loan ID.
+ *
+ * @name get
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
-router.get('/get/:loanid', async (req, res, next) => {
+router.get('/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
-        try {
-            if (err) return next(err)
-            if (!manager) return res.status(401).json(info)
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
 
-            const loan = await Loan.findOne({ deleted: false, loanID: req.params.loanid })
-                .select('-classification -__v -_id')
+        try {
+            const loan = await Loan.findOne({ deleted: false, loanID: req.params.loanID })
+                .select('-classification -ledger -__v -_id')
                 .lean()
 
             // Return loans
             if (loan) {
+                parseDecimal(loan)
                 return res.status(200).json({ loan, error: false })
             } else {
                 return res.status(400).json({ message: 'Loan ID does not exist', error: true })
@@ -82,16 +120,20 @@ router.get('/get/:loanid', async (req, res, next) => {
 })
 
 /**
- * GET /:username
+ * GET /user/:username
  *
- * Get all loans for a loanee
+ * Get all loans for a loanee given their username.
+ * @name get/user/:username
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
-router.get('/:username', async (req, res, next) => {
+router.get('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
-        try {
-            if (err) return next(err)
-            if (!manager) return res.status(401).json(info)
+        if (err) return next(err)
+        if (!manager) return res.status(401).json(info)
 
+        try {
             const { username } = req.params
 
             const loanee = await Loanee.findOne({ username }).lean()
@@ -100,12 +142,19 @@ router.get('/:username', async (req, res, next) => {
                 return res.status(404).json({ message: 'Loanee does not exist' })
             }
 
-            const options = { deleted: false }
-            if (['approved', 'pending', 'rejected'].includes(req.query.status))
-                options.status = req.query.status
+            const options = { username, deleted: false }
+            const optionsList = []
 
-            const loans = await Loan.find(options).select('-__v -_id').lean()
+            const { status } = req.query
+            const statuses = status.split(',')
+            statuses.forEach((s) => {
+                if (['pending', 'approved', 'released', 'rejected', 'complete'].includes(s))
+                    optionsList.push({ ...options, status: s })
+            })
 
+            const loans = await Loan.find({ $or: optionsList }).select('-__v -_id -ledger').lean()
+
+            parseDecimal(loans)
             // Return loans
             return res.status(200).json({ loans, error: false })
         } catch (error) {
@@ -116,11 +165,27 @@ router.get('/:username', async (req, res, next) => {
 })
 
 /**
- * PUT /new/:username
+ * PUT /user/:username
  *
- * Create a new loan application for a loanee
+ * Create a new loan application for a loanee.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
+ * @name put/user/:username
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
+ *
+ * @param {String} username - Username of the loanee.
+ * @param {String} loanType - Type of loan. Can be "emergency", "multipurpose", "educational", "pettyCash", "commercial", or "livelihood".
+ * @param {Number} term - Term of the loan. How many payments are to be made to complete the loan.
+ * @param {String} paymentFrequency - How often payments are made for the loan.
+ * @param {Object} coborrower - Loan coborrower. Contains the `name` (NameSchema), `birthday` (Date), `occupation`, and `contact_no` (both Strings) of the coborrower.
+ * @param {mongoose.Decimal128} amount - Original amount loaned.
+ * @param {String} status - Status of the loan. Must be "pending", "approved", "released", "rejected", or "complete".
+ * @param {String} classification - Classification of the loan. Must be "new" or "renewal".
  */
-router.put('/new/:username', async (req, res, next) => {
+router.put('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
@@ -150,8 +215,11 @@ router.put('/new/:username', async (req, res, next) => {
                 term: req.body.term,
                 paymentFrequency: req.body.paymentFrequency,
                 submissionDate: Date.now(),
+                approvalDate: null,
+                dueDate: null,
                 coborrower: req.body.coborrower,
                 originalLoanAmount: req.body.amount,
+                balance: req.body.amount,
                 ledger: [],
                 status: req.body.status,
                 classification: req.body.classification
@@ -176,23 +244,31 @@ router.put('/new/:username', async (req, res, next) => {
 })
 
 /**
- * POST /review-application
+ * POST /:loanID/review
  *
- * Approve or reject a loan application
+ * Approve or reject a loan application, then automatically insert a transaction for initial deductions if approved.
  *
- *  req.body must be of the form:
- *  {
- *      loanID: String
- *      approved: boolean
- *  }
+ * loanID is the loan ID to review.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
+ * @name post/:loanID/review
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
+ * @param {boolean} approved - Whether or not the loan is approved. Value is true if approved, and false if rejected.
+ * @param {NameSchema} oic - The name of the officer in charge of the review. Is an object that follows the NameSchema.
  */
-router.post('/review-application/:loanID', async (req, res, next) => {
+router.post('/:loanID/review', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingLoan = await Loan.findOne({ loanID: req.params.loanID })
+            const { loanID } = req.params
+
+            // Fetch and preprocess existing loans
+            const existingLoan = await Loan.findOne({ loanID }).lean()
             if (!existingLoan) {
                 return res.status(404).json({ message: 'Loan application does not exist' })
             } else if (existingLoan.status !== 'pending') {
@@ -200,16 +276,68 @@ router.post('/review-application/:loanID', async (req, res, next) => {
                     .status(400)
                     .json({ message: 'Cannot approve an application that is not pending approval' })
             }
+            parseDecimal(existingLoan)
 
-            await Loan.updateOne(
-                { loanID: req.params.loanID },
-                {
-                    status: req.body.approved ? 'approved' : 'rejected'
-                },
-                {
-                    runValidators: true
+            // Fetch settings
+            const settings = await LoanSettings.findOne().lean()
+
+            parseDecimal(settings)
+
+            if (!settings[existingLoan.loanType]) {
+                return res.status(400).json({
+                    message: 'No loan settings exist for the current loan type',
+                    error: true
+                })
+            }
+
+            // Calculate deductions
+            let deductions = new Decimal('0')
+
+            for (const deductionType of ['service_fee', 'capital_build_up', 'savings']) {
+                const deductionSetting = settings[existingLoan.loanType][deductionType]
+
+                if (deductionSetting.enabled && deductionSetting.unit === '%') {
+                    deductions = deductions.add(
+                        new Decimal(deductionSetting.value)
+                            .mul(existingLoan.originalLoanAmount)
+                            .mul(new Decimal('0.01'))
+                    )
+                } else if (deductionSetting.enabled) {
+                    deductions = deductions.add(deductionSetting.value)
                 }
-            )
+            }
+
+            // Create update query
+            const query = {
+                $set: {
+                    status: req.body.approved ? 'approved' : 'rejected',
+                    approvalDate: Date.now()
+                }
+            }
+
+            if (existingLoan.ledger.length === 0) {
+                query.$set.ledger = [
+                    {
+                        transcationID: Date.now().toString(36).toUpperCase(),
+                        transactionDate: Date.now(),
+                        submissionDate: Date.now(),
+                        amountPaid: deductions,
+                        amountDue: 0,
+                        balance: deductions.neg().add(existingLoan.balance).toString(),
+                        interestPaid: 0,
+                        interestDue: 0,
+                        finesPaid: 0,
+                        finesDue: 0,
+                        officerInCharge: req.body.oic
+                    }
+                ]
+            }
+
+            if (existingLoan.balance && req.body.approved) {
+                query.$set.balance = deductions.neg().add(existingLoan.balance).toString()
+            }
+
+            await Loan.updateOne({ loanID }, query, { runValidators: true })
 
             return res.status(200).json({
                 message: `Loan application ${req.body.approved ? 'approved' : 'rejected'}`,
@@ -217,6 +345,14 @@ router.post('/review-application/:loanID', async (req, res, next) => {
             })
         } catch (error) {
             if (error.name === 'ValidationError') {
+                if (error.errors.balance) {
+                    return res.status(400).json({
+                        message:
+                            'Cannot accept loan: Loan balance would be less than 0 after initial deductions',
+                        error: true
+                    })
+                }
+
                 return res.status(400).json({
                     message: error.errors[Object.keys(error.errors)[0]].message,
                     error: true
@@ -229,45 +365,101 @@ router.post('/review-application/:loanID', async (req, res, next) => {
 })
 
 /**
- * POST /edit-loan
+ * PATCH /:loanID
  *
  * Edit a loan or loan application
  *
  * req.body contains the data of the loan to edit. Finds a loan in the database using LoanID.
- * NOTE: Does not edit loan ledgers, loan IDs, or submission dates.
+ * NOTE: Does not edit loan ledgers, loan IDs, submission dates, or approval dates.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
+ * @name patch/:loanID
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
+ *
+ * @param {String} loanType - Type of loan. Can be "emergency", "multipurpose", "educational", "pettyCash", "commercial", or "livelihood".
+ * @param {Number} term - Term of the loan. How many payments are to be made to complete the loan.
+ * @param {String} paymentFrequency - How often payments are made for the loan.
+ * @param {Object} coborrower - Loan coborrower. Contains the `name` (NameSchema), `birthday` (Date), `occupation`, and `contact_no` (both Strings) of the coborrower.
  */
-router.post('/edit-loan', async (req, res, next) => {
+router.patch('/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingLoan = await Loan.findOne({ loanID: req.body.loanID })
-            if (!existingLoan) {
-                return res.status(400).json({ message: 'Loan application does not exist' })
-            } else {
-                // Do not edit loan ledgers, loan IDs, or submission dates.
-                let loanInfo = req.body
-                if (loanInfo.ledger) {
-                    delete loanInfo.ledger
-                }
-                delete loanInfo.loanID
-                delete loanInfo.submissionDate
+            const { loanID } = req.params
 
-                if (
-                    Object.entries(loanInfo.coborrower.name).every(([, val]) => {
-                        return val === '' || val === null
-                    })
-                ) {
-                    loanInfo.coborrower = null
-                }
+            const existingLoan = await Loan.findOne({ loanID })
+            if (!existingLoan)
+                return res.status(404).json({ message: 'Loan application does not exist' })
 
-                await Loan.updateOne({ loanID: req.body.loanID }, loanInfo, {
-                    runValidators: true
-                })
-
-                return res.json({ message: 'Loan application successfully edited', error: false })
+            // Do not edit loan ledgers, loan IDs, submission dates, or approval dates.
+            const loanInfo = { ...req.body }
+            if (loanInfo.ledger) {
+                delete loanInfo.ledger
             }
+            delete loanInfo.loanID
+            delete loanInfo.submissionDate
+            delete loanInfo.approvalDate
+            delete loanInfo.originalLoanAmount
+
+            const response = { message: 'Loan application successfully edited', error: false }
+
+            if (existingLoan.status === 'approved' && loanInfo.status === 'released') {
+                loanInfo.releaseDate = new Date()
+
+                loanInfo.dueDate = new Date(Date.now() + 1000 * 60 * 60 * 24)
+                if (existingLoan.paymentFrequency === 'weekly')
+                    loanInfo.dueDate.setDate(loanInfo.dueDate.getDate() + 6)
+                else if (existingLoan.paymentFrequency === 'months') {
+                    loanInfo.dueDate.setMonth(loanInfo.dueDate.getMonth() + 1)
+                    loanInfo.dueDate.setDate(loanInfo.dueDate.getDate() - 1)
+                }
+
+                const settings = await LoanSettings.findOne().lean()
+                parseDecimal(settings)
+
+                if (!settings[existingLoan.loanType]) {
+                    return res.status(400).json({
+                        message: 'No loan settings exist for the current loan type',
+                        error: true
+                    })
+                }
+
+                const timeSetting = settings[existingLoan.loanType].time
+                const timeConversions = {
+                    days: 1,
+                    months: 30,
+                    years: 365
+                }
+                loanInfo.nextInterestDate = moment(loanInfo.releaseDate)
+                    .add(timeSetting.value * timeConversions[timeSetting.type], 'days')
+                    .set({
+                        hour: 0,
+                        minute: 0,
+                        second: 0,
+                        millisecond: 0
+                    })
+                    .toDate()
+
+                response.dueDate = loanInfo.dueDate
+            }
+
+            if (
+                loanInfo.coborrower &&
+                Object.entries(loanInfo.coborrower.name).every(([, val]) => {
+                    return val === '' || val === null
+                })
+            ) {
+                loanInfo.coborrower = null
+            }
+
+            await Loan.updateOne({ loanID }, loanInfo, { runValidators: true })
+
+            return res.status(200).json(response)
         } catch (error) {
             if (error.name === 'ValidationError') {
                 return res.status(400).json({
@@ -282,33 +474,33 @@ router.post('/edit-loan', async (req, res, next) => {
 })
 
 /**
- * POST /delete-loan
+ * DELETE /:loanID
  *
  * Delete a loan or loan application
  *
- * Request body contains; {
- *      loanID: loan ID of the loan to be deleted
- * }
- *
  * This functionality only soft deletes the loan;
  * the deleted loan will still be visible in the database
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ *
+ * @name delete/:loanID
+ * @function
+ * @memberof module:routes/loans~router-loans
+ * @inner
  */
-router.post('/delete-loan', async (req, res, next) => {
+router.delete('/:loanID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingLoan = await Loan.findOne({ loanID: req.body.loanID })
+            const { loanID } = req.params
+
+            const existingLoan = await Loan.findOne({ loanID })
             if (!existingLoan) {
-                return res.status(400).json({ message: 'Loan application does not exist' })
+                return res.status(404).json({ message: 'Loan application does not exist' })
             } else {
-                await Loan.updateOne(
-                    { loanID: req.body.loanID },
-                    {
-                        deleted: true
-                    }
-                )
+                await Loan.updateOne({ loanID }, { deleted: true })
 
                 return res.json({ message: 'Loan application successfully deleted', error: false })
             }
@@ -324,4 +516,5 @@ router.post('/delete-loan', async (req, res, next) => {
         }
     })(req, res, next)
 })
+
 export default router

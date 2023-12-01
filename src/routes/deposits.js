@@ -1,13 +1,28 @@
+/**
+ * Express routes for managing deposit information.
+ * @module routes/deposits
+ * @requires express
+ */
+
 // Packages
 import { Router } from 'express'
 import passport from 'passport'
+import moment from 'moment'
+moment().format()
 
-// Initialize router
+/**
+ * Router to mount routes on. Accessed through {SERVER_URL}/deposits/{route}
+ * @const
+ * @namespace router-deposits
+ */
 const router = Router()
 
 // Import models
 import Loanee from '../models/loanee.js'
 import Deposit from '../models/deposit.js'
+import DepositSettings from '../models/depositSettings.js'
+
+import parseDecimal from '../modules/decimal/parseDecimal.js'
 
 // Ledger routes
 import ledgerRouter from './deposit-ledgers.js'
@@ -24,6 +39,11 @@ router.use(
  * GET /
  *
  * Get all deposits
+ *
+ * @name get
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
  */
 router.get('/', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
@@ -32,6 +52,8 @@ router.get('/', async (req, res, next) => {
 
         const deposits = await Deposit.find({ deleted: false }).select('-__v -_id').lean()
 
+        parseDecimal(deposits)
+
         return res.status(200).json({ deposits, error: false })
     })(req, res, next)
 })
@@ -39,18 +61,25 @@ router.get('/', async (req, res, next) => {
 /**
  * GET /get/:depositid
  *
- * Get a deposit given its deposit ID
+ * Get a deposit given its deposit ID.
+ * depositID is the ID of the deposit.
+ *
+ * @name get/:depositid
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
  */
-router.get('/get/:depositid', async (req, res, next) => {
+router.get('/:depositID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
-        const deposit = await Deposit.findOne({ deleted: false, depositID: req.params.depositid })
+        const deposit = await Deposit.findOne({ deleted: false, depositID: req.params.depositID })
             .select('-__v -_id')
             .lean()
 
         if (deposit) {
+            parseDecimal(deposit)
             return res.status(200).json({ deposit, error: false })
         } else {
             return res.status(400).json({ message: 'Deposit ID does not exist', error: true })
@@ -61,9 +90,15 @@ router.get('/get/:depositid', async (req, res, next) => {
 /**
  * GET /:username
  *
- * Get all deposits of a member given their username
+ * Get all deposits of a member given their username.
+ * username is the username to search by.
+ *
+ * @name get/:username
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
  */
-router.get('/:username', async (req, res, next) => {
+router.get('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         try {
             if (err) return next(err)
@@ -81,6 +116,8 @@ router.get('/:username', async (req, res, next) => {
                 .select('-__v -_id')
                 .lean()
 
+            parseDecimal(deposits)
+
             return res.status(200).json({ deposits, error: false })
         } catch (error) {
             console.error(error)
@@ -92,18 +129,23 @@ router.get('/:username', async (req, res, next) => {
 /**
  * PUT /:username
  *
- * Create a new deposit of a member given their username
+ * Create a new deposit of a member given their username.
  *
- * req.body is of the format {
- *      username
- *      approvalDate,
- *      status (optional),
- *      category,
- *      interest rate,
- *      original deposit amount
- * }
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ * username is the username of the member that owns the deposit.
+ *
+ * @name put/:username
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
+ *
+ * @param {String} username - Username of the user that owns this deposit.
+ * @param {Date} approvalDate - Date the deposit was approved.
+ * @param {mongoose.Decimal128} originalDepositAmount - Original amount that was deposited.
+ * @param {String} status - Current deposit status. One of 'pending', 'accepted', 'rejected', or 'complete'.
+ * @param {String} category - Deposit category. One of 'shareCapital', 'savings', or 'timeDeposit'.
  */
-router.put('/new/:username', async (req, res, next) => {
+router.put('/user/:username', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
@@ -116,17 +158,48 @@ router.put('/new/:username', async (req, res, next) => {
             return res.status(404).json({ message: 'Loanee does not exist' })
         }
 
+        const submissionDate = Date.now()
+
+        const allSettings = await DepositSettings.findOne().lean()
+        if (!allSettings[req.body.category]) {
+            return res.status(400).json({
+                message: 'No loan settings exist for the current loan type',
+                error: true
+            })
+        }
+        const timeSetting = allSettings[req.body.category].time
+
+        const timeConversions = {
+            days: 1,
+            months: 30,
+            years: 365
+        }
+        const nextInterestDate = moment(submissionDate)
+            .add(timeSetting.value * timeConversions[timeSetting.type], 'days')
+            .set({
+                hour: 0,
+                minute: 0,
+                second: 0,
+                millisecond: 0
+            })
+            .toDate()
+
+        const depositInfo = {
+            username: username,
+            approvalDate: req.body.approvalDate,
+            submissionDate: submissionDate,
+            nextInterestDate: nextInterestDate,
+            category: req.body.category,
+            interestRate: req.body.interestRate,
+            originalDepositAmount: req.body.originalDepositAmount,
+            runningAmount: req.body.originalDepositAmount,
+            ledger: [],
+            status: req.body.status || 'pending'
+        }
+
         // Create new deposit
         try {
-            await Deposit.create({
-                username: username,
-                approvalDate: req.body.approvalDate,
-                category: req.body.category,
-                interestRate: req.body.interestRate,
-                originalDepositAmount: req.body.originalDepositAmount,
-                ledger: [],
-                status: req.body.status || 'pending'
-            })
+            await Deposit.create(depositInfo)
 
             // Return deposit status
             return res.status(201).json({ message: 'Deposit created successfully', error: false })
@@ -144,20 +217,31 @@ router.put('/new/:username', async (req, res, next) => {
 })
 
 /**
- * POST /edit-deposit
+ * PATCH /:depositID
  *
- * Edit a deposit
+ * Edit a deposit (except the deposit's ledger).
  *
- * req.body contains the data of the deposit to edit. Finds a deposit in the database using depositID.
- * NOTE: Does not edit deposit IDs.
+ * depositID represents the ID of the deposit to edit.
+ *
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
+ * @name patch/:depositID
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
+ *
+ * @param {mongoose.Decimal128} originalDepositAmount - Original amount that was deposited.
+ * @param {String} status - Current deposit status. One of 'pending', 'accepted', 'rejected', or 'complete'.
+ * @param {String} category - Deposit category. One of 'shareCapital', 'savings', or 'timeDeposit'.
  */
-router.post('/edit-deposit', async (req, res, next) => {
+router.patch('/:depositID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingDeposit = await Deposit.findOne({ depositID: req.body.depositID })
+            const { depositID } = req.params
+
+            const existingDeposit = await Deposit.findOne({ depositID })
             if (!existingDeposit) {
                 return res.status(400).json({ message: 'Deposit application does not exist' })
             } else {
@@ -169,9 +253,7 @@ router.post('/edit-deposit', async (req, res, next) => {
                 delete depositInfo.depositID
                 delete depositInfo.approvalDate
 
-                await Deposit.updateOne({ loanID: req.body.loanID }, depositInfo, {
-                    runValidators: true
-                })
+                await Deposit.updateOne({ depositID }, depositInfo, { runValidators: true })
 
                 return res.json({ message: 'Loan application successfully edited', error: false })
             }
@@ -189,28 +271,31 @@ router.post('/edit-deposit', async (req, res, next) => {
 })
 
 /**
- * POST /delete-deposit
+ * DELETE /:depositID
  *
- * Delete a deposit.
+ * Marks a deposit as deleted.
  *
- * Request body contains: {
- *      depositID: deposit ID of the deposit to be deleted
- * }
+ * Request body must be a JSON object containing the fields specified in the `parameters` section.
  *
- * This functionality only soft deletes the deposit.
+ * @name delete/:depositID
+ * @function
+ * @memberof module:routes/deposits~router-deposits
+ * @inner
  */
-router.post('/delete-deposit', async (req, res, next) => {
+router.delete('/:depositID', async (req, res, next) => {
     passport.authenticate('is-manager', { session: false }, async (err, manager, info) => {
         if (err) return next(err)
         if (!manager) return res.status(401).json(info)
 
         try {
-            const existingDeposit = await Deposit.findOne({ depositID: req.body.depositID })
+            const { depositID } = req.params
+
+            const existingDeposit = await Deposit.findOne({ depositID })
             if (!existingDeposit) {
-                return res.status(400).json({ message: 'Deposit does not exist' })
+                return res.status(404).json({ message: 'Deposit does not exist' })
             } else {
                 await Deposit.updateOne(
-                    { DepositID: req.body.DepositID },
+                    { depositID },
                     {
                         deleted: true
                     }
