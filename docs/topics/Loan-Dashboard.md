@@ -42,7 +42,7 @@ The amount of days for these colors to pop us as well is depending on the settin
 
 ## Accessing the Loan Ledger
 
-To access the loan ledger of a specific loan, find the loan to view, navigate to the right most part of the loan's row and find the arrow. This will forward you to the loan's ledger page.
+To access the loan ledger of a specific loan, find the loan to view, navigate to the rightmost part of the loan's row and find the arrow. This will forward you to the loan's ledger page.
 
 <seealso>
     <category ref="loans">

@@ -1,5 +1,7 @@
 # Officer Profiles
 
+# TODO: add a section on creating an officer profile.
+
 <seealso>
     <category ref="profiles">
         <a href="Member-Profiles.md" />
