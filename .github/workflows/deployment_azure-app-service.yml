@@ -18,7 +18,7 @@ concurrency:
 env:
   WRS_INSTANCE: docs/ucwa
   WRS_ARTIFACT: webHelpUCWA2-all.zip
-  WRS_DOCKER_VERSION: 232.10165.1
+  WRS_DOCKER_VERSION: 232.10275
 
 jobs:
   deploy:
