@@ -40,6 +40,10 @@ For ___due date___, this corresponds with the colors found in the settings tab (
 
 The amount of days for these colors to pop us as well is depending on the settings the ___admin___ has decided to put.
 
+> [Adding a payment transaction](Adding-Loan-Ledger-Transaction.md) will have the loan considered
+> as **paid** for the current period. Within 5 to 15 minutes of the transaction, the loan's due date
+> will be updated to the next period.
+
 ## Accessing the Loan Ledger
 
 To access the loan ledger of a specific loan, find the loan to view, navigate to the rightmost part of the loan's row and find the arrow. This will forward you to the loan's ledger page.
