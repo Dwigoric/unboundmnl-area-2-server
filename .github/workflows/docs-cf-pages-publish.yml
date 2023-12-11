@@ -71,9 +71,6 @@ jobs:
     needs: build
     env:
       CLOUDFLARE_PAGES_PROJECT_NAME: 'docs-svfmc'
-    environment:
-      name: 'Publish Documentation'
-      url: ${{ steps.deploy-to-cloudflare-pages.outputs.url }}
     permissions:
       contents: read
       deployments: write
