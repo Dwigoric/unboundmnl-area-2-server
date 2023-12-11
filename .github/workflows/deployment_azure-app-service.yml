@@ -19,6 +19,7 @@ concurrency:
 
 jobs:
   deploy:
+    name: Deploy to Azure Web App
     runs-on: ubuntu-latest
     environment:
       name: 'Production'
