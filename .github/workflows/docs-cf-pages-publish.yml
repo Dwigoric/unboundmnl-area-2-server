@@ -12,15 +12,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  WRS_INSTANCE: docs/ucwa
-  WRS_ARTIFACT: webHelpUCWA2-all.zip
-  WRS_DOCKER_VERSION: 232.10275
-
 jobs:
   build:
     name: Build documentation
     runs-on: ubuntu-latest
+    env:
+      WRS_INSTANCE: docs/ucwa
+      WRS_ARTIFACT: webHelpUCWA2-all.zip
+      WRS_DOCKER_VERSION: 232.10275
 
     steps:
       - name: Checkout
@@ -70,6 +69,8 @@ jobs:
     name: Publish to Cloudflare Pages
     runs-on: ubuntu-latest
     needs: build
+    env:
+      CLOUDFLARE_PAGES_PROJECT_NAME: 'docs-svfmc'
     environment:
       name: 'Publish Documentation'
       url: ${{ steps.deploy-to-cloudflare-pages.outputs.url }}
@@ -93,6 +94,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          projectName: ${{ env.CLOUDFLARE_PAGES_PROJECT_NAME }}
           directory: built_docs
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
