@@ -9,4 +9,5 @@
     <var name="backend-repo-url" value="https://github.com/Dwigoric/unboundmnl-area-2-server" />
     <var name="deployment-platform" value="Cloudflare Pages" />
     <var name="backend-deployment-platform" value="Azure App Service" />
+    <var name="loan-app-form-filename" value="loan_application_form.pdf" />
 </vars>
