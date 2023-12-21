@@ -2,6 +2,9 @@ name: Publish Writerside and JSDoc documentation to Cloudflare Pages
 
 on:
   push:
+    paths:
+        - 'docs/**'
+        - 'built_docs/**'
     branches:
       - main
       - 'Sprint-[0-9]*'
