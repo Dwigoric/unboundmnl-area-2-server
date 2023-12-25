@@ -5,22 +5,21 @@ name: Deploy Node.js express app to Azure Web App - compact-donuts
 
 on:
   push:
+    paths-ignore:
+      - 'docs/**'
     branches:
       - main
-      - 'Sprint-[0-9]'
+      - 'Sprint-[0-9]*'
+      - 'patch-[0-9]*'
   workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  WRS_INSTANCE: docs/ucwa
-  WRS_ARTIFACT: webHelpUCWA2-all.zip
-  WRS_DOCKER_VERSION: 232.10165.1
-
 jobs:
   deploy:
+    name: Deploy to Azure Web App
     runs-on: ubuntu-latest
     environment:
       name: 'Production'
@@ -41,49 +40,15 @@ jobs:
           echo 'Install dependencies'
           yarn install --immutable
 
-      - name: Build jsdoc documentation
-        uses: andstor/jsdoc-action@v1
-        with:
-          source_dir: .
-          recurse: true
-          output_dir: ./public/docs/jsdoc
-
-      - name: Build Writerside docs using Docker
-        uses: JetBrains/writerside-github-action@v4
-        with:
-          instance: ${{ env.WRS_INSTANCE }}
-          artifact: ${{ env.WRS_ARTIFACT }}
-          docker-version: ${{ env.WRS_DOCKER_VERSION }}
-
-      - name: Upload Writerside documentation artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: wrs_docs
-          path: |
-              artifacts/${{ env.WRS_ARTIFACT }}
-              artifacts/report.json
-          retention-days: 7
-
-      - name: Test Writerside documentation
-        uses: JetBrains/writerside-checker-action@v1
-        with:
-          instance: ${{ env.WRS_INSTANCE }}
-
-      - name: Unzip Writerside artifact
-        uses: montudor/action-zip@v1
-        with:
-          args: unzip -qq artifacts/${{ env.WRS_ARTIFACT }} -d ./public/docs/code
-
-      - name: Remove unused files and folders
+      - name: Remove docs folder from repo
         run: |
-          sudo rm -rf artifacts
           git rm -rf docs 
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
-          app-name: 'unboundmnl-area-2-backend'
+          app-name: 'api-svfmc'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .

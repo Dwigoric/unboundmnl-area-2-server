@@ -32,6 +32,7 @@ Its status will now be changed to <strong>Approved (for release)</strong>.
     <category ref="loans">
         <a href="Loan-Dashboard.md" />
         <a href="Creating-a-Loan-Application.md" />
+        <a href="Loan-Ledger.md" />
     </category>
     <category ref="uh">
         <a href="Admin.md" />
@@ -47,3 +48,4 @@ Its status will now be changed to <strong>Approved (for release)</strong>.
         <a href="Vue.md"></a>
     </category>
 </seealso>
+

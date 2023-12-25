@@ -1,9 +1,6 @@
 # Loan Dashboard
 
-The first thing you see once you enter the website is the ___Loan Dashboard___.
-This page houses all loans found in the database that are accepted.
-
-![Dashboard Page](dashboard-page.png)
+The first thing you see once you enter the website is the ___Loan Dashboard___. This page houses all loans found in the database that are accepted.
 
 Each row contains information on a certain loan. Information present are:
 - Type of Loan
@@ -15,7 +12,7 @@ Each row contains information on a certain loan. Information present are:
 
 ## Sorting, Filtering, and Searching
 
-Additionally, loans are sorted firstly by ___status___, then by ___due date___. Adding your own sort is possible by clicking the header of the certain field you would like to toggle. An arrow would then appear, pointing up for ascending, and pointing down for descending. Clicking the header once again would remove the sorting of that specific header. Also, the search bar found on the top right of the loan table can help filter specific fields you wish to search.
+Additionally, loans are sorted firstly by ___status___, then by ___due date___. Adding your own sort is possible by clicking the header of the certain field you would like to toggle. An arrow would then appear, pointing up for ascending, and pointing down for descending. Clicking the header once again would remove the sorting of that specific header. Also, the search bar found on the top left of the loans table can help filter specific fields you wish to search.
 
 ## Signifiers
 
@@ -43,18 +40,19 @@ For ___due date___, this corresponds with the colors found in the settings tab (
 
 The amount of days for these colors to pop us as well is depending on the settings the ___admin___ has decided to put.
 
+> [Adding a payment transaction](Adding-Loan-Ledger-Transaction.md) will have the loan considered
+> as **paid** for the current period. Within 5 to 15 minutes of the transaction, the loan's due date
+> will be updated to the next period.
+
 ## Accessing the Loan Ledger
 
-To access the loan ledger of a specific loan, find the loan to view, navigate to the right most part of the loan's row and find the arrow. This will forward you to the loan's ledger page.
-
-
-
-
+To access the loan ledger of a specific loan, find the loan to view, navigate to the rightmost part of the loan's row and find the arrow. This will forward you to the loan's ledger page.
 
 <seealso>
     <category ref="loans">
         <a href="Creating-a-Loan-Application.md" />
         <a href="Loan-Approval-Rejection.md" />
+        <a href="Loan-Ledger.md" />
     </category>
     <category ref="uh">
         <a href="Admin.md" />

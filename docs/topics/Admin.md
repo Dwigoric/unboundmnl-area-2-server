@@ -1,5 +1,11 @@
 # Admin
 
+The Admin is the most powerful user of the application. They
+oversee the officer accounts and the settings of the loans and deposits. 
+The admin has the liberty to create, delete, and change the passwords of the officer profiles.
+The admin also has the same permissions as the officers in member creation and management alongside
+the loan and deposit functionalities. 
+
 <seealso>
     <category ref="admin">
         <a href="Changing-Password.md" />

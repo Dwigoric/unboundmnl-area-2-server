@@ -1,5 +1,10 @@
 # Deposits
 
+Loans can be viewed in two different ways:
+* Through the [Deposit Dashboard](Deposit-Dashboard.md), which contains all deposits in the system
+present in the system
+* Through a [member's profile](Member-Profiles.md), which contains all deposits of that specific member.
+
 <seealso>
     <category ref="deposits">
         <a href="Deposit-Dashboard.md" />

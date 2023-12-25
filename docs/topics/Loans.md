@@ -1,10 +1,9 @@
 # Loans
 
 Loans can be viewed in two different ways:
-* Through the [Loan Dashboard](Loan-Dashboard.md), which contains all loans
+* Through the [Loan Dashboard](Loan-Dashboard.md), which contains all loans in the system
 present in the system
-* Through a [member's profile](Member-Profiles.md), which contains all loans
-of that specific member.
+* Through a [member's profile](Member-Profiles.md), which contains all loans of that specific member.
 
 
 <seealso>

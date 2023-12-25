@@ -4,6 +4,10 @@ When creating a loan application, you do not need to fill out all the fields.
 The fields related to the member's information are required, but their information
 will be retrieved when you search for their profile.
 
+> You must [set up the Loan Application Form PDF](Server-Set-up-the-Loan-Application-Form-PDF.md)
+> on the server before proceeding, if you haven't already.
+{ style='warning' }
+
 <procedure title="Creating a loan application" type="steps">
 <step>
 Search for a member by their name or username.
@@ -42,6 +46,7 @@ You can find instructions on how to approve or reject a loan application at
     <category ref="loans">
         <a href="Loan-Dashboard.md" />
         <a href="Loan-Approval-Rejection.md" />
+        <a href="Loan-Ledger.md" />
     </category>
     <category ref="uh">
         <a href="Admin.md" />
@@ -57,3 +62,4 @@ You can find instructions on how to approve or reject a loan application at
         <a href="Vue.md"></a>
     </category>
 </seealso>
+
